@@ -1,0 +1,124 @@
+<odoo>
+    <record id="view_province_form" model="ir.ui.view">
+        <field name="name">Tỉnh/TP</field>
+        <field name="model">province</field>
+        <field name="arch" type="xml">
+            <form string="Tỉnh/TP">
+                <group>
+                    <field name="name"/>
+                    <field name="distance_to_hn"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_province_tree" model="ir.ui.view">
+        <field name="name">Danh sách Tỉnh/TP</field>
+        <field name="model">province</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="name"/>
+                <field name="distance_to_hn"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_school_form" model="ir.ui.view">
+        <field name="name">Trường</field>
+        <field name="model">school</field>
+        <field name="arch" type="xml">
+            <form string="Trường">
+                <group>
+                    <field name="name_in_vn"/>
+                    <field name="name_in_jp"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_school_tree" model="ir.ui.view">
+        <field name="name">Trường</field>
+        <field name="model">school</field>
+        <field name="arch" type="xml">
+            <tree string="Ds Trường">
+                <field name="name_in_vn"/>
+                <field name="name_in_jp"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_certification_form" model="ir.ui.view">
+        <field name="name">Bằng cấp</field>
+        <field name="model">intern.certification</field>
+        <field name="arch" type="xml">
+            <form string="Bằng cấp">
+                <group>
+                    <field name="name_in_vn"/>
+                    <field name="name_in_jp"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_certification_tree" model="ir.ui.view">
+        <field name="name">Bằng cấp</field>
+        <field name="model">intern.certification</field>
+        <field name="arch" type="xml">
+            <tree string="Bằng cấp">
+                <field name="name_in_vn"/>
+                <field name="name_in_jp"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_marital_form" model="ir.ui.view">
+        <field name="name">Bằng cấp</field>
+        <field name="model">marital</field>
+        <field name="arch" type="xml">
+            <form string="Tình trạng hôn nhân">
+                <group>
+                    <field name="name_in_vn"/>
+                    <field name="name_in_jp"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_marital_tree" model="ir.ui.view">
+        <field name="name">Bằng cấp</field>
+        <field name="model">marital</field>
+        <field name="arch" type="xml">
+            <tree string="Tình trạng hôn nhân">
+                <field name="name_in_vn"/>
+                <field name="name_in_jp"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="view_translator_form" model="ir.ui.view">
+        <field name="name">Phiên âm tiếng Nhật</field>
+        <field name="model">intern.translator</field>
+        <field name="arch" type="xml">
+            <form string="Từ điển">
+                <group>
+                    <field name="vi_word"/>
+                    <field name="jp_word"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_translator_tree" model="ir.ui.view">
+        <field name="name">Phiên âm tiếng Nhật</field>
+        <field name="model">intern.translator</field>
+        <field name="arch" type="xml">
+            <tree string="Từ điển">
+                <field name="vi_word"/>
+                <field name="jp_word"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

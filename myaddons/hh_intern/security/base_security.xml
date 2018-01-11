@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="intern_management">
+          <field name="name">Quyền với thực tập sinh </field>
+          <field name="description">Mức độ quyền truy cập thông tin thực tập sinh</field>
+          <field name="sequence">3</field>
+        </record>
+
+        <record id="group_user" model="res.groups">
+         <field name="name">Đối ngoại</field>
+         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+         <field name="category_id" ref="intern_management"/>
+        </record>
+
+        <record id="group_manager" model="res.groups">
+          <field name="name">Kiểm soát</field>
+          <field name="implied_ids" eval="[(4, ref('group_user'))]"/>
+          <field name="category_id" ref="intern_management"/>
+        </record>
+
+
+    </data>
+
+
+  <data>
+    <record id="create_invoice_access_intern" model="ir.rule">
+      <field name="name">Intern for corresponding managers only</field>
+      <field name="model_id" ref="model_intern_intern"/>
+      <field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]
+</field>
+      <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+    </record>
+  </data>
+</odoo>
+

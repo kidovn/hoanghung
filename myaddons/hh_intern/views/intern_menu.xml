@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Action to open To-do list -->
+    <!--<act_window id="action_intern_list"-->
+        <!--name="Danh sách thực tập sinh"-->
+        <!--res_model="intern.intern"-->
+        <!--view_mode="tree,form" />-->
+
+    <record model="ir.actions.act_window" id="action_intern_list">
+        <field name="name">Danh sách thực tập sinh</field>
+        <field name="res_model">intern.intern</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_tree_intern"></field>
+         <field name="form_view_id" ref="view_intern_form"/>
+    </record>
+
+
+    <!-- Menu item to open To-do Task list -->
+    <menuitem id="menu_intern"
+        name="Kiểm soát" />
+
+
+    <act_window id="action_province"
+        name="Danh sách tỉnh/tp"
+        res_model="province"
+        view_mode="tree,form" />
+    <act_window id="action_school"
+        name="Danh sách trường"
+        res_model="school"
+        view_mode="tree,form" />
+
+    <act_window id="action_certification"
+        name="Danh sách bằng cấp"
+        res_model="intern.certification"
+        view_mode="tree,form" />
+
+    <act_window id="action_translator"
+        name="Phiên âm tiếng Nhật"
+        res_model="intern.translator"
+        view_mode="tree,form" />
+
+
+    <menuitem id="menu_common_data"
+              name="Dữ liệu chung"/>
+
+    <menuitem id="menu_school"
+              parent="menu_common_data"
+              name="Trường"
+              action="action_school" groups="hh_intern.group_manager"/>
+
+    <menuitem id="menu_province"
+              parent="menu_common_data"
+              name="Tỉnh/Tp"
+              action="action_province" groups="hh_intern.group_manager"/>
+
+     <menuitem id="menu_certification"
+              parent="menu_common_data"
+              name="Bằng cấp"
+              action="action_certification" groups="hh_intern.group_manager"/>
+
+    <menuitem id="menu_translator"
+              parent="menu_common_data"
+              name="Phiên âm tiếng Nhật"
+              action="action_translator" />
+</odoo>

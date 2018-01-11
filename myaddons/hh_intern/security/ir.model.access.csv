@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_intern_intern_manager,intern_intern manager,model_intern_intern,group_manager,1,1,1,1
+access_intern_intern_user,intern_intern user,model_intern_intern,group_user,1,1,1,0
+access_res_user_manager,res user manager,base.model_res_users,group_manager,1,1,1,1
+access_res_user_user,res user normal,base.model_res_users,group_user,1,0,0,0
+access_translator,translator right,model_intern_translator,,1,1,1,1
+access_province,province right,model_province,,1,1,1,1
+access_marital,marital right,model_marital,,1,0,0,0
+access_school,school right,model_school,,1,0,0,0
+access_certification,certification right,model_intern_certification,,1,0,0,0
+access_intern_family_user,intern_family user,model_intern_family,group_user,1,1,1,1
+access_intern_employment_user,intern_employment user,model_intern_employment,group_user,1,1,1,1
+access_intern_education_user,intern_education user,model_intern_education,group_user,1,1,1,1

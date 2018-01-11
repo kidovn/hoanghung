@@ -1,0 +1,29 @@
+.openerp .test{
+    width: 1000px;
+}
+
+td{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+td.columnDivider {
+    border-right: 1px solid #DEDEDE;
+
+}
+tr.rowDivider{
+    border-bottom: 1px solid #DEDEDE;
+}
+
+div.column{
+
+    margin-left: 1cm
+    margin-right: 1cm
+}
+
+.class_education [data-id="month_start"]{width: 1cm;}
+.class_education [data-id="year_start"]{width: 2.8cm;}
+.class_education [data-id="month_end"]{width: 1cm;}
+.class_education [data-id="year_end"]{width: 2.8cm;}
+.class_education [data-id="certificate"]{width: 2.3cm;}
+.class_education [data-id="graduated"]{width: 2.8cm;}

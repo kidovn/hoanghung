@@ -88,7 +88,7 @@ class InternFamily(models.Model):
     @api.onchange('ages')  # if these fields are changed, call method
     def name_change(self):
         if self.name:
-            self.birth_year = (datetime.now().year)+1 - self.ages
+            self.birth_year = (datetime.now().year) - self.ages
 
     # @api.one
     # def _get_ages(self):
@@ -102,33 +102,57 @@ class InternFamily(models.Model):
         result = super(InternFamily,self).read(fields,load)
         for record in result:
             if 'birth_year' in record and 'ages' in record:
-                record['ages'] = datetime.now().year+1 - record['birth_year']
+                record['ages'] = datetime.now().year - record['birth_year']
         return result
 
 
+def percentage(part, whole):
+    return 100 * float(part)/float(whole)
 
-class Intern(models.Model):
-    _name = 'intern.intern'
+class InternKS(models.Model):
+    _name = 'intern.internks'
     _description = 'Thực tập sinh'
 
-    name = fields.Char("Tên tiếng Việt có dấu",required=True)
-    name_without_signal = fields.Char("Tên tiếng Việt ko dấu")
-    name_in_japan = fields.Char("Tên tiếng Nhật")
-    gender = fields.Selection([('nam','Nam'),('nu','Nữ')])
+    serial = fields.Char("Mã số")
+    long_term = fields.Boolean("Đăng ký dài hạn")
+    name = fields.Char("Tên tiếng Việt có dấu", required=True)
+    gender = fields.Selection([('nam', 'Nam'), ('nu', 'Nữ')])
     day = fields.Char("Ngày", size=2)
     month = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
                               (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ],"Tháng")
+                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
 
-    year = fields.Char("Năm",size=4)
+    year = fields.Char("Năm", size=4)
 
-    date_of_birth = fields.Char("Ngày sinh",store=False, compute='_date_of_birth')
+    date_of_birth = fields.Char("Ngày sinh", store=False, compute='_date_of_birth')
+
+    name_without_signal = fields.Char("Tên tiếng Việt ko dấu")
+    name_in_japan = fields.Char("Tên tiếng Nhật")
+
+    address = fields.Text('Địa chỉ liên hệ')
+    province = fields.Many2one("province", string="Tỉnh/TP")
+    avatar = fields.Binary("Ảnh")
+
+    marital_status = fields.Many2one('marital', string="Tình trạng hôn nhân")
+    height = fields.Integer("Chiều cao (cm)")
+    weight = fields.Integer("Cân nặng (kg)")
+    vision_left = fields.Char("Mắt trái")
+    vision_right = fields.Char("Mắt phải")
+
+    blood_group = fields.Selection([('A', 'A'), ('B', 'B'), ('AB', 'AB'), ('O', 'O')], 'Nhóm máu')
+    check_kureperin = fields.Selection([('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')],
+                                       "Kiểm tra kureperin")
+
+
+    certification = fields.Many2one('intern.certification', "Bằng cấp")
 
     @api.one
-    @api.depends('day', 'month','year')
+    @api.depends('day', 'month', 'year')
     def _date_of_birth(self):
-        self.date_of_birth = "%s/%s/%s"%(self.day,self.month,self.year)
-
+        if self.day and self.month and self.year:
+            self.date_of_birth = u"%s Tháng %s Năm %s" % (self.day, self.month, self.year)
+        else:
+            self.date_of_birth = ""
 
     @api.constrains('day')
     def _check_day(self):
@@ -153,23 +177,243 @@ class Intern(models.Model):
                 raise ValidationError("Sai ngày sinh")
 
     phone_number = fields.Char("Số điện thoại")
-    address = fields.Text('Địa chỉ liên hệ')
-    province = fields.Many2one("province",string="Tỉnh/TP")
-    avatar = fields.Binary("Ảnh")
 
 
-    marital_status = fields.Many2one('marital', string="Tình trạng hôn nhân")
-    height = fields.Integer("Chiều cao (cm)")
-    weight = fields.Integer("Cân nặng (kg)")
-    vision_left = fields.Char("Mắt trái")
-    vision_right = fields.Char("Mắt phải")
+    #ngay nop ho so
+    day_sent_doc = fields.Char("Ngày", size=2)
+    month_sent_doc = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+
+    year_sent_doc = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
+
+    date_sent_doc = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_send_doc')
+    @api.one
+    @api.depends('day_sent_doc', 'month_sent_doc', 'year_sent_doc')
+    def _date_send_doc(self):
+        if self.day_sent_doc and self.month_sent_doc and self.year_sent_doc:
+            self.date_sent_doc = u"%s Tháng %s Năm %s" % (self.day_sent_doc, self.month_sent_doc, self.year_sent_doc)
+        else:
+            self.date_sent_doc = ""
+
+    @api.model
+    def _get_current_year(self):
+        return str(datetime.now().year)
+
+
+
+    # date_of_birth = fields.Char("Ngày sinh", store=False, compute='_date_of_birth')
+    #
+    # @api.one
+    # @api.depends('day', 'month', 'year')
+    # def _date_of_birth(self):
+    #     self.date_of_birth = "%s/%s/%s" % (self.day, self.month, self.year)
+
+
+
+    #test
+    logic_correct = fields.Integer()
+    logic_done = fields.Integer()
+    logic_percentage = fields.Char(store=False,compute='_cal_logic_percentage')
+
+    @api.one
+    def _cal_logic_percentage(self):
+        _logger.info("VAO_cal_logic_percentage")
+        if self.logic_done is not 0:
+            self.logic_percentage = "%d" % (percentage(self.logic_correct, self.logic_done))
+
+
+    add_correct = fields.Integer()
+    add_done = fields.Integer()
+    add_percentage = fields.Char(store=False,compute='_cal_add_percentage')
+
+    @api.one
+    def _cal_add_percentage(self):
+        if self.add_done is not 0:
+            self.add_percentage = "%d"%(percentage(self.add_correct,self.add_done))
+
+    calculation_correct = fields.Integer()
+    calculation_done = fields.Integer()
+    calculation_percentage = fields.Char(store=False,compute='_cal_calculation_percentage')
+
+    @api.one
+    def _cal_calculation_percentage(self):
+        if self.calculation_done is not 0:
+            self.calculation_percentage ="%d"%(percentage(self.calculation_correct,self.calculation_done))
+
+    notice_correct = fields.Integer()
+    notice_done = fields.Integer()
+    notice_percentage = fields.Char(store=False,compute='_cal_notice_percentage')
+
+    @api.one
+    def _cal_notice_percentage(self):
+        if self.notice_done is not 0:
+            self.notice_percentage ="%d"%(percentage(self.notice_correct,self.notice_done))
+
+    total_correct = fields.Integer(store=False,compute='_cal_total_corect')
+    total_question = fields.Integer("Tổng số câu", default=133)
+    iq_percentage = fields.Char("Trung bình cộng",compute='_cal_total_percentage')
+
+    @api.multi
+    def _cal_total_corect(self):
+        self.total_correct = self.logic_correct + self.add_correct + self.calculation_correct + self.notice_correct
+        # _logger.info("Total_percentage " + str(self.total_correct) + " " + str(self.total_question))
+        # if self.total_question is not 0:
+        #     self.total_percentage = "%d" % (percentage(self.total_correct, self.total_question))
+        #     _logger.info("PEE" + self.total_percentage)
+
+    def _cal_total_percentage(self):
+        if self.total_question is not 0:
+            self.iq_percentage = "%d" % (percentage(self.total_correct, self.total_question))
+
+
+    employment_experience = fields.Char(u"Kinh nghiệm làm việc")
+    average = fields.Float(u"Trung bình cộng", store=False)
+    incremental = fields.Integer(u"Cộng dồn")
+
+    room_recruitment = fields.Many2one("department",string=u"Phòng tuyển dụng")
+    recruitment_employee = fields.Many2one('hh.employee',string=u"Cán bộ tuyển dụng")
+
+    pass_recruitment = fields.Selection([('0','Thanh lý'),('1','Trúng tuyển')],string="Trúng tuyển")
+    # pass_recruitment = fields.Selection([(0,'Thanh lý'),(1,'Trúng tuyển')],string="Trúng tuyển")
+
+
+    invoice_name_vi = fields.Char(u'Đơn hàng')
+
+    promotions = fields.One2many("intern.promotion", "intern", string=u"Tiến cử")
+
+
+    #pass
+    day_pass = fields.Char("Ngày", size=2)
+    month_pass = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+    year_pass = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
+
+    date_pass = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_pass',)
+
+    @api.one
+    @api.depends('day_pass', 'month_pass', 'year_pass')
+    def _date_pass(self):
+        if self.day_pass and self.month_pass and self.year_pass:
+            self.date_pass = u"%s Tháng %s Năm %s" % (self.day_pass, self.month_pass, self.year_pass)
+        else:
+            self.date_pass =""
+
+
+    fee_departure = fields.Char(u"Phí xuất cảnh")
+    syndication = fields.Char(u"Nghiệp đoàn")
+    place_to_work = fields.Char(u"Địa điểm làm việc")
+
+
+    #ngay nhap hoc
+    day_join_school = fields.Char("Ngày", size=2)
+    month_join_school = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                              (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+    year_join_school = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
+
+    date_join_school = fields.Char("Ngày nhập học", store=False, compute='_date_join_school')
+
+    @api.one
+    @api.depends('day_join_school', 'month_join_school', 'year_join_school')
+    def _date_join_school(self):
+        if self.day_join_school and self.month_join_school and self.year_join_school:
+            self.date_join_school = u"%s Tháng %s Năm %s" % (self.day_join_school, self.month_join_school, self.year_join_school)
+        else:
+            self.date_join_school = ""
+
+    #du kien xuat canh
+    day_leave = fields.Char("Ngày", size=2)
+    month_leave = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+    year_leave = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
+
+    date_leave = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_leave')
+
+    @api.one
+    @api.depends('day_leave', 'month_leave', 'year_leave')
+    def _date_leave(self):
+        if self.day_leave and self.month_leave and self.year_leave:
+            self.date_leave = u"%s Tháng %s Năm %s" % (self.day_leave, self.month_leave, self.year_leave)
+        else:
+            self.date_leave = ""
+
+    pttt_employee = fields.Many2one('hh.employee',string=u"Cán bộ phát triển thị trường", domain=[('room_type','=',1)])
+
+    legal_name = fields.Selection([('chauhung','Châu Hưng'),('hoanghung','Hoàng Hưng'),('tracodi','Tracodi')],'Pháp nhân')
+
+    # thanh ly
+    day_liquidation = fields.Char("Ngày", size=2)
+    month_liquidation = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                                    (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                                    (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+    year_liquidation = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
+
+    liquidation_reason = fields.Char("Lý do thanh lý")
+
+    date_liquidation = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_liquidation')
+
+    @api.one
+    @api.depends('day_liquidation', 'month_liquidation', 'year_liquidation')
+    def _date_liquidation(self):
+        if self.day_liquidation and self.month_liquidation and self.year_liquidation:
+            self.date_liquidation = u"%s Tháng %s Năm %s" % (self.day_liquidation, self.month_liquidation, self.year_liquidation)
+        else:
+            self.date_liquidation =""
+
+    user_access = fields.Many2many("res.users",default=lambda self: self.env.user, string="User có quyền xem")
+
+
+class Promotion(models.Model):
+    _name = 'intern.promotion'
+    _description = u'Tiến cử'
+    intern = fields.Many2one("intern.intern",required=True,ondelete='cascade')
+    day = fields.Char("Ngày", size=2)
+    month = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
+                                       (5, '05'), (6, '06'), (7, '07'), (8, '08'),
+                                       (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+
+    year = fields.Char("Năm", size=4, default=lambda self: self._get_current_year())
+
+    date = fields.Char("Ngày", store=False, compute='_date')
+    @api.one
+    @api.depends('day', 'month', 'year')
+    def _date(self):
+        if self.day and self.month and self.year:
+            self.date = u"%s Tháng %s Năm %s" % (self.day, self.month, self.year)
+        else:
+            self.date=""
+
+    invoice = fields.Char("Đơn hàng", required=True)
+
+    @api.model
+    def _get_current_year(self):
+        return str(datetime.now().year)
+
+
+class InternDN(models.Model):
+    _name = 'intern.interndn'
+    # _inherits = {'intern.internks': 'intern_id'}
+
+    _description = 'Thực tập sinh'
+
+    # intern_id = fields.Many2one('intern.internks', required=True, ondelete='restrict', auto_join=True,
+    #                              string='Related Intern', help='Intern-related data of the user')
+
+
     blindness = fields.Boolean("Bệnh mù màu")
     smoking = fields.Boolean("Có hút thuốc")
     preferred_hand = fields.Selection((('0', 'Tay phải'), ('1', 'Tay trái')), string="Tay thuận", default='0')
     surgery = fields.Boolean("Phẫu thuật hay xăm hình")
     surgery_content = fields.Char("Nội dung")
     drink_alcohol = fields.Boolean("Uống rượu bia")
-    certification = fields.Many2one('intern.certification', "Bằng cấp")
     specialized = fields.Text("Chuyên ngành")
     favourite = fields.Text("Sở thích")
     strong = fields.Text("Điểm mạnh")
@@ -177,10 +421,10 @@ class Intern(models.Model):
     teammate = fields.Boolean("Có kinh nghiệm sống tập thể")
     cooking = fields.Boolean("Biết nấu ăn")
     diseases = fields.Boolean("Lý lịch bệnh tật")
-    blood_group = fields.Selection([('A', 'A'), ('B', 'B'), ('AB', 'AB'), ('O', 'O')], 'Nhóm máu')
-    check_kureperin = fields.Selection([('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')],
-                                       "Kiểm tra kureperin")
-    check_iq = fields.Char("Kiểm tra IQ")
+
+
+
+
     family_income = fields.Char("Tổng thu nhập gia đình")
     motivation = fields.Text("Động lực")
     income_after_three_year = fields.Char("Sau 3 năm bạn muốn kiếm được bao nhiêu ?")
@@ -201,32 +445,15 @@ class Intern(models.Model):
     family_member_in_jp = fields.Char("Người thân ở Nhật")
     family_accept = fields.Boolean("Gia đình có đồng ý cho đi Nhật không?", default=True)
 
-    user_access = fields.Many2many("res.users",default=lambda self: self.env.user, string="User có quyền xem")
-
     show_specialized = fields.Boolean(store=False,default=False)
 
-    @api.multi
-    @api.onchange('certification')  # if these fields are changed, call method
-    def certification_change(self):
-        if self.certification:
-            if self.certification.id == 1:
-                self.specialized = u'無し'
-                self.show_specialized = False
 
-            elif self.certification.id == 2:
-                self.specialized = u'無し'
-                self.show_specialized = False
-            else:
-                self.specialized = ""
-                self.show_specialized = True
-        else:
-            self.show_specialized = False
 
     # info = fields.Many2one('intern.info',"Sơ yếu lý lịch")
 
     @api.model
     def create(self, vals):
-        record = super(Intern, self).create(vals)
+        record = super(InternDN, self).create(vals)
         try:
             splitName= vals['name'].split()
             tempSplitName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(vals['name'])).split()
@@ -268,6 +495,24 @@ class Intern(models.Model):
     #             member.ages = 0
     #     return super(Intern, self).load_views(views, options)
 
+class InternHS(models.Model):
+    _name = 'intern.internhs'
+
+
+class Intern(models.Model):
+    _name = 'intern.intern'
+    _inherits = {'intern.interndn': 'interndn_id','intern.internks':'internks_id', 'intern.internhs':'internhs_id'}
+
+    _description = 'Thực tập sinh'
+
+    interndn_id = fields.Many2one('intern.interndn', required=True, ondelete='restrict', auto_join=True,
+                                 string='Related Intern', help='Intern-related data of the user')
+
+    internks_id = fields.Many2one('intern.internks', required=True, ondelete='restrict', auto_join=True,
+                                  string='Related Intern', help='Intern-related data of the user')
+
+    internhs_id = fields.Many2one('intern.internhs', required=True, ondelete='restrict', auto_join=True,
+                                  string='Related Intern', help='Intern-related data of the user')
 
     @api.onchange('name')  # if these fields are changed, call method
     def name_change(self):
@@ -276,7 +521,6 @@ class Intern(models.Model):
             tmp = self.convertToJP(intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name)))
             if tmp is not None:
                 self.name_in_japan = tmp
-
 
     def convertToJP(self,name):
         words = name.split()
@@ -291,9 +535,70 @@ class Intern(models.Model):
                 return None
         return final
 
+    @api.multi
+    @api.onchange('logic_correct','logic_done')
+    @api.depends('logic_correct', 'logic_done')
+    def _cal_logic_percentage(self):
+        _logger.info("VAO_cal_logic_percentage")
+        if self.logic_done is not 0:
+            self.logic_percentage = "%d" % (percentage(self.logic_correct, self.logic_done))
 
-class InternKS(models.Model):
-    _inherit = 'intern.intern'
-    _name = 'intern.internks'
-    _description = 'Thực tập sinh'
+    @api.multi
+    @api.onchange('add_correct', 'add_done')
+    @api.depends('add_correct', 'add_done')
+    def _cal_add_percentage(self):
+        if self.add_done is not 0:
+            self.add_percentage = "%d" % (percentage(self.add_correct, self.add_done))
+
+    @api.multi
+    @api.onchange('calculation_correct', 'calculation_done')
+    @api.depends('calculation_correct', 'calculation_done')
+    def _cal_calculation_percentage(self):
+        if self.calculation_done is not 0:
+            self.calculation_percentage = "%d" % (percentage(self.calculation_correct, self.calculation_done))
+
+    @api.multi
+    @api.onchange('notice_correct', 'notice_done')
+    @api.depends('notice_correct', 'notice_done')
+    def _cal_notice_percentage(self):
+        if self.notice_done is not 0:
+            self.notice_percentage = "%d" % (percentage(self.notice_correct, self.notice_done))
+
+    @api.multi
+    @api.onchange('logic_correct', 'add_correct','calculation_correct','notice_correct','total_question')
+    @api.depends('logic_correct', 'add_correct', 'calculation_correct', 'notice_correct', 'total_question')
+    def _cal_total_percentage(self):
+        self.total_correct = self.logic_correct + self.add_correct + self.calculation_correct + self.notice_correct
+        if self.total_question is not 0:
+            self.total_percentage = "%d" % (percentage(self.total_correct, self.total_question))
+
+
+    @api.onchange('room_recruitment')
+    def _set_domain_for_recruitment_employee(self):
+        ids = []
+        if self.room_recruitment:
+            if self.room_recruitment.members:
+                for member in self.room_recruitment.members:
+                    ids.append(member.id)
+            if self.room_recruitment.manager:
+                ids.append(self.room_recruitment.manager.id)
+
+        return {'domain': {'recruitment_employee': [('id', 'in', ids)]}}
+
+    @api.multi
+    @api.onchange('certification')  # if these fields are changed, call method
+    def certification_change(self):
+        if self.certification:
+            if self.certification.id == 1:
+                self.specialized = u'無し'
+                self.show_specialized = False
+
+            elif self.certification.id == 2:
+                self.specialized = u'無し'
+                self.show_specialized = False
+            else:
+                self.specialized = ""
+                self.show_specialized = True
+        else:
+            self.show_specialized = False
 

@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import intern, translator, province, school, certification, marital
+from . import department, intern, translator, province, school, certification, marital

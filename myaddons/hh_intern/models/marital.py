@@ -19,7 +19,5 @@ class Marital(models.Model):
             return super(Marital, self).name_get()
         res = []
         for record in self:
-            _logger.info(record)
             res.append((record.id, record.name_in_jp))
-
         return res

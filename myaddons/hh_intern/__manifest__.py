@@ -26,8 +26,12 @@
     'data': [
         'security/base_security.xml',
         'views/styles.xml',
-        'views/intern_menu.xml',
+        'views/department_view.xml',
+        'views/department_menu.xml',
+        'views/internks_view.xml',
+        'views/internks_menu.xml',
         'views/intern_view.xml',
+        'views/intern_menu.xml',
         'views/province_view.xml',
         'security/ir.model.access.csv',
     ],

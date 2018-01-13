@@ -11,14 +11,25 @@
                             <td colspan="1" width="250px" class="columnDivider">
                                  <label for="name" class="test" />
                             </td>
-                            <td colspan="1" >
+                            <td colspan="1" width="400px">
                                 <div class="column">
-                                    <field name="name" style="width:300px"/>
+                                    <field name="name" style="width:300px; background-color: #ffa;"/>
                                 </div>
                             </td>
                             <td colspan="1" rowspan="3">
                                 <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar"/>
                             </td>
+                            <!--<td colspan="2" rowspan="4">
+                                <table >
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label string="Từ chưa có"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>-->
                         </tr>
                         <tr>
                             <td colspan="1" width="250px" class="columnDivider">
@@ -26,7 +37,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                   <field name="name_without_signal" style="width:300px"/>
+                                   <field name="name_without_signal" style="width:300px;background-color: #ffa;" />
                                 </div>
                             </td>
                         </tr>
@@ -47,9 +58,10 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day" style="width: 2cm; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'"/>/
-                                    <field name="month" style="width: 2cm; display: inline-block" placeholder="Tháng"/>/
-                                    <field name="year" style="width:2cm" placeholder="Năm"/>
+                                    <field name="day" style="width: 40px; display: inline-block;background-color: #ffa;" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month" style="width: 70px; display: inline-block;background-color: #ffa;" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year" style="width:50px;background-color: #ffa;" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_of_birth" style="background-color: #ffa;"  class="oe_read_only"/>
                                 </div>
                             </td>
                         </tr>
@@ -59,7 +71,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="gender" style="width:10%"/>
+                                     <field name="gender" style="width:80px;background-color: #ffa;" />
                                 </div>
                             </td>
                         </tr>
@@ -74,7 +86,7 @@
                             </td>
                             <td colspan="1" >
                                 <div class="column">
-                                    <field name="address" style="width: 20%;"/>
+                                    <field name="address" style="width: 20%;" placeholder="Không bao gồm tỉnh/tp"/>
                                 </div>
                             </td>
                         </tr>
@@ -84,7 +96,7 @@
                             </td>
                             <td colspan="1" >
                                 <div class="column">
-                                    <field name="province" style="width: 10%;" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                    <field name="province" style="width: 100px;background-color: #ffa; " options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
                                         placeholder="Tỉnh/tp"/>
                                 </div>
                             </td>
@@ -96,7 +108,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="phone_number" style="width:4cm"/>
+                                     <field name="phone_number" style="width:250px;background-color: #ffa;"/>
                                 </div>
                             </td>
                         </tr>
@@ -110,7 +122,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="marital_status" style="width:10%%" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     <field name="marital_status" widget="selection" style="width:80px;background-color: #ffa;" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
                                      context="{'jp': True}"/>
                                 </div>
                             </td>
@@ -121,7 +133,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="height" style="width:10%%" />
+                                     <field name="height" style="width:80px;background-color: #ffa;" />
                                 </div>
                             </td>
                         </tr>
@@ -131,7 +143,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="weight" style="width:10%%" />
+                                     <field name="weight" style="width:80px;background-color: #ffa;" />
                                 </div>
                             </td>
                         </tr>
@@ -146,7 +158,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="vision_left" style="width:10%%"/>
+                                     <field name="vision_left" style="width:80px;background-color: #ffa;"/>
                                 </div>
                             </td>
                         </tr>
@@ -156,7 +168,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                      <field name="vision_right" style="width:10%%"/>
+                                      <field name="vision_right" style="width:80px;background-color: #ffa;"/>
                                 </div>
                             </td>
                         </tr>
@@ -191,7 +203,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                      <field name="preferred_hand" style="width:5cm"/>
+                                      <field name="preferred_hand" style="width:200px"/>
                                 </div>
                             </td>
                         </tr>
@@ -227,7 +239,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="certification" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:5cm" context="{'jp': True}"/>
+                                    <field name="certification" widget="selection" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:150px;background-color: #ffa;" context="{'jp': True}"/>
                                     <field name="show_specialized" invisible="1"/>
                                 </div>
                             </td>
@@ -238,7 +250,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="specialized"  style="width:20%%" attrs="{'invisible':[('show_specialized', '==', False)]}" />
+                                    <field name="specialized"  style="width:250px" attrs="{'invisible':[('show_specialized', '==', False)]}" />
                                 </div>
                             </td>
                         </tr>
@@ -252,7 +264,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="favourite"  style="width:5cm"/>
+                                       <field name="favourite"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -262,7 +274,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="strong"  style="width:5cm"/>
+                                       <field name="strong"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -273,7 +285,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="weak"  style="width:5cm"/>
+                                       <field name="weak"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -294,18 +306,18 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="check_kureperin"  style="width:10%%"/>
+                                       <field name="check_kureperin"  style="width:80px;background-color: #ffa;"/>
                                 </div>
                             </td>
                         </tr>
 
                          <tr>
                             <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="check_iq"/>
+                                  <label for="iq_percentage" string="Kiểm tra IQ"/>
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="check_iq"  style="width:10%%"/>
+                                       <field name="iq_percentage"  style="width:30px;background-color: #ffa;"/>%
                                 </div>
                             </td>
                         </tr>
@@ -316,7 +328,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="family_income"  style="width:20%%"/>
+                                       <field name="family_income"  style="width:200px"/>
                                 </div>
                             </td>
                         </tr>
@@ -327,7 +339,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="teammate"  style="width:20%%"/>
+                                       <field name="teammate"  style="width:200px"/>
                                 </div>
                             </td>
                         </tr>
@@ -338,7 +350,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="cooking"  style="width:20%%"/>
+                                       <field name="cooking"  style="width:200px"/>
                                 </div>
                             </td>
                         </tr>
@@ -349,7 +361,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="blood_group"  style="width:10%%"/>
+                                       <field name="blood_group"  style="width:80px;background-color: #ffa;"/>
                                 </div>
                             </td>
                         </tr>
@@ -365,7 +377,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="motivation"  style="width:8cm"/>
+                                       <field name="motivation"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -380,7 +392,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="income_after_three_year"  style="width:8cm"/>
+                                       <field name="income_after_three_year"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -395,7 +407,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="job_after_return"  style="width:8cm"/>
+                                       <field name="job_after_return"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -410,7 +422,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="prefer_object"  style="width:8cm"/>
+                                       <field name="prefer_object"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -425,7 +437,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="memory"  style="width:8cm"/>
+                                       <field name="memory"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -440,7 +452,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="valuable"  style="width:8cm"/>
+                                       <field name="valuable"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -455,7 +467,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="family_member_in_jp"  style="width:8cm"/>
+                                       <field name="family_member_in_jp"  style="width:300px"/>
                                 </div>
                             </td>
                         </tr>
@@ -470,17 +482,17 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="education_status" style="width: 4cm; display: inline-block"/>
-                                    <field name="education_content" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width:20%%; margin-left: 20px"/>
+                                    <field name="education_status" style="width: 200px; display: inline-block"/>
+                                    <field name="education_content" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width:300px; margin-left: 20px"/>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <group>
-                    <field name="family_accept" invisible="1"/>
-                </group>
+                <!--<group invisible="1">-->
+                    <!--<field name="family_accept" />-->
+                <!--</group>-->
 
 
                     <notebook>
@@ -491,10 +503,10 @@
                                     <field name="year_start" string="Năm bắt đầu"/>
                                     <field name="month_end" string="Tháng"/>
                                     <field name="year_end" string="Năm kết thúc"/>
-                                    <field name="school_type" string="Trường" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                    <field name="school_type" string="Trường" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
                                     <field name="school" string="Tên trường"/>
                                     <field name="specialization"/>
-                                    <field name="certificate" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                    <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
                                     <field name="graduated"/>
                                 </tree>
                             </field>
@@ -524,18 +536,8 @@
                                 </tree>
                             </field>
                         </page>
-
-
                     </notebook>
 
-                    <group>
-                        <field name="user_access" groups="hh_intern.group_manager"  mode="tree">
-                            <tree>
-                                <field name="name" string="Tên"/>
-                                <field name="login" string="Tài khoản"/>
-                            </tree>
-                        </field>
-                    </group>
             </form>
         </field>
     </record>

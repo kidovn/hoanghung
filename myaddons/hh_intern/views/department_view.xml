@@ -1,0 +1,166 @@
+<odoo>
+    <record id="view_department_form" model="ir.ui.view">
+        <field name="name">Phòng ban</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <form string="Phòng ban">
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="room_type"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="room_type"  style="width:200px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="name"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="name"  style="width:200px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="manager"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="manager"  style="width:200px" options="{ 'no_open': True,'no_quick_create':True}"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <notebook>
+                        <page string="Thành viên">
+                            <field name="members" mode="tree">
+                                <tree class="class_education">
+                                    <field name="name"/>
+                                    <field name="gender"/>
+                                    <field name="date_of_birth"/>
+                                </tree>
+                            </field>
+                        </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_department_tree" model="ir.ui.view">
+        <field name="name">Danh sách phòng ban</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="room_type"/>
+                <field name="name"/>
+                <field name="manager"/>
+                <field name="members"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_filter_department" model="ir.ui.view">
+        <field name="name">Lọc phòng ban</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="room_type"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">Nhân viên</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <form string="Nhân viên">
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="name"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="name"  style="width:250px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="gender"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="gender"  style="width:100px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="day" string="Ngày sinh"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'"/>
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng"/>
+                                    <field name="year" style="width:50px" placeholder="Năm" data-inputmask="'mask': '9999'"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="room_type"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="room_type"  style="width:100px"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </field>
+    </record>
+
+     <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">Danh sách nhân viên</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="date_of_birth"/>
+                <field name="room_type"/>
+            </tree>
+        </field>
+    </record>
+
+      <record id="view_filter_department" model="ir.ui.view">
+        <field name="name">Lọc nhân viên</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="room_type"/>
+            </search>
+        </field>
+    </record>
+</odoo>

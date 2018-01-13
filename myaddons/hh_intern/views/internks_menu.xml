@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.actions.act_window" id="action_internks_list">
+        <field name="name">Danh sách thực tập sinh</field>
+        <field name="res_model">intern.intern</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_tree_internks')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_internks_form')})]"/>
+    </record>
+
+    <menuitem id="menu_internks"
+        name="Kiểm soát" />
+
+    <menuitem id="menu_list_internks" parent="menu_internks"
+        name="Thực tập sinh" action="action_internks_list" groups="base.group_user"/>
+</odoo>

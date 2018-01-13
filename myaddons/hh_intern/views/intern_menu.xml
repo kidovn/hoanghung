@@ -10,14 +10,15 @@
         <field name="name">Danh sách thực tập sinh</field>
         <field name="res_model">intern.intern</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_tree_intern"></field>
-         <field name="form_view_id" ref="view_intern_form"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_tree_intern')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_intern_form')})]"/>
     </record>
 
 
     <!-- Menu item to open To-do Task list -->
-    <menuitem id="menu_intern"
-        name="Kiểm soát" />
+    <!--<menuitem id="menu_intern"-->
+        <!--name="Kiểm soát" />-->
 
 
     <act_window id="action_province"

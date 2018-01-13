@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.actions.act_window" id="action_department_list">
+        <field name="name">Danh sách phòng ban</field>
+        <field name="res_model">department</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_department_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_department_form')})]"/>
+    </record>
+
+    <menuitem id="menu_department_test"
+              name="Phòng ban"/>
+
+    <menuitem id="menu_department_list"
+              parent="menu_department_test"
+              name="Phòng ban"
+              action="action_department_list" groups="hh_intern.group_manager"/>
+</odoo>

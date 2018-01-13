@@ -1,0 +1,95 @@
+<odoo>
+
+    <template id="invoice_assets" name="module_name assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hh_intern_report/static/src/js/mylistview.js"/>
+        </xpath>
+    </template>
+
+
+    <record id="view_tree_document" model="ir.ui.view">
+        <field name="name">Danh sách tài liệu</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_document" model="ir.ui.view">
+        <field name="name">Chi tiết tài liệu</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <form string="Thực tập sinh">
+                <group>
+                    <field name="name" string="Tên văn bản"/>
+                    <field name="note" string="Ghi chú"/>
+                    <field name="attachment" string="Văn bản" filename="file_name"/>
+                    <field name="file_name" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_filter_document" model="ir.ui.view">
+        <field name="name">Lọc document</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_doc_generate" model="ir.ui.view">
+        <field name="name">Tạo đơn hàng</field>
+        <field name="model">intern.invoice</field>
+         <field name="arch" type="xml">
+             <form create="false">
+                 <header>
+                    <button name="create_doc" string="Tạo Đơn hàng" type="object" class="oe_highlight"/>
+                </header>
+                 <group>
+                     <group>
+                         <field name="name" string="Tên"/>
+                         <field name="enterprise"/>
+                         <field name="name_of_guild" string="Tên nghiệp đoàn"/>
+                     </group>
+                     <group>
+                         <field name="order" invisible="1"/>
+                        <field name="document" string="Loại văn bản" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                        invisible="1"/>
+                     </group>
+                 </group>
+                 <notebook>
+                    <page string="Danh sách thực tập sinh" >
+                        <field name="interns" string="Danh sách thực tập sinh"  mode="tree">
+
+                             <tree string="Chi tiết thực tập sinh">
+                                <field name="name"  />
+                                <field name="date_of_birth" />
+                                <field name="address" />
+                                <field name="province" />
+                                 <field name="height"/>
+                            </tree>
+                        </field>
+                    </page>
+                 </notebook>
+             </form>
+         </field>
+    </record>
+    <record id="view_invoice_history_tree" model="ir.ui.view">
+        <field name="name">History</field>
+        <field name="model">intern.invoice</field>
+         <field name="arch" type="xml">
+             <tree>
+                 <field name="name" />
+                 <field name="enterprise" />
+                 <field name="name_of_guild" />
+                 <field name="interns" />
+             </tree>
+         </field>
+    </record>
+</odoo>

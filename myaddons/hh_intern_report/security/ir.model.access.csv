@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_intern_document,document manager,model_intern_document,hh_intern.group_manager,1,1,1,1
+access_intern_document,document manager,model_intern_document,hh_intern.group_user,1,0,0,0
+access_intern_invoice,invoice manager,model_intern_invoice,,1,1,1,1

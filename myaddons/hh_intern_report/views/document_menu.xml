@@ -1,0 +1,39 @@
+<odoo>
+    <!-- Action to open To-do list -->
+    <act_window id="action_document_list"
+        name="Document"
+        res_model="intern.document"
+        view_mode="tree,form" />
+
+    <act_window id="action_invoice_history"
+                 name="Lịch sử đơn hàng"
+        res_model="intern.invoice"
+        view_mode="tree,form" />
+
+    <act_window id="action_document_generator"
+        name="Tạo Đơn hàng"
+        res_model="intern.invoice"
+        view_mode="form" />
+
+
+    <!-- Menu item to open To-do Task list -->
+
+
+    <menuitem id="menu_doi_ngoai_root" name="Đối ngoại"/>
+
+    <menuitem id="menu_list_intern" parent="menu_doi_ngoai_root"
+        name="Thực tập sinh" action="hh_intern.action_intern_list" groups="base.group_user"/>
+
+    <menuitem id="menu_invoice_history" parent="menu_doi_ngoai_root"
+        name="Lịch sử đơn hàng" action="action_invoice_history" groups="base.group_user"/>
+
+   <menuitem id="menu_document_generator" parent="menu_doi_ngoai_root"
+        name="Tạo đơn hàng" action="action_document_generator" groups="base.group_user"/>
+
+
+     <!--<menuitem id="menu_document_root"-->
+        <!--name="Tài liệu mẫu" />-->
+
+    <menuitem id="menu_document_list" parent="hh_intern.menu_common_data"
+        name="Tài liệu mẫu" action="action_document_list" groups="hh_intern.group_manager"/>
+</odoo>

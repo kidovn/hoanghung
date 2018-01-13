@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <record id="menu_document" model="website.menu">
+      <field name="name">Văn bản</field>
+      <field name="url">/document</field>
+      <field name="parent_id" ref="website.main_menu"/>
+      <field name="sequence" type="int">50</field>
+    </record>
+
+  </data>
+
+  <!--<data>-->
+
+    <!--<record id="hh_intern_report.model_intern_document" model="ir.model">-->
+      <!--<field name="website_form_access">True</field>-->
+    <!--</record>-->
+
+    <!--<function model="ir.model.fields" name="formbuilder_whitelist">-->
+      <!--<value>intern.document</value>-->
+      <!--<value eval="[-->
+        <!--'name',-->
+        <!--'note',-->
+      <!--]"/>-->
+    <!--</function>-->
+
+  <!--</data>-->
+</odoo>

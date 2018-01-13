@@ -1,0 +1,48 @@
+<odoo>
+    <record id="view_intern_form" model="ir.ui.view">
+        <field name="name">Chi tiết thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form string="Thực tập sinh">
+                <group name="group_top">
+                        <group name="group_left">
+                            <field name="id" invisible="1" />
+                            <field name="name"/>
+                            <field name="name_without_signal" class="oe_edit_only"/><!--attrs="{'invisible': [('id', '=', False)]}" -->
+                            <field name="date_of_birth"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
+                            <field name="address"/>
+                            <field name="province"/>
+
+                        </group>
+                    </group>
+            </form>
+        </field>
+    </record>
+
+    <!--<record id="view_tree_intern" model="ir.ui.view">-->
+        <!--<field name="name">Danh sách thực tập sinh</field>-->
+        <!--<field name="model">intern.intern</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree >-->
+                <!--<field name="name"/>-->
+                <!--<field name="province"/>-->
+                <!--<field name="date_of_birth"/>-->
+                <!--<field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <record id="view_filter_intern" model="ir.ui.view">
+        <field name="name">Lọc thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="province"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+
+ <data>
+    <record id="access_invoice_permission" model="ir.rule">
+      <field name="name">Invoice for corresponding managers only</field>
+      <field name="model_id" ref="model_intern_invoice"/>
+      <field name="domain_force">['|',('create_uid','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]
+    </field>
+      <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+    </record>
+  </data>
+</odoo>

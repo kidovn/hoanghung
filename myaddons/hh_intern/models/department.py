@@ -35,7 +35,7 @@ class Department(models.Model):
     _name = 'department'
     _description = u'Phòng ban'
     room_type = fields.Selection([('0','Tuyển dụng'),('1','Phát triển thị trường'),('2','Kiểm soát'),('3','Đối ngoại'),
-                                  ('4','Hồ sơ'),('5','Kế toán')],string="Phòng")
+                                  ('4','Hồ sơ'),('5','Kế toán')],string="Phòng", required=True)
     name = fields.Char("Tên")
     manager = fields.Many2one('hh.employee',string="Trưởng phòng")
     members = fields.Many2many('hh.employee')

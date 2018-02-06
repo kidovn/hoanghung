@@ -26,6 +26,8 @@
     'data': [
         'security/base_security.xml',
         'views/styles.xml',
+        'views/invoice_view.xml',
+        'views/invoice_menu.xml',
         'views/department_view.xml',
         'views/department_menu.xml',
         'views/internks_view.xml',
@@ -33,6 +35,8 @@
         'views/intern_view.xml',
         'views/intern_menu.xml',
         'views/province_view.xml',
+        'views/extern_document_view.xml',
+        'views/extern_document_menu.xml',
         'security/ir.model.access.csv',
     ],
     # only loaded in demonstration mode

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.main import serialize_exception,content_disposition
@@ -186,8 +186,10 @@ class Document(http.Controller):
         reponds = BytesIO()
         archive = zipfile.ZipFile(reponds, 'w', zipfile.ZIP_DEFLATED)
         if finalDoc is not None:
-            archive.write(finalDoc.name,"cover.docx")
+            archive.write(finalDoc.name,".docx")
             os.unlink(finalDoc.name)
+        else:
+            return
 
         if invoice.order:
             ids = []
@@ -213,3 +215,111 @@ class Document(http.Controller):
         return request.make_response(ret_zip,
                                          [('Content-Type', 'application/zip'),
                                           ('Content-Disposition', content_disposition(filename))])
+
+    @http.route('/web/binary/download_proletter_document', type='http', auth="public")
+    def download_proletter_document(self, model, id, filename, **kwargs):
+        invoice = request.env[model].search([('id', '=', id)])
+
+        reponds = BytesIO()
+        archive = zipfile.ZipFile(reponds, 'w', zipfile.ZIP_DEFLATED)
+
+        doc_list_send = invoice.create_list_of_sent_en()
+        archive.write(doc_list_send.name, u'推薦書 - ENG.docx')
+        os.unlink(doc_list_send.name)
+
+        doc_list_send_jp = invoice.create_list_of_sent_jp()
+        archive.write(doc_list_send_jp.name, u'推薦書.docx')
+        os.unlink(doc_list_send_jp.name)
+        archive.close()
+        reponds.flush()
+        ret_zip = reponds.getvalue()
+        reponds.close()
+
+        return request.make_response(ret_zip,
+                                     [('Content-Type', 'application/zip'),
+                                      ('Content-Disposition', content_disposition(filename))])
+
+
+    @http.route('/web/binary/download_extern_document', type='http', auth="public")
+    def download_extern_document(self, model, id, filename=None, **kwargs):
+        invoice = request.env[model].search([('id', '=', id)])
+
+        reponds = BytesIO()
+        archive = zipfile.ZipFile(reponds, 'w', zipfile.ZIP_DEFLATED)
+
+        checklist = request.env['intern.document'].search([('name', '=', "Checklist")], limit=1)
+        if checklist:
+            stream = BytesIO(checklist[0].attachment.decode("base64"))
+            tpl = DocxTemplate(stream)
+            tempFile = NamedTemporaryFile(delete=False)
+            tpl.render({})
+            tpl.save(tempFile)
+            tempFile.flush()
+            tempFile.close()
+            archive.write(tempFile.name, 'Checklist.docx')
+            os.unlink(tempFile.name)
+
+        doc1_13_1 = invoice.create_1_13_1()
+
+        archive.write(doc1_13_1.name, u'1-13号 HOANG HUNG JAPAN 訓連センター.docx')
+        os.unlink(doc1_13_1.name)
+
+        doc1_13_2 = invoice.create_1_13_2()
+        archive.write(doc1_13_2.name, u'1-13号HOANG HUNG 会社.docx')
+        os.unlink(doc1_13_2.name)
+
+        master = invoice.create_master()
+        archive.write(master.name, 'Master.docx')
+        os.unlink(master.name)
+
+        doc1_29 = invoice.create_doc_1_29()
+        archive.write(doc1_29.name, '1_29.docx')
+        os.unlink(doc1_29.name)
+
+        doc_list_send = invoice.create_list_of_sent_en()
+        archive.write(doc_list_send.name, u'推薦書 - ENG.docx')
+        os.unlink(doc_list_send.name)
+
+        doc_list_send_jp = invoice.create_list_of_sent_jp()
+        archive.write(doc_list_send_jp.name, u'推薦書.docx')
+        os.unlink(doc_list_send_jp.name)
+
+        doc1_20 = invoice.create_doc_1_20()
+        archive.write(doc1_20.name, '1_20.docx')
+        os.unlink(doc1_20.name)
+
+        for i, intern in enumerate(invoice.interns_pass):
+            doc1_3 = invoice.create_doc_1_3(intern, i)
+            archive.write(doc1_3.name, '1_3_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i+1)))
+            os.unlink(doc1_3.name)
+
+            doc1_10 = invoice.create_doc_1_10(intern)
+            archive.write(doc1_10.name, '1_10_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i+1)))
+            os.unlink(doc1_10.name)
+
+
+
+            doc1_21 = invoice.create_doc_1_21(intern)
+            archive.write(doc1_21.name, '1_21_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i + 1)))
+            os.unlink(doc1_21.name)
+
+            doc1_28 = invoice.create_doc_1_28(intern)
+            archive.write(doc1_28.name, '1_28_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i + 1)))
+            os.unlink(doc1_28.name)
+
+            hdtn = invoice.create_hdtn(intern)
+            archive.write(hdtn.name, 'hdtn_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i + 1)))
+            os.unlink(hdtn.name)
+
+            hdtv = invoice.create_hdtv(intern)
+            archive.write(hdtv.name, 'hdtv_%s_%d.docx' % (intern_utils.name_with_underscore(intern.name),(i + 1)))
+            os.unlink(hdtv.name)
+
+        archive.close()
+        reponds.flush()
+        ret_zip = reponds.getvalue()
+        reponds.close()
+
+        return request.make_response(ret_zip,
+                                     [('Content-Type', 'application/zip'),
+                                      ('Content-Disposition', content_disposition(filename))])

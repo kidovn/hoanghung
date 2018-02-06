@@ -1,8 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_intern_internks_manager,intern_internks manager,model_intern_internks,group_manager,1,1,1,1
-access_intern_internks_user,intern_internks user,model_intern_internks,group_user,1,1,1,0
+access_intern_internks_user,intern_internks user,model_intern_internks,group_user,1,1,1,1
 access_intern_interndn_manager,intern_interndn manager,model_intern_interndn,group_manager,1,1,1,1
-access_intern_interndn_user,intern_interndn user,model_intern_interndn,group_user,1,1,1,0
+access_intern_interndn_user,intern_interndn user,model_intern_interndn,group_user,1,1,1,1
+access_intern_internhs_user,intern_internhs manager,model_intern_internhs,group_manager,1,1,1,1
 access_intern_intern_manager,intern_intern manager,model_intern_intern,group_manager,1,1,1,1
 access_intern_intern_user,intern_intern user,model_intern_intern,group_user,1,1,1,0
 access_res_user_manager,res user manager,base.model_res_users,group_manager,1,1,1,1
@@ -18,3 +19,10 @@ access_intern_education_user,intern_education user,model_intern_education,group_
 access_promotion,intern_promotion manager,model_intern_promotion,group_user,1,1,1,1
 access_department_manager,department manager,model_department,group_user,1,1,1,1
 access_employee_manager,employee manager,model_hh_employee,group_user,1,1,1,1
+access_dispatchcom2_manager,dispatchcom2 manager,model_dispatchcom2,group_user,1,1,1,1
+access_dispatchcom1_manager,dispatchcom1 manager,model_dispatchcom1,group_user,1,1,1,1
+access_trainingcenter_manager,trainingcenter manager,model_trainingcenter,group_user,1,1,1,1
+access_intern_enterprise_manager,intern enterprise manager,model_intern_enterprise,group_user,1,1,1,1
+access_intern_guild_manager,intern guild manager,model_intern_guild,group_user,1,1,1,1
+access_intern_externdoc_manager,intern externdoc manager,model_intern_externdoc,group_user,1,1,1,1
+access_relation_manager,intern relation manager,model_relation,group_user,1,1,1,1

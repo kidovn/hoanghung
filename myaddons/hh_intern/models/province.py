@@ -9,6 +9,8 @@ class Province(models.Model):
     distance_to_hn = fields.Integer("Khoảng cách tới Hà Nội")
 
     def getDistanceString(self):
+        if self.name is 'Hà Nội':
+            return u'ハノイ中心から約30分'
         return u"ハノイ中心から約%d時間" % self.distance_to_hn
 
     def getNameWithoutSign(self):

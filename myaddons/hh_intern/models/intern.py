@@ -9,26 +9,51 @@ import province
 _logger = logging.getLogger(__name__)
 
 
+class Promotion(models.Model):
+    _name = 'intern.promotion'
+    _description = u'Tiến cử'
+    intern = fields.Many2one("intern.internks",required=True,ondelete='cascade')
+    day = fields.Char("Ngày", size=2)
+    month = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
+
+    year = fields.Char("Năm", size=4, default=lambda self: self._get_current_year())
+
+    date = fields.Char("Ngày", store=False, compute='_date')
+    @api.one
+    @api.depends('day', 'month', 'year')
+    def _date(self):
+        if self.day and self.month and self.year:
+            self.date = u"%s Tháng %s Năm %s" % (self.day, self.month, self.year)
+        else:
+            self.date = ""
+
+    invoice = fields.Char("Đơn hàng", required=True)
+
+    @api.model
+    def _get_current_year(self):
+        return str(datetime.now().year)
 
 
 class InternEducation(models.Model):
     _name = 'intern.education'
     info = fields.Many2one("intern.intern", required=True,ondelete='cascade')
 
-    month_start = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                              (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_start = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
     year_start = fields.Char("Năm bắt đầu", size=4)
 
-    month_end = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                    (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                    (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_end = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
     year_end = fields.Char("Năm kết thúc", size=4)
 
     school = fields.Char("Tên trường",required=True)
     school_type = fields.Many2one("school")
-    specialization = fields.Text("Chuyên ngành")
+    specialization = fields.Char("Chuyên ngành")
     certificate = fields.Many2one("school","Bằng cấp")
     graduated = fields.Boolean("Đã tốt nghiệp", default= True)
     show_specialization = fields.Boolean(store=False)
@@ -59,20 +84,19 @@ class InternEducation(models.Model):
 class InternEmployment(models.Model):
     _name = 'intern.employment'
     info = fields.Many2one("intern.intern",required=True,ondelete='cascade')
+    month_start = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
-    month_start = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                    (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                    (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    year_start = fields.Char("Năm bắt đầu", size=4,required=True)
 
-    year_start = fields.Char("Năm bắt đầu", size=4)
+    month_end = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
+    year_end = fields.Char("Năm kết thúc", size=4,required=True)
 
-    month_end = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                  (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                  (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
-    year_end = fields.Char("Năm kết thúc", size=4)
-
-    company = fields.Text("Tên công ty",required=True)
-    description = fields.Text("Lý lịch làm việc")
+    company = fields.Char("Tên công ty",required=True)
+    description = fields.Char("Lý lịch làm việc")
 
 class InternFamily(models.Model):
     _name = 'intern.family'
@@ -115,12 +139,38 @@ class InternKS(models.Model):
 
     serial = fields.Char("Mã số")
     long_term = fields.Boolean("Đăng ký dài hạn")
+
+    identity = fields.Char("CMND")
+    identity_2 = fields.Char("Thẻ căn cước")
+
+
+
+    day_identity = fields.Char("Ngày", size=2)
+    month_identity = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
+
+    year_identity = fields.Char("Năm", size=4)
+
+    date_identity = fields.Char("Ngày cấp", store=False, compute='_date_of_identity')
+
+    @api.one
+    @api.depends('day_identity', 'month_identity', 'year_identity')
+    def _date_of_identity(self):
+        if self.day_identity and self.month_identity and self.year_identity:
+            self.date_identity = u"%s Tháng %s Năm %s" % (self.day_identity, self.month_identity, self.year_identity)
+        else:
+            self.date_identity = ""
+
+    place_cmnd = fields.Many2one("province",string="Nơi cấp")
+
     name = fields.Char("Tên tiếng Việt có dấu", required=True)
+
     gender = fields.Selection([('nam', 'Nam'), ('nu', 'Nữ')])
     day = fields.Char("Ngày", size=2)
-    month = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                              (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
     year = fields.Char("Năm", size=4)
 
@@ -129,20 +179,22 @@ class InternKS(models.Model):
     name_without_signal = fields.Char("Tên tiếng Việt ko dấu")
     name_in_japan = fields.Char("Tên tiếng Nhật")
 
-    address = fields.Text('Địa chỉ liên hệ')
+    address = fields.Char('Địa chỉ liên hệ')
     province = fields.Many2one("province", string="Tỉnh/TP")
     avatar = fields.Binary("Ảnh")
 
     marital_status = fields.Many2one('marital', string="Tình trạng hôn nhân")
     height = fields.Integer("Chiều cao (cm)")
     weight = fields.Integer("Cân nặng (kg)")
-    vision_left = fields.Char("Mắt trái")
-    vision_right = fields.Char("Mắt phải")
+    vision_left = fields.Integer("Mắt trái")
+    vision_right = fields.Integer("Mắt phải")
 
     blood_group = fields.Selection([('A', 'A'), ('B', 'B'), ('AB', 'AB'), ('O', 'O')], 'Nhóm máu')
+
+    note_health = fields.Char("Ghi chú sức khỏe")
+
     check_kureperin = fields.Selection([('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')],
                                        "Kiểm tra kureperin")
-
 
     certification = fields.Many2one('intern.certification', "Bằng cấp")
 
@@ -177,13 +229,14 @@ class InternKS(models.Model):
                 raise ValidationError("Sai ngày sinh")
 
     phone_number = fields.Char("Số điện thoại")
-
+    phone_number_relative = fields.Char("Số điện thoại người thân")
+    relative_note = fields.Many2one('relation',string='Quan hệ')
 
     #ngay nop ho so
     day_sent_doc = fields.Char("Ngày", size=2)
-    month_sent_doc = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_sent_doc = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
 
     year_sent_doc = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
@@ -253,27 +306,34 @@ class InternKS(models.Model):
 
     total_correct = fields.Integer(store=False,compute='_cal_total_corect')
     total_question = fields.Integer("Tổng số câu", default=133)
-    iq_percentage = fields.Char("Trung bình cộng",compute='_cal_total_percentage')
+    iq_percentage = fields.Char("Trung bình cộng"
+                                ,compute='_cal_total_percentage'
+                                )
 
     @api.multi
     def _cal_total_corect(self):
-        self.total_correct = self.logic_correct + self.add_correct + self.calculation_correct + self.notice_correct
+        for rec in self:
+            rec.total_correct = rec.logic_correct + rec.add_correct + rec.calculation_correct + rec.notice_correct
         # _logger.info("Total_percentage " + str(self.total_correct) + " " + str(self.total_question))
         # if self.total_question is not 0:
         #     self.total_percentage = "%d" % (percentage(self.total_correct, self.total_question))
         #     _logger.info("PEE" + self.total_percentage)
 
+    @api.multi
     def _cal_total_percentage(self):
-        if self.total_question is not 0:
-            self.iq_percentage = "%d" % (percentage(self.total_correct, self.total_question))
+        for rec in self:
+            if rec.total_question is not 0:
+                rec.iq_percentage = "%d" % (percentage(rec.total_correct, rec.total_question))
 
+    employments_vi = fields.One2many("intern.employment", "info", string="Kinh nghiệm làm việc")
 
-    employment_experience = fields.Char(u"Kinh nghiệm làm việc")
     average = fields.Float(u"Trung bình cộng", store=False)
     incremental = fields.Integer(u"Cộng dồn")
 
-    room_recruitment = fields.Many2one("department",string=u"Phòng tuyển dụng")
-    recruitment_employee = fields.Many2one('hh.employee',string=u"Cán bộ tuyển dụng")
+    # room_recruitment = fields.Many2one("department",string=u"Phòng tuyển dụng")
+    # recruitment_employee = fields.Many2one('hh.employee',string=u"Cán bộ tuyển dụng")
+    room_recruitment = fields.Char(string=u"Phòng tuyển dụng")
+    recruitment_employee = fields.Char(string=u"Cán bộ tuyển dụng")
 
     pass_recruitment = fields.Selection([('0','Thanh lý'),('1','Trúng tuyển')],string="Trúng tuyển")
     # pass_recruitment = fields.Selection([(0,'Thanh lý'),(1,'Trúng tuyển')],string="Trúng tuyển")
@@ -286,21 +346,21 @@ class InternKS(models.Model):
 
     #pass
     day_pass = fields.Char("Ngày", size=2)
-    month_pass = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
-
+    month_pass = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
     year_pass = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
 
     date_pass = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_pass',)
 
-    @api.one
+    @api.multi
     @api.depends('day_pass', 'month_pass', 'year_pass')
     def _date_pass(self):
-        if self.day_pass and self.month_pass and self.year_pass:
-            self.date_pass = u"%s Tháng %s Năm %s" % (self.day_pass, self.month_pass, self.year_pass)
-        else:
-            self.date_pass =""
+        for rec in self:
+            if rec.day_pass and rec.month_pass and rec.year_pass:
+                rec.date_pass = u"%s Tháng %s Năm %s" % (rec.day_pass, rec.month_pass, rec.year_pass)
+            else:
+                rec.date_pass =""
 
 
     fee_departure = fields.Char(u"Phí xuất cảnh")
@@ -310,92 +370,73 @@ class InternKS(models.Model):
 
     #ngay nhap hoc
     day_join_school = fields.Char("Ngày", size=2)
-    month_join_school = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                              (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_join_school = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
     year_join_school = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
 
     date_join_school = fields.Char("Ngày nhập học", store=False, compute='_date_join_school')
 
-    @api.one
+    @api.multi
     @api.depends('day_join_school', 'month_join_school', 'year_join_school')
     def _date_join_school(self):
-        if self.day_join_school and self.month_join_school and self.year_join_school:
-            self.date_join_school = u"%s Tháng %s Năm %s" % (self.day_join_school, self.month_join_school, self.year_join_school)
-        else:
-            self.date_join_school = ""
+        for rec in self:
+            if rec.day_join_school and rec.month_join_school and rec.year_join_school:
+                rec.date_join_school = u"%s Tháng %s Năm %s" % (rec.day_join_school, rec.month_join_school, rec.year_join_school)
+            else:
+                rec.date_join_school = ""
 
     #du kien xuat canh
     day_leave = fields.Char("Ngày", size=2)
-    month_leave = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                          (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                          (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_leave = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
     year_leave = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
 
     date_leave = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_leave')
 
-    @api.one
+    @api.multi
     @api.depends('day_leave', 'month_leave', 'year_leave')
     def _date_leave(self):
-        if self.day_leave and self.month_leave and self.year_leave:
-            self.date_leave = u"%s Tháng %s Năm %s" % (self.day_leave, self.month_leave, self.year_leave)
-        else:
-            self.date_leave = ""
+        for rec in self:
+            if rec.day_leave and rec.month_leave and rec.year_leave:
+                rec.date_leave = u"%s Tháng %s Năm %s" % (rec.day_leave, rec.month_leave, rec.year_leave)
+            else:
+                rec.date_leave = ""
 
-    pttt_employee = fields.Many2one('hh.employee',string=u"Cán bộ phát triển thị trường", domain=[('room_type','=',1)])
+    # pttt_employee = fields.Many2one('hh.employee',string=u"Cán bộ phát triển thị trường", domain=[('room_type','=',1)])
+    pttt_employee = fields.Char(string=u"Cán bộ PTTT")
+    pttt_room = fields.Char(string=u"Phòng PTTT")
 
     legal_name = fields.Selection([('chauhung','Châu Hưng'),('hoanghung','Hoàng Hưng'),('tracodi','Tracodi')],'Pháp nhân')
 
     # thanh ly
     day_liquidation = fields.Char("Ngày", size=2)
-    month_liquidation = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                    (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                    (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    month_liquidation = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+                                        ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+                                        ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
 
     year_liquidation = fields.Char("Năm", size=4,default=lambda self: self._get_current_year())
 
-    liquidation_reason = fields.Char("Lý do thanh lý")
+
+    liquidation_reason = fields.Selection([('0','Do thực tập sinh'),('1','Do Công ty'),('2','Do khách hàng')],string=u"Lý do thanh lý")
+    liquidation_note = fields.Char("Nội dung")
 
     date_liquidation = fields.Char("Ngày gửi hồ sơ", store=False, compute='_date_liquidation')
 
-    @api.one
+    @api.multi
     @api.depends('day_liquidation', 'month_liquidation', 'year_liquidation')
     def _date_liquidation(self):
-        if self.day_liquidation and self.month_liquidation and self.year_liquidation:
-            self.date_liquidation = u"%s Tháng %s Năm %s" % (self.day_liquidation, self.month_liquidation, self.year_liquidation)
-        else:
-            self.date_liquidation =""
+        for rec in self:
+            if rec.day_liquidation and rec.month_liquidation and rec.year_liquidation:
+                rec.date_liquidation = u"%s Tháng %s Năm %s" % (rec.day_liquidation, rec.month_liquidation, rec.year_liquidation)
+            else:
+                rec.date_liquidation =""
 
     user_access = fields.Many2many("res.users",default=lambda self: self.env.user, string="User có quyền xem")
 
-
-class Promotion(models.Model):
-    _name = 'intern.promotion'
-    _description = u'Tiến cử'
-    intern = fields.Many2one("intern.intern",required=True,ondelete='cascade')
-    day = fields.Char("Ngày", size=2)
-    month = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                                       (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                                       (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
-
-    year = fields.Char("Năm", size=4, default=lambda self: self._get_current_year())
-
-    date = fields.Char("Ngày", store=False, compute='_date')
-    @api.one
-    @api.depends('day', 'month', 'year')
-    def _date(self):
-        if self.day and self.month and self.year:
-            self.date = u"%s Tháng %s Năm %s" % (self.day, self.month, self.year)
-        else:
-            self.date=""
-
-    invoice = fields.Char("Đơn hàng", required=True)
-
-    @api.model
-    def _get_current_year(self):
-        return str(datetime.now().year)
 
 
 class InternDN(models.Model):
@@ -414,24 +455,24 @@ class InternDN(models.Model):
     surgery = fields.Boolean("Phẫu thuật hay xăm hình")
     surgery_content = fields.Char("Nội dung")
     drink_alcohol = fields.Boolean("Uống rượu bia")
-    specialized = fields.Text("Chuyên ngành")
-    favourite = fields.Text("Sở thích")
-    strong = fields.Text("Điểm mạnh")
-    weak = fields.Text("Điểm yếu")
+    specialized = fields.Char("Chuyên ngành")
+    favourite = fields.Char("Sở thích")
+    strong = fields.Char("Điểm mạnh")
+    weak = fields.Char("Điểm yếu")
     teammate = fields.Boolean("Có kinh nghiệm sống tập thể")
     cooking = fields.Boolean("Biết nấu ăn")
-    diseases = fields.Boolean("Lý lịch bệnh tật")
+    diseases = fields.Boolean("Tiền sử bệnh lý")
 
 
 
 
     family_income = fields.Char("Tổng thu nhập gia đình")
-    motivation = fields.Text("Động lực")
+    motivation = fields.Char("Động lực")
     income_after_three_year = fields.Char("Sau 3 năm bạn muốn kiếm được bao nhiêu ?")
-    job_after_return = fields.Text("Sau khi về nước bạn muốn làm công việc gì ?")
-    prefer_object = fields.Text("Nếu nhận mức lương gấp 3 hiện tại bạn muốn mua gì ?")
-    memory = fields.Text("Kỷ niệm đáng nhớ nhất của bạn")
-    valuable = fields.Text("Điều quý giá")
+    job_after_return = fields.Char("Sau khi về nước bạn muốn làm công việc gì ?")
+    prefer_object = fields.Char("Nếu nhận mức lương gấp 3 hiện tại bạn muốn mua gì ?")
+    memory = fields.Char("Kỷ niệm đáng nhớ nhất của bạn")
+    valuable = fields.Char("Điều quý giá")
 
     education_status = fields.Selection([('1', '年数過剰入学 '), ('2', '年数不足入学'), ('3', '留年')], "Tình trạng học tập")
     education_content = fields.Char("Nội dung")
@@ -445,31 +486,12 @@ class InternDN(models.Model):
     family_member_in_jp = fields.Char("Người thân ở Nhật")
     family_accept = fields.Boolean("Gia đình có đồng ý cho đi Nhật không?", default=True)
 
-    show_specialized = fields.Boolean(store=False,default=False)
 
 
 
     # info = fields.Many2one('intern.info',"Sơ yếu lý lịch")
 
-    @api.model
-    def create(self, vals):
-        record = super(InternDN, self).create(vals)
-        try:
-            splitName= vals['name'].split()
-            tempSplitName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(vals['name'])).split()
-            tempSplitJp = vals['name_in_japan'].split(u'・')
-            for i, s in enumerate(tempSplitName):
-                s = s.strip()
-                jps = self.env['intern.translator'].search([('vi_word', '=', s.upper())],limit=1)
-                if not jps:
-                    _logger.info("splitName[i] " + splitName[i] + "  " + tempSplitJp[i])
-                    self.env['intern.translator'].create({
-                        'vi_word': s.upper(), 'jp_word': tempSplitJp[i]
-                    })
-        except:
-            print('Loi roi')
 
-        return record
 
     # @api.model
     # def get_creator(self):
@@ -495,13 +517,16 @@ class InternDN(models.Model):
     #             member.ages = 0
     #     return super(Intern, self).load_views(views, options)
 
-class InternHS(models.Model):
-    _name = 'intern.internhs'
+class InvoiceStt(models.Model):
+    _name = 'intern.invoicestt'
+    invoiceid = fields.Integer('Invoice_id')
+    status = fields.Selection([(1,'Tiến cử'),(2,'Thi tuyển'),(3,'Trúng tuyển'),(4,'Xin TCLT'),(5,'Xin Visa'),(6,'Xuất cảnh')],'Trạng thái')
+    canceled = fields.Boolean('Bị hủy',default=False)
 
 
 class Intern(models.Model):
     _name = 'intern.intern'
-    _inherits = {'intern.interndn': 'interndn_id','intern.internks':'internks_id', 'intern.internhs':'internhs_id'}
+    _inherits = {'intern.interndn': 'interndn_id', 'intern.internks': 'internks_id', 'intern.internhs': 'internhs_id'}
 
     _description = 'Thực tập sinh'
 
@@ -514,6 +539,24 @@ class Intern(models.Model):
     internhs_id = fields.Many2one('intern.internhs', required=True, ondelete='restrict', auto_join=True,
                                   string='Related Intern', help='Intern-related data of the user')
 
+    # test = ["aa","bb"]
+    # invoice_list_status = fields.Many2many('intern.invoicestt','lưu trạng thái tts ở mỗi đơn hàng')
+    notice_name = fields.Char('Chú ý',store=False,compute='_calculate_name')
+
+    @api.depends('name')
+    def _calculate_name(self):
+        self.notice_name = ""
+        if self.name:
+            tmpName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name))
+            words = tmpName.split()
+            for i, word in enumerate(words):
+                jps = self.env['intern.translator'].search([('vi_word', '=', word.upper())], limit=1)
+                if not jps:
+                    self.notice_name = "Một số từ trong tên TTS không có trong từ điển, vui lòng nhập tên tiếng Nhật của TTS"
+                    return
+
+
+
     @api.onchange('name')  # if these fields are changed, call method
     def name_change(self):
         if self.name:
@@ -521,6 +564,7 @@ class Intern(models.Model):
             tmp = self.convertToJP(intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name)))
             if tmp is not None:
                 self.name_in_japan = tmp
+
 
     def convertToJP(self,name):
         words = name.split()
@@ -532,49 +576,54 @@ class Intern(models.Model):
                     final = final+u"・"
                 final = final+jps[0].jp_word
             else:
-                return None
+                return ""
         return final
 
     @api.multi
     @api.onchange('logic_correct','logic_done')
     @api.depends('logic_correct', 'logic_done')
     def _cal_logic_percentage(self):
-        _logger.info("VAO_cal_logic_percentage")
-        if self.logic_done is not 0:
-            self.logic_percentage = "%d" % (percentage(self.logic_correct, self.logic_done))
+        for rec in self:
+            if rec.logic_done is not 0:
+                rec.logic_percentage = "%d" % (percentage(rec.logic_correct, rec.logic_done))
 
     @api.multi
     @api.onchange('add_correct', 'add_done')
     @api.depends('add_correct', 'add_done')
     def _cal_add_percentage(self):
-        if self.add_done is not 0:
-            self.add_percentage = "%d" % (percentage(self.add_correct, self.add_done))
+        for rec in self:
+            if rec.add_done is not 0:
+                rec.add_percentage = "%d" % (percentage(rec.add_correct, rec.add_done))
 
     @api.multi
     @api.onchange('calculation_correct', 'calculation_done')
     @api.depends('calculation_correct', 'calculation_done')
     def _cal_calculation_percentage(self):
-        if self.calculation_done is not 0:
-            self.calculation_percentage = "%d" % (percentage(self.calculation_correct, self.calculation_done))
+        for rec in self:
+            if rec.calculation_done is not 0:
+                rec.calculation_percentage = "%d" % (percentage(rec.calculation_correct, rec.calculation_done))
 
     @api.multi
     @api.onchange('notice_correct', 'notice_done')
     @api.depends('notice_correct', 'notice_done')
     def _cal_notice_percentage(self):
-        if self.notice_done is not 0:
-            self.notice_percentage = "%d" % (percentage(self.notice_correct, self.notice_done))
+        for rec in self:
+            if rec.notice_done is not 0:
+                rec.notice_percentage = "%d" % (percentage(rec.notice_correct, rec.notice_done))
 
     @api.multi
     @api.onchange('logic_correct', 'add_correct','calculation_correct','notice_correct','total_question')
     @api.depends('logic_correct', 'add_correct', 'calculation_correct', 'notice_correct', 'total_question')
     def _cal_total_percentage(self):
-        self.total_correct = self.logic_correct + self.add_correct + self.calculation_correct + self.notice_correct
-        if self.total_question is not 0:
-            self.total_percentage = "%d" % (percentage(self.total_correct, self.total_question))
+        for rec in self:
+            rec.total_correct = rec.logic_correct + rec.add_correct + rec.calculation_correct + rec.notice_correct
+            if rec.total_question is not 0:
+                rec.total_percentage = "%d" % (percentage(rec.total_correct, rec.total_question))
 
 
     @api.onchange('room_recruitment')
     def _set_domain_for_recruitment_employee(self):
+
         ids = []
         if self.room_recruitment:
             if self.room_recruitment.members:
@@ -585,20 +634,122 @@ class Intern(models.Model):
 
         return {'domain': {'recruitment_employee': [('id', 'in', ids)]}}
 
+    show_specialized = fields.Boolean(store=False, default=False, compute='certification_change')
+
     @api.multi
+    @api.depends('certification')
     @api.onchange('certification')  # if these fields are changed, call method
     def certification_change(self):
-        if self.certification:
-            if self.certification.id == 1:
-                self.specialized = u'無し'
-                self.show_specialized = False
+        for rec in self:
+            if rec.certification:
+                if rec.certification.id == 1:
+                    rec.specialized = u'無し'
+                    rec.show_specialized = False
 
-            elif self.certification.id == 2:
-                self.specialized = u'無し'
-                self.show_specialized = False
+                elif rec.certification.id == 2:
+                    rec.specialized = u'無し'
+                    rec.show_specialized = False
+                else:
+                    rec.specialized = ""
+                    rec.show_specialized = True
             else:
-                self.specialized = ""
-                self.show_specialized = True
-        else:
-            self.show_specialized = False
+                rec.show_specialized = False
 
+
+
+    @api.model
+    def create(self, vals):
+        _logger.info("CREATE")
+
+        if 'identity' in vals and vals['identity']:
+            vals['identity'] = vals['identity'].strip()
+            tmp = self.env['intern.intern'].search([('identity', '=', vals['identity'])], limit=1)
+            if tmp and len(tmp) == 1:
+                raise ValidationError('Đã tồn tại TTS có số CMND này')
+
+        if 'identity_2' in vals and vals['identity_2']:
+            vals['identity_2'] = vals['identity_2'].strip()
+            tmp = self.env['intern.intern'].search([('identity_2', '=', vals['identity_2'])], limit=1)
+            if tmp and len(tmp) == 1:
+                raise ValidationError('Đã tồn tại TTS có số thẻ căn cước này')
+
+        record = super(Intern, self).create(vals)
+        try:
+            splitName = vals['name'].split()
+            tempSplitName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(vals['name'])).split()
+            if u'・' in vals['name_in_japan']:
+                tempSplitJp = vals['name_in_japan'].split(u'・')
+            elif u' ' in vals['name_in_japan']:
+                tempSplitJp = vals['name_in_japan'].split(u' ')
+            else:
+                tempSplitJp =[]
+
+            if len(tempSplitName) == len(tempSplitJp):
+                for i, s in enumerate(tempSplitName):
+                    s = s.strip()
+                    jps = self.env['intern.translator'].search([('vi_word', '=', s.upper())], limit=1)
+                    if not jps:
+                        # _logger.info("splitName[i] " + splitName[i] + "  " + tempSplitJp[i])
+                        self.env['intern.translator'].create({
+                            'vi_word': s.upper(), 'jp_word': tempSplitJp[i]
+                        })
+        except:
+            print('Loi roi')
+
+        return record
+
+    @api.constrains('name_in_japan')
+    def validate_name_in_japan(self):
+        _logger.info("validate_name_in_japan")
+
+        if self.name_in_japan and self.name:
+            tempSplitName = self.name.split()
+            tempSplitJp = self.name_in_japan.split(u'・')
+            if len(tempSplitName) == len(tempSplitJp):
+                return True
+            else:
+                if u'・' not in self.name_in_japan:
+                    raise ValidationError(u'Tên tiếng Nhật của TTS chưa đúng. Lưu ý các chữ cách nhau bằng dấu ・')
+                else:
+                    raise ValidationError('Tên tiếng Nhật của TTS chưa đúng')
+        return True
+
+    # @api.constrains('identity')
+    # def unique_identity(self):
+    #     _logger.info("vao ")
+    #
+
+    @api.one
+    def write(self, vals):
+        _logger.info("WRITE")
+        if 'identity' in vals and vals['identity']:
+            vals['identity'] = vals['identity'].strip()
+            tmp = self.env['intern.intern'].search([('identity', '=', vals['identity']),('id','!=',self.id)], limit=1)
+
+            if tmp and len(tmp) == 1:
+                raise ValidationError('Đã tồn tại TTS có số CMND này')
+        if 'identity_2' in vals and vals['identity_2']:
+            vals['identity_2'] = vals['identity_2'].strip()
+            tmp = self.env['intern.intern'].search([('identity_2', '=', vals['identity_2']),('id','!=',self.id)], limit=1)
+            if tmp and len(tmp) == 1:
+                raise ValidationError('Đã tồn tại TTS có số thẻ căn cước này')
+
+        if vals.get('name_in_japan'):
+            tempSplitName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name)).split()
+            if u'・' in vals['name_in_japan']:
+                tempSplitJp = vals['name_in_japan'].split(u'・')
+            elif u' ' in vals['name_in_japan']:
+                tempSplitJp = vals['name_in_japan'].split(u' ')
+            else:
+                tempSplitJp =[]
+            if len(tempSplitName) == len(tempSplitJp):
+                for i, s in enumerate(tempSplitName):
+                    s = s.strip()
+                    jps = self.env['intern.translator'].search([('vi_word', '=', s.upper())], limit=1)
+                    if not jps:
+                        # _logger.info("splitName[i] " + splitName[i] + "  " + tempSplitJp[i])
+                        self.env['intern.translator'].create({
+                            'vi_word': s.upper(), 'jp_word': tempSplitJp[i]
+                        })
+
+        super(Intern, self).write(vals)

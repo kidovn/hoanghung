@@ -1,0 +1,39 @@
+<odoo>
+    <act_window id="action_invoice_history"
+                name="Lịch sử đơn hàng"
+        res_model="intern.invoice"
+        view_mode="tree,form" />
+
+    <record model="ir.actions.act_window" id="action_invoice_history">
+        <field name="name">Đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_generate')})]"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_generator">
+        <field name="name">Tạo Đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_generate')})]"/>
+    </record>
+
+
+    <!-- Menu item to open To-do Task list -->
+
+
+    <menuitem id="menu_doi_ngoai_root" name="Đối ngoại"/>
+
+
+    <menuitem id="menu_invoice_history" parent="menu_doi_ngoai_root"
+        name="Danh sách đơn hàng" action="action_invoice_history" groups="base.group_user"/>
+
+   <!--<menuitem id="menu_document_generator" parent="menu_doi_ngoai_root"-->
+        <!--name="Tạo đơn hàng" action="action_document_generator" />-->
+
+    <menuitem id="menu_list_intern" parent="menu_doi_ngoai_root"
+        name="Danh sách TTS" action="hh_intern.action_intern_list" groups="base.group_user"/>
+</odoo>

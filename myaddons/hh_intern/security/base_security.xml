@@ -25,6 +25,16 @@
 
 
     <!--<data>-->
+        <!--<record id="create_invoice_access_internhs" model="ir.rule">-->
+          <!--<field name="name">Intern for corresponding managers only</field>-->
+          <!--<field name="model_id" ref="model_intern_internhs"/>-->
+          <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
+            <!--</field>-->
+          <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+        <!--</record>-->
+  <!--</data>-->
+
+    <!--<data>-->
         <!--<record id="create_invoice_access_internks" model="ir.rule">-->
           <!--<field name="name">Intern for corresponding managers only</field>-->
           <!--<field name="model_id" ref="model_intern_internks"/>-->
@@ -45,15 +55,15 @@
   <!--</data>-->
 
 
-  <!--<data>-->
-    <!--<record id="create_invoice_access_intern" model="ir.rule">-->
-      <!--<field name="name">Intern for corresponding managers only</field>-->
-      <!--<field name="model_id" ref="model_intern_intern"/>-->
-      <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
-        <!--</field>-->
-      <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
-    <!--</record>-->
-  <!--</data>-->
+  <data>
+    <record id="create_invoice_access_intern" model="ir.rule">
+      <field name="name">Intern for corresponding managers only</field>
+      <field name="model_id" ref="model_intern_intern"/>
+      <field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]
+        </field>
+      <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+    </record>
+  </data>
 
     <!--<data>-->
         <!--<record id="access_department" model="ir.rule">-->

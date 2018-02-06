@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!--<record model="ir.actions.act_window" id="action_intern_expand">-->
+        <!--<field name="name">A Test Action</field>-->
+        <!--<field name="res_model">intern.intern</field>-->
+        <!--<field name="view_mode">tree,form</field>-->
+        <!--<field name="view_ids" eval="[(5, 0, 0),-->
+            <!--(0, 0, {'view_mode': 'tree', 'view_id': ref('hh_intern.view_tree_intern')}),-->
+            <!--(0, 0, {'view_mode': 'form', 'view_id': ref('view_intern_form_extends')})]"/>-->
+        <!--&lt;!&ndash;<field name="view_id" ref="view_intern_form_extends"/>&ndash;&gt;-->
+         <!--&lt;!&ndash;<field name="form_view_id" ref="view_intern_form_extends"/>&ndash;&gt;-->
+    <!--</record>-->
+
+    <record model="ir.actions.act_window" id="action_invoice_after_exam">
+        <field name="name">Danh sách đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_after_exam')})]"/>
+        <!--<field name="view_id" ref="view_intern_form_extends"/>-->
+         <!--<field name="form_view_id" ref="view_intern_form_extends"/>-->
+    </record>
+
+    <record model="ir.actions.act_window" id="action_intern_expand">
+        <field name="name">A Test Action</field>
+        <field name="res_model">intern.externdoc</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_extern_document_form')})]"/>
+        <!--<field name="view_id" ref="view_intern_form_extends"/>-->
+         <!--<field name="form_view_id" ref="view_intern_form_extends"/>-->
+    </record>
+
+    <menuitem id="menu_hoso_main" name="Hồ sơ"/>
+
+    <menuitem
+        id="menu_list_invoice_after_exam"
+        name="Danh sách đơn hàng"
+        action="action_invoice_after_exam" parent="menu_hoso_main"/>
+</odoo>

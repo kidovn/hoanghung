@@ -1,0 +1,76 @@
+<odoo>
+    <!-- ir.cron -->
+    <record id="hh_cron_view" model="ir.ui.view">
+        <field name="model">hh.cron</field>
+        <field name="arch" type="xml">
+            <form string="Scheduled Actions">
+                <header>
+                    <button name="method_direct_trigger" type="object" string="Gửi ngay bây giờ" class="oe_highlight"/>
+                </header>
+               <sheet>
+                <group col="2">
+                    <field name="name" string="Tên báo cáo"/>
+                    <field name="nextcall"/>
+                </group>
+                <notebook>
+                    <page string="Information">
+                        <group string="Action to Trigger">
+                            <field name="emails"/>
+                            <field name="report" context="{'tree_view_ref':'hh_automation_report.hh_filter_tree'}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+                        </group>
+                        <table class="o_group o_inner_group">
+                            <tbody>
+                                <tr>
+                                    <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
+                                         <label for="interval_number" style="font-weight: bold;margin-right: 0px;"/>
+                                    </td>
+                                    <td colspan="1" width="200px">
+                                        <div class="column">
+                                            <field name="interval_number" style="width: 50px; display: inline-block"/>
+                                            <field name="interval_type" style="width: 130px; display: inline-block"/>
+                                        </div>
+                                    </td>
+                                    <td/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </page>
+                    <page string="Nội dung">
+                        <field name="body_content" widget="html"/>
+                    </page>
+                </notebook>
+               </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hh_cron_view_tree" model="ir.ui.view">
+        <field name="model">hh.cron</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hh_filter_tree" model="ir.ui.view">
+        <field name="model">ir.filters</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Loại báo cáo"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_cron_auto_report" model="ir.actions.act_window">
+        <field name="name">Gửi báo cáo tự động</field>
+        <field name="res_model">hh.cron</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('hh_cron_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hh_cron_view')})]"/>
+    </record>
+
+    <menuitem id="report_automation" name="Gửi báo cáo tự động" parent="hh_hoso.menu_report_root"
+              action="action_cron_auto_report"/>
+</odoo>

@@ -1,0 +1,47 @@
+<odoo>
+
+    <!--<template id="invoice_assets" name="module_name assets" inherit_id="web.assets_backend">-->
+        <!--<xpath expr="." position="inside">-->
+            <!--<script type="text/javascript" src="/hh_intern_report/static/src/js/mylistview.js"/>-->
+        <!--</xpath>-->
+    <!--</template>-->
+
+
+    <record id="view_tree_document" model="ir.ui.view">
+        <field name="name">Danh sách tài liệu</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="name"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_document" model="ir.ui.view">
+        <field name="name">Chi tiết tài liệu</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <form string="Thực tập sinh">
+                <group>
+                    <field name="name" string="Tên văn bản"/>
+                    <field name="note" string="Ghi chú"/>
+                    <field name="attachment" string="Văn bản" filename="file_name"/>
+                    <field name="file_name" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_filter_document" model="ir.ui.view">
+        <field name="name">Lọc document</field>
+        <field name="model">intern.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+
+
+</odoo>

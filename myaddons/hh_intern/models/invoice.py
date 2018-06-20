@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-import logging
+
 from tempfile import TemporaryFile, NamedTemporaryFile
 from io import BytesIO
 from datetime import datetime, date
 from docxtpl import DocxTemplate, InlineImage, CheckedBox, CheckBox, RichText, Tick
+from docx.shared import Mm, Inches
+from docx import Document
 import intern_utils
+from odoo import SUPERUSER_ID
+import os
 from odoo.exceptions import UserError, ValidationError
+import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -14,46 +19,66 @@ class Invoice(models.Model):
     _name = 'intern.invoice'
     _description = u'Đơn hàng'
 
+    _order = 'id desc'
+
     name = fields.Char("Tên đơn hàng", required=True)
     name_of_guild = fields.Char("Tên nghiệp đoàn")
     enterprise = fields.Char("Tên xí nghiệp")
     order = fields.Char()
 
     place_to_work = fields.Char("Địa điểm làm việc")
-    legal_name = fields.Selection([('chauhung', 'Châu Hưng'), ('hoanghung', 'Hoàng Hưng'), ('tracodi', 'Tracodi')],
+    legal_name = fields.Selection([('chauhung', 'Châu Hưng'), ('hoanghung', 'Hoàng Hưng'), ('tracodi', 'Tracodi'),('thuanan','Thuận An')],
                                   'Pháp nhân')
 
-
-    @api.model
-    def _default_document(self):
-        return self.env['intern.document'].search([('name', '=', 'CV')], limit=1)
-
-    document = fields.Many2one('intern.document', 'Văn bản',default=_default_document)
-    interns = fields.Many2many('intern.intern',string=u'Danh sách thi tuyển')
+    room_pttt = fields.Many2one('department',string='Phòng PTTT')
+    employee_pttt = fields.Many2one('hh.employee', string=u"Cán bộ PTTT")
 
     # @api.model
-    # @api.onchange('interns')
-    # @api.depends('interns')
-    # def _get_interns_pass(self):
-    #     _logger.info("_get_interns_pass")
-    #     # listId = []
-    #     # for intern in self.interns:
-    #     #     _logger.info("_get_interns_pass " + str(intern.pass_recruitment))
-    #     #     if intern.pass_recruitment == '1':
-    #     #         _logger.info("PASSS " + str(intern.id))
-    #     #         self.interns_pass = [[4, intern.id]]
-    #     #         listId.append(intern)
-    #     # # self.interns_pass = [[4,listId]]
-    #     # self.interns_pass = listId
-    #     self.interns_pass = self.interns.filtered(lambda l:l.pass_recruitment == '1')
+    # def _default_document(self):
+    #     return self.env['intern.document'].search([('name', '=', 'CV')], limit=1)
 
-    interns_pass = fields.Many2many(relation='invoice_intern_pass_rel',comodel_name='intern.intern')
-    # interns_pass = fields.Many2many(comodel_name='intern.intern',store=False,compute='_get_interns_pass')
+    document = fields.Selection([('Doc1-3', '1-3'), ('Doc1-10', '1-10'), ('Doc1-13', '1-13'),('Doc1-20', '1-20'),
+                                 ('Doc1-21', '1-21'),('Doc1-28', '1-28'),('Doc1-29', '1-29'),('DocCCDT','Chứng chỉ kết thúc Đào tạo'),
+                                 ('HDPC', 'Hợp đồng PC'),('PROLETTER', 'Thư tiến cử')], string='Hồ sơ in',store=True
+                                    )
+    interns = fields.Many2many('intern.intern',string=u'Danh sách thi tuyển')
+    interns_pass = fields.Many2many(relation='invoice_intern_pass_rel', comodel_name='intern.intern',
+                                    string=u'DS Trúng tuyển')
+
+    interns_clone = fields.One2many('intern.internclone','invoice_id',string='Thực tập sinh')
+
+    interns_promoted = fields.One2many('intern.internclone', 'invoice_id')
+    interns_confirm_exam = fields.One2many('intern.internclone', 'invoice_id')
+    interns_escape_exam = fields.One2many('intern.internclone', 'invoice_id')
+    interns_pass_new = fields.One2many('intern.internclone', 'invoice_id')
+    interns_preparatory = fields.One2many('intern.internclone', 'invoice_id')
+    interns_cancel_pass = fields.One2many('intern.internclone', 'invoice_id')
+    interns_departure = fields.One2many('intern.internclone', 'invoice_id')
+
+    # # interns_pre = fields.Many2many(relation='invoice_intern_pre_rel', comodel_name='intern.internclone',string=u'Tiềm năng')
+    #
+    # interns_exam = fields.One2many('intern.internclone','invoice_id',
+    #                                 string=u'Danh sách thi tuyển')
+    # # interns_exam = fields.Many2many(relation='invoice_intern_exam_rel',comodel_name='intern.internclone', string=u'Danh sách thi tuyển')
+    #
+
+    #
+    # interns_preparatory = fields.Many2many(relation='invoice_intern_preparatory_rel', comodel_name='intern.internclone',string=u'Dự bị')
+    #
+    # interns_cancel_pass = fields.Many2many(relation='invoice_intern_cancel_pass_rel', comodel_name='intern.internclone',
+    #                                        string=u'Huỷ thi')
+    #
+    #
+    # interns_promotion = fields.Many2many(relation='invoice_intern_promo_rel',comodel_name='intern.internclone',string=u'Tiến cử')
+    #
+    # interns_escape_exam = fields.Many2many(relation='invoice_intern_escape_exam_rel',comodel_name='intern.internclone',string=u'Rút bỏ chốt thi tuyển')
+    #
 
 
 
 
-                               # , domain=lambda self:self._getCurrentUser)
+
+    # , domain=lambda self:self._getCurrentUser)
 
     # @api.model
     # def create(self, vals):
@@ -82,33 +107,33 @@ class Invoice(models.Model):
     #         res['arch'] = etree.tostring(doc)
     #     return res
 
-    @api.multi
-    def read(self, fields= None, load='_classic_read'):
-        res = super(Invoice,self).read(fields=fields,load=load)
-        # if res:
-        #     for t in res:
-        #         _logger.info("TT" +str(t))
-        if res:
-            if len(res) == 1:
-                if 'order' in res[0] and 'interns' in res[0] and res[0]['order'] and res[0]['interns']:
-                    # _logger.info("AAAA %s" %(res[0]['order']))
-                    ids = []
-                    for intern in self.interns:
-                        ids.append(intern.id)
-
-                    try:
-                        list = self.env['intern.intern'].search([('id','in',ids)],order="%s"%(res[0]['order']))
-                        ids_new = []
-                        for i in list:
-                            ids_new.append(i.id)
-                        res[0]['interns'] = ids_new
-                    except:
-                        _logger.info('order %s'%(res[0]['order']))
-        return res
+    # @api.multi
+    # def read(self, fields= None, load='_classic_read'):
+    #     res = super(Invoice,self).read(fields=fields,load=load)
+    #     # if res:
+    #     #     for t in res:
+    #     #         _logger.info("TT" +str(t))
+    #     if res:
+    #         if len(res) == 1:
+    #             if 'order' in res[0] and 'interns' in res[0] and res[0]['order'] and res[0]['interns']:
+    #                 # _logger.info("AAAA %s" %(res[0]['order']))
+    #                 ids = []
+    #                 for intern in self.interns:
+    #                     ids.append(intern.id)
+    #
+    #                 try:
+    #                     list = self.env['intern.intern'].search([('id','in',ids)],order="%s"%(res[0]['order']))
+    #                     ids_new = []
+    #                     for i in list:
+    #                         ids_new.append(i.id)
+    #                     res[0]['interns'] = ids_new
+    #                 except:
+    #                     _logger.info('order %s'%(res[0]['order']))
+    #     return res
 
     @api.multi
     def create_proletter_doc(self):
-        if self.interns_pass is None or len(self.interns_pass) is 0:
+        if self.interns_pass_doc is None or len(self.interns_pass_doc) is 0:
             raise ValidationError("Không có thực tập sinh nào trong danh sách trúng tuyển")
 
         error2 = ""
@@ -146,124 +171,198 @@ class Invoice(models.Model):
 
         return {
             'type': 'ir.actions.act_url',
-            'url': '/web/binary/download_proletter_document?model=intern.invoice&id=%s&filename=ThuTienCu.zip' % (
-                self.id),
+            'url': '/web/binary/download_proletter_document?model=intern.invoice&id=%s&filename=%s_%s_ThuTienCu.zip' % (
+                self.id,self.guild.name_acronym,self.enterprise_doc.name_romaji),
             'target': 'self', }
 
 
     @api.multi
     def create_extern_doc(self):
-        if self.interns_pass is None or len(self.interns_pass) is 0:
+
+        if self.interns_pass_doc is None or len(self.interns_pass_doc) is 0:
             raise ValidationError("Không có thực tập sinh nào trong danh sách trúng tuyển")
-        for itern in self.interns_pass:
-            error = ""
-            if not itern.name:
-                error = error+u'- tên tiếng Việt\n'
-            if not itern.name_in_japan:
-                error = error + u'- tên tiếng Nhật\n'
-            if not itern.day or not itern.month or not itern.year:
-                error = error + u'- ngày sinh\n'
-            if not itern.gender:
-                error = error + u'- giới tính\n'
-            if not itern.marital_status:
-                error = error + u'- tình trạng hôn nhân\n'
-            if (not itern.identity and not itern.identity_2):
-                error = error + u'- CMND\n'
-            if itern.identity and not itern.place_cmnd:
-                error = error + u'- nơi cấp CMND\n'
-            if not itern.day_identity or not itern.month_identity or not itern.year_identity:
-                error = error + u'- ngày cấp CMND\n'
-            if not itern.hktt:
-                error = error + u'- Địa chỉ HKTT\n'
-            if not itern.last_education_from_month or not itern.last_education_from_year \
-                or not itern.last_education_to_month or not itern.last_education_to_year or not itern.last_school_education_jp or not itern.last_school_education:
-                error = error + u'- Trường học mới nhất\n'
 
-            if not itern.time_start_at_pc_from_month or not itern.time_start_at_pc_from_year or not itern.total_time_at_pc_jp \
-                or not itern.total_time_at_pc_vi:
-                error = error + u'- thông tin làm việc tại Công ty PC2\n'
+        # Validate for doc 1-3
+        if self.document and self.document == 'Doc1-3':
+            for itern in self.interns_pass_doc:
+                error = ""
+                if not itern.name:
+                    error = error + u'- tên tiếng Việt\n'
+                if not itern.name_in_japan:
+                    error = error + u'- tên tiếng Nhật\n'
+                if not itern.day or not itern.month or not itern.year:
+                    error = error + u'- ngày sinh\n'
+                if not itern.gender:
+                    error = error + u'- giới tính\n'
+                if not itern.marital_status:
+                    error = error + u'- tình trạng hôn nhân\n'
+                if not itern.hktt:
+                    error = error + u'- Địa chỉ HKTT\n'
+                if not itern.last_education_from_month or not itern.last_education_from_year \
+                        or not itern.last_education_to_month or not itern.last_education_to_year or not itern.last_school_education_jp:
+                    error = error + u'- Trường học mới nhất\n'
 
-            if not itern.contact_person or not itern.contact_address or \
-                    not itern.contact_relative or not itern.contact_phone:
-                error = error + u'- người thân khi cần liên lạc\n'
+                if not itern.time_start_at_pc_from_month or not itern.time_start_at_pc_from_year \
+                        or (itern.time_at_pc_year == 0 and itern.time_at_pc_month == 0):
+                    error = error + u'- thông tin làm việc tại Công ty PC2\n'
+                if error:
+                    raise ValidationError(u"Thiếu thông tin của %s:\n%s" % (itern.name, error))
 
-            if error:
-                raise ValidationError(u"Thiếu thông tin của %s:\n%s" % (itern.name,error))
+            error2 = ""
+            if not self.day_create_letter_promotion or not self.month_create_letter_promotion or not self.year_create_letter_promotion:
+                error2 = error2 + u"- ngày làm thư tiến cử\n"
+            if not self.dispatchcom2:
+                error2 = error2 + u"- công ty phái cử 2\n"
+            if error2:
+                raise ValidationError(u"Thiếu thông tin bổ sung cho hồ sơ: \n%s" % error2)
+        elif self.document and self.document == 'DocCCDT': #validate CCDT
+            error2 = ""
+            if not self.day_create_plan_training or not self.month_create_plan_training or not self.year_create_plan_training:
+                error2 = error2 + u"- ngày lập kế hoạch đào tạo\n"
+            if not self.day_start_training or not self.month_start_training or not self.year_start_training:
+                error2 = error2 + u"- ngày bắt đầu khoá học\n"
+            if not self.day_end_training or not self.month_end_training or not self.year_end_training:
+                error2 = error2 + u"- ngày kết thúc khoá học\n"
+            if not self.date_create_plan_training_report_customer or not self.month_create_plan_training_report_customer or not self.year_create_plan_training_report_customer:
+                error2 = error2 + u"- ngày lập kế hoạch đào tạo báo cáo khách hàng\n"
 
-        error2=""
-        if not self.person_sign_proletter\
-                or not self.position_person_sign:
-            error2 = error2+u"- người ký thư tiến cử\n"
-        if not self.day_create_letter_promotion or not self.month_create_letter_promotion or not self.year_create_letter_promotion:
-            error2 = error2 + u"- ngày làm thư tiến cử\n"
+            if not self.length_training or not self.hours_training:
+                error2 = error2 + u"- thời gian đào tạo khoá học\n"
+            if not self.training_center:
+                error2 = error2 + u"- trung tâm đào tạo\n"
+            if not self.guild:
+                error2 = error2 + u"- nghiệp đoàn\n"
 
-        if not self.day_create_plan_training or not self.month_create_plan_training or not self.year_create_plan_training:
-            error2 = error2 + u"- ngày lập kế hoạch đào tạo\n"
-        if not self.day_start_training or not self.month_start_training or not self.year_start_training:
-            error2 = error2 + u"- ngày bắt đầu khoá học\n"
-        if not self.day_end_training or not self.month_end_training or not self.year_end_training:
-            error2 = error2 + u"- ngày kết thúc khoá học\n"
-        if not self.date_create_plan_training_report_customer or not self.month_create_plan_training_report_customer or not self.year_create_plan_training_report_customer:
-            error2 = error2 + u"- ngày lập kế hoạch đào tạo báo cáo khách hàng\n"
-        if not self.day_pay_finance1 or not self.month_pay_finance1 or not self.year_pay_finance1:
-            error2 = error2 + u"- ngày nộp tài chính lần 1\n"
-        if not self.day_pay_finance2 or not self.month_pay_finance2 or not self.year_pay_finance2:
-            error2 = error2 + u"- ngày nộp tài chính lần 2\n"
-        if not self.day_departure_doc or not self.month_departure_doc or not self.year_departure_doc:
-            error2 = error2 + u"- ngày nộp xuất cảnh dự kiến\n"
+            if error2:
+                raise ValidationError(u"Thiếu thông tin bổ sung cho hồ sơ: \n%s"%error2)
 
-        if not self.length_training or not self.hours_training:
-            error2 = error2 + u"- thời gian đào tạo khoá học\n"
-        if not self.training_center:
-            error2 = error2 + u"- trung tâm đào tạo\n"
-        if not self.guild:
-            error2 = error2 + u"- nghiệp đoàn\n"
-        if not self.enterprise_doc:
-            error2 = error2 + u"- xí nghiệp\n"
-        if not self.dispatchcom1:
-            error2 = error2 + u"- pháp nhân\n"
-        if not self.dispatchcom2:
-            error2 = error2 + u"- công ty phái cử 2\n"
+        else:
+            for itern in self.interns_pass_doc:
+                error = ""
+                if not itern.name:
+                    error = error+u'- tên tiếng Việt\n'
+                if not itern.name_in_japan:
+                    error = error + u'- tên tiếng Nhật\n'
+                if not itern.day or not itern.month or not itern.year:
+                    error = error + u'- ngày sinh\n'
+                if not itern.gender:
+                    error = error + u'- giới tính\n'
+                if not itern.marital_status:
+                    error = error + u'- tình trạng hôn nhân\n'
+                if (not itern.identity and not itern.identity_2):
+                    error = error + u'- CMND\n'
+                if itern.identity and not itern.place_cmnd:
+                    error = error + u'- nơi cấp CMND\n'
+                if not itern.day_identity or not itern.month_identity or not itern.year_identity:
+                    error = error + u'- ngày cấp CMND\n'
+                if not itern.hktt:
+                    error = error + u'- Địa chỉ HKTT\n'
+                if not itern.last_education_from_month or not itern.last_education_from_year \
+                    or not itern.last_education_to_month or not itern.last_education_to_year or not itern.last_school_education_jp:
+                    error = error + u'- Trường học mới nhất\n'
 
-        if not self.name_working_department:
-            error2 = error2 + u"- bộ phận TTS sẽ làm việc\n"
-        if not self.job_en or not self.job_jp or not self.job_vi:
-            error2 = error2 + u"- ngành nghề xin thư tiến cử\n"
+                if not itern.time_start_at_pc_from_month or not itern.time_start_at_pc_from_year  \
+                    or (itern.time_at_pc_year == 0 and itern.time_at_pc_month == 0):
+                    error = error + u'- thông tin làm việc tại Công ty PC2\n'
 
-        if error2:
-            raise ValidationError(u"Thiếu thông tin bổ sung cho hồ sơ: \n%s"%error2)
+                if not itern.contact_person or not itern.contact_address or \
+                        not itern.contact_relative or not itern.contact_phone:
+                    error = error + u'- người thân khi cần liên lạc\n'
 
-        if not self.dispatchcom1.name_jp or not self.dispatchcom1.name_en or not self.dispatchcom1.name \
-            or not self.dispatchcom1.director or not self.dispatchcom1.position_director or not self.dispatchcom1.position_director_vi \
-            or not self.dispatchcom1.address_vi \
-                or not self.dispatchcom1.address_en \
-            or not self.dispatchcom1.phone_number or not self.dispatchcom1.date_create or not self.dispatchcom1.mission \
-            or not self.dispatchcom1.capital or not self.dispatchcom1.revenue:
-            raise ValidationError(u"Thiếu thông tin của pháp nhân")
+                if error:
+                    raise ValidationError(u"Thiếu thông tin của %s:\n%s" % (itern.name,error))
+
+            error2=""
+            if not self.person_sign_proletter\
+                    or not self.position_person_sign:
+                error2 = error2+u"- người ký thư tiến cử\n"
+            if not self.day_create_letter_promotion or not self.month_create_letter_promotion or not self.year_create_letter_promotion:
+                error2 = error2 + u"- ngày làm thư tiến cử\n"
+
+            if not self.day_create_plan_training or not self.month_create_plan_training or not self.year_create_plan_training:
+                error2 = error2 + u"- ngày lập kế hoạch đào tạo\n"
+            if not self.day_start_training or not self.month_start_training or not self.year_start_training:
+                error2 = error2 + u"- ngày bắt đầu khoá học\n"
+            if not self.day_end_training or not self.month_end_training or not self.year_end_training:
+                error2 = error2 + u"- ngày kết thúc khoá học\n"
+            if not self.date_create_plan_training_report_customer or not self.month_create_plan_training_report_customer or not self.year_create_plan_training_report_customer:
+                error2 = error2 + u"- ngày lập kế hoạch đào tạo báo cáo khách hàng\n"
+            if not self.day_pay_finance1 or not self.month_pay_finance1 or not self.year_pay_finance1:
+                error2 = error2 + u"- ngày nộp tài chính lần 1\n"
+            if not self.day_pay_finance2 or not self.month_pay_finance2 or not self.year_pay_finance2:
+                error2 = error2 + u"- ngày nộp tài chính lần 2\n"
+            if not self.month_departure_doc or not self.year_departure_doc:
+                error2 = error2 + u"- ngày nộp xuất cảnh dự kiến\n"
+
+            if not self.length_training or not self.hours_training:
+                error2 = error2 + u"- thời gian đào tạo khoá học\n"
+            if not self.training_center:
+                error2 = error2 + u"- trung tâm đào tạo\n"
+            if not self.guild:
+                error2 = error2 + u"- nghiệp đoàn\n"
+            if not self.enterprise_doc:
+                error2 = error2 + u"- xí nghiệp\n"
+            if not self.dispatchcom1:
+                error2 = error2 + u"- pháp nhân\n"
+            if not self.dispatchcom2:
+                error2 = error2 + u"- công ty phái cử 2\n"
+
+            if not self.name_working_department:
+                error2 = error2 + u"- bộ phận TTS sẽ làm việc\n"
+            if not self.job_en or not self.job_jp or not self.job_vi:
+                error2 = error2 + u"- ngành nghề xin thư tiến cử\n"
+
+            if error2:
+                raise ValidationError(u"Thiếu thông tin bổ sung cho hồ sơ: \n%s"%error2)
+
+            if not self.dispatchcom1.name_jp or not self.dispatchcom1.name_en or not self.dispatchcom1.name \
+                or not self.dispatchcom1.director or not self.dispatchcom1.position_director or not self.dispatchcom1.position_director_vi \
+                or not self.dispatchcom1.address_vi \
+                    or not self.dispatchcom1.address_en \
+                or not self.dispatchcom1.phone_number or not self.dispatchcom1.date_create or not self.dispatchcom1.mission \
+                or not self.dispatchcom1.capital or not self.dispatchcom1.revenue:
+                raise ValidationError(u"Thiếu thông tin của pháp nhân")
 
 
-        if not self.training_center.name_jp or not self.training_center.address_en \
-                or not self.training_center.date_create or not self.training_center.phone_number \
-            or not self.training_center.responsive_person or not self.training_center.mission:
-            raise ValidationError(u"Thiếu thông tin của trung tâm đào tạo")
+            if not self.training_center.name_jp or not self.training_center.address_en \
+                    or not self.training_center.date_create or not self.training_center.phone_number \
+                or not self.training_center.responsive_person or not self.training_center.mission:
+                raise ValidationError(u"Thiếu thông tin của trung tâm đào tạo")
 
 
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/web/binary/download_extern_document?model=intern.invoice&id=%s&filename=hoso.zip' % (
-                self.id),
-            'target': 'self', }
+            if (len(self.interns_pass_doc)-1)/10>=len(self.dispatchcom2):
+                raise ValidationError(u"Thiếu số lượng công ty PC2")
 
 
+
+        if self.document and self.document !='All':
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/web/binary/download_extern_document_specific?model=intern.invoice&id=%s&document=%s&filename=%s_%s_%s.zip' % (
+                    self.id, self.document, self.guild.name_acronym, self.enterprise_doc.name_romaji,self.document),
+                'target': 'self', }
+        else:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/web/binary/download_extern_document?model=intern.invoice&id=%s&filename=%s_%s_HoSo.zip' % (
+                    self.id,self.guild.name_acronym,self.enterprise_doc.name_romaji),
+                'target': 'self', }
+
+    # @api.one
+    # def create_doc(self):
+    #     return {
+    #         'type': 'ir.actions.act_url',
+    #         'url': '/web/binary/test_doc',
+    #         'target': 'self', }
     @api.multi
     def create_doc(self):
         _logger.info("CREATE DOC")
 
-        if self.interns is None or len(self.interns) is 0:
+        if self.interns_exam_doc is None or len(self.interns) is 0:
             raise ValidationError("Không có thực tập sinh nào trong danh sách thi tuyển")
 
 
-        for intern in self.interns:
+        for intern in self.interns_exam_doc:
             if intern.date_of_birth is None:
                 raise ValidationError(u"Thiếu thông tin %s của %s"%(u'ngày sinh',intern.name))
 
@@ -302,11 +401,10 @@ class Invoice(models.Model):
                 raise ValidationError(u"Thiếu thông tin %s của %s" % (u'Lý lịch Học tập', intern.name))
             if intern.family_members is None or len(intern.family_members) is 0:
                 raise ValidationError(u"Thiếu thông tin %s của %s" % (u'Thành viên gia đình', intern.name))
-
+        _logger.info("CREATE DOC ENDDD")
         return {
             'type': 'ir.actions.act_url',
-            'url': '/web/binary/download_document?model=intern.invoice&id=%s&filename=doc_cv.zip' % (
-            self.id),
+            'url': '/web/binary/download_document?model=intern.invoice&id=%s&filename=%s.zip' %(str(self.id) ,self.name),
             'target': 'self',}
 
 
@@ -346,49 +444,99 @@ class Invoice(models.Model):
 
     def createHeaderDoc(self):
         docs = self.env['intern.document'].search([('name', '=', "CV_HEAD")], limit=1)
-        if docs:
-            stream = BytesIO(docs[0].attachment.decode("base64"))
-            tpl = DocxTemplate(stream)
-            context = {}
-            table_interns = []
-            for i,intern in enumerate(self.interns):
-                info = {}
-                info['stt'] = str(i+1)
-                info['htk'] = intern.name_without_signal.upper()
-                info['htn'] = intern.name_in_japan
-                if intern.gender == 'nu':
-                    info['gt'] = u'女'
-                else:
-                    info['gt'] = u'男'
-                info['ns'] = intern_utils.date_time_in_jp(intern.day,intern.month,intern.year)
-                info['t'] = str((datetime.now().year)+1 - int(intern.year))
-                info['nm'] = intern.blood_group
-                info['tlt'] = intern.vision_left
-                info['tlp'] = intern.vision_right
-                if intern.preferred_hand == '0':
-                    info['tt'] = u'右'
-                else:
-                    info['tt'] = u'左'
-                info['cc'] = str(intern.height)
-                info['cn'] = str(intern.weight)
-                info['iq'] = "%s%%"%intern.iq_percentage
-                info['ktk'] = intern.check_kureperin
-                info['hn']  = intern.marital_status.name_in_jp
-                info['pro'] = intern_utils.no_accent_vietnamese(intern.province.name).upper()
-                info['bc'] = intern.certification.name_in_jp
-                table_interns.append(info)
+        logo = self.env['intern.document'].search([('name', '=', "Logo")], limit=1)
+        streamDoc = BytesIO(docs[0].attachment.decode("base64"))
+        target_document = None
+        tempFile1 = None
+        if len(self.interns_exam_doc)>20:
+            target_document = Document(streamDoc)
+            tmp = len(self.interns_exam_doc)/20
+            for i in range(1,tmp+1):
+                document = Document(streamDoc)
+                for table in document.tables:
+                    for row in table.rows:
+                        for cell in row.cells:
+                            if 'tbl_intern' in cell.text:
+                                cell.text = cell.text.replace('tbl_intern','tbl_intern%d'%i)
+                                break
+                # target_document.add_page_break()
+                for element in document.element.body:
+                    target_document.element.body.append(element)
 
-            context['xn'] = self.enterprise
-            context['nd'] = self.name_of_guild
-            context['now'] = intern_utils.date_time_in_jp(datetime.now().day+1,datetime.now().month +1,datetime.now().year+1)
-            context['tbl_intern'] = table_interns
+            tempFile1 = NamedTemporaryFile(delete=False)
+            target_document.save(tempFile1.name)
+            tempFile1.flush()
+            tempFile1.close()
+
+        if docs:
+            tpl = None
+            if target_document is None:
+                stream = BytesIO(docs[0].attachment.decode("base64"))
+                tpl = DocxTemplate(stream)
+            else:
+                tpl = DocxTemplate(tempFile1.name)
+
+            context = {}
+            for k in range(0,len(self.interns_exam_doc)/20+1):
+                table_interns = []
+                for i in range(20*k,20*k+20):
+                    if i >= len(self.interns_exam_doc):
+                        break
+                    intern = self.interns_exam_doc[i]
+                    info = {}
+                    info['stt'] = str(i+1)
+                    info['htk'] = intern.name_without_signal.upper()
+                    info['htn'] = intern.name_in_japan
+                    if intern.gender == 'nu':
+                        info['gt'] = u'女'
+                    else:
+                        info['gt'] = u'男'
+                    info['ns'] = intern_utils.date_time_in_jp(intern.day,intern.month,intern.year)
+                    info['t'] = str(intern_utils.get_age_jp(datetime.now(), intern.day,intern.month,intern.year))
+                    info['nm'] = intern.blood_group
+
+                    left = 1.5 - (10.0 - intern.vision_left) / 10.0
+                    right = 1.5 - (10.0 - intern.vision_right) / 10.0
+                    info['tlt'] = "%.1f" % (left)
+                    info['tlp'] = "%.1f" % (right)
+                    if intern.preferred_hand == '0':
+                        info['tt'] = u'右'
+                    elif intern.preferred_hand == '1':
+                        info['tt'] = u'左'
+                    else:
+                        info['tt'] = u'両手'
+                    info['cc'] = str(intern.height)
+                    info['cn'] = str(intern.weight)
+                    info['iq'] = "%s%%"%intern.iq_percentage
+                    info['ktk'] = intern.check_kureperin
+                    info['hn'] = intern.marital_status.name_in_jp
+                    info['pro'] = intern_utils.no_accent_vietnamese(intern.province.name).upper()
+                    info['bc'] = intern.certification.name_in_jp
+                    table_interns.append(info)
+
+                if k == 0:
+                    context['tbl_intern'] = table_interns
+                else:
+                    context['tbl_intern%d'%k] = table_interns
+
+            context['logo'] = InlineImage(tpl,BytesIO(logo[0].attachment.decode("base64")),width=Mm(35))
+            context['xn'] = self.enterprise_doc.name_jp
+            context['nd'] = self.guild.name_in_jp
+            context['now'] = intern_utils.date_time_in_jp(datetime.now().day,datetime.now().month,datetime.now().year)
+
             tpl.render(context)
 
             tempFile = NamedTemporaryFile(delete=False)
             tpl.save(tempFile)
             tempFile.flush()
             tempFile.close()
+
+            if tempFile1 is not None:
+                os.unlink(tempFile1.name)
+
             return tempFile
+        if tempFile1 is not None:
+            os.unlink(tempFile1.name)
         return None
 
 
@@ -419,14 +567,15 @@ class Invoice(models.Model):
     #             image_part = doc.part.related_parts[rId]
     #             list_image.append(image_part.blob)
 
-    def calculate_age(self,born):
-        today = date.today()
-        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    # def calculate_age(self,born):
+    #     today = date.today()
+    #     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
     def createCVDoc(self, document, intern, index):
         stream = BytesIO(document.attachment.decode("base64"))
         tpl = DocxTemplate(stream)
         context = {}
+
         if intern.avatar is not None:
             streamAvatar = BytesIO(intern.avatar.decode("base64"))
             # context['aa'] = InlineImage(tpl, streamAvatar, width=Mm(20))
@@ -440,7 +589,7 @@ class Invoice(models.Model):
             context['gt'] = '女'
         else:
             context['gt'] = '男'
-        context['t'] = str((datetime.now().year)+1- int(intern.year))
+        context['t'] = str(intern_utils.get_age_jp(datetime.now(),intern.day,intern.month,intern.year))
 
         if intern.marital_status:
             context['hn'] = intern.marital_status.name_in_jp
@@ -485,8 +634,12 @@ class Invoice(models.Model):
         if intern.preferred_hand == '0':
             context['ptt'] = CheckedBox().init(24)
             context['ttt'] = CheckBox().init(24)
-        else:
+        elif intern.preferred_hand == '1':
+            _logger.info('tay phai')
             context['ptt'] = CheckBox().init(24)
+            context['ttt'] = CheckedBox().init(24)
+        else:
+            context['ptt'] = CheckedBox().init(24)
             context['ttt'] = CheckedBox().init(24)
 
         if intern.surgery:
@@ -511,13 +664,13 @@ class Invoice(models.Model):
             elif intern.certification.id == 2:
                 intern.specialized = u'無し'
         if intern.specialized:
-            context['chn'] = intern.specialized
+            context['chn'] = intern_utils.convert_to_docx_string(intern.specialized)
         if intern.favourite:
-            context['st'] = intern.favourite
+            context['st'] = intern_utils.convert_to_docx_string(intern.favourite)
         if intern.strong:
-            context['dm'] = intern.strong
+            context['dm'] = intern_utils.convert_to_docx_string(intern.strong)
         if intern.weak:
-            context['dy'] = intern.weak
+            context['dy'] = intern_utils.convert_to_docx_string(intern.weak)
         if intern.teammate:
             context['kns'] = u'有'
         else:
@@ -544,17 +697,17 @@ class Invoice(models.Model):
         if intern.family_income:
             context['tng'] = intern.family_income
         if intern.motivation:
-            context['dl'] = intern.motivation
+            context['dl'] = intern_utils.convert_to_docx_string(intern.motivation)
         if intern.income_after_three_year:
             context['bn']= intern.income_after_three_year
         if intern.job_after_return:
-            context['vn'] = intern.job_after_return
+            context['vn'] = intern_utils.convert_to_docx_string(intern.job_after_return)
         if intern.prefer_object:
-            context['mg'] = intern.prefer_object
+            context['mg'] = intern_utils.convert_to_docx_string(intern.prefer_object)
         if intern.memory:
-            context['kn'] = intern.memory
+            context['kn'] = intern_utils.convert_to_docx_string(intern.memory)
         if intern.valuable:
-            context['qg'] = intern.valuable
+            context['qg'] = intern_utils.convert_to_docx_string(intern.valuable)
 
         context['hm'] = CheckBox().init(20)
         context['hs'] = CheckBox().init(20)
@@ -579,9 +732,9 @@ class Invoice(models.Model):
                 info['nkt'] = intern_utils.date_time_in_jp(month=education.month_end, year=education.year_end)
             else:
                 info['nkt'] = intern_utils.date_time_in_jp(year=education.year_end)
-            info['tt'] = intern_utils.no_accent_vietnamese(education.school).upper()
+            info['tt'] = intern_utils.convert_to_docx_string(intern_utils.no_accent_vietnamese(education.school).upper())
             info['lt'] = education.school_type.name_in_jp
-            info['cn'] = education.specialization
+            info['cn'] = intern_utils.convert_to_docx_string(education.specialization)
             info['bc'] = education.certificate.name_in_jp
             if education.graduated:
                 info['tn'] = u'卒業'
@@ -593,30 +746,36 @@ class Invoice(models.Model):
         context['tbl_educations'] = table_education
 
         table_employment = []
-        for employment in intern.employments:
-            info = {}
-            if employment.month_start:
-                info['nbd'] = intern_utils.date_time_in_jp(month=employment.month_start, year=employment.year_start)
-            else:
-                info['nbd'] = intern_utils.date_time_in_jp(year=employment.year_start)
-            if employment.month_end:
-                info['nkt'] = intern_utils.date_time_in_jp(month=employment.month_end, year=employment.year_end)
-            else:
-                info['nkt'] = intern_utils.date_time_in_jp(year=employment.year_end)
-            info['ct'] = employment.company
-            info['cv'] = employment.description
-            table_employment.append(info)
+        if len(intern.employments) == 0:
+            table_employment.append({})
+            table_employment.append({})
+        else:
+            for employment in intern.employments:
+                info = {}
+                if employment.month_start:
+                    info['nbd'] = intern_utils.date_time_in_jp(month=employment.month_start, year=employment.year_start)
+                else:
+                    info['nbd'] = intern_utils.date_time_in_jp(year=employment.year_start)
+                if employment.month_end:
+                    info['nkt'] = intern_utils.date_time_in_jp(month=employment.month_end, year=employment.year_end)
+                else:
+                    info['nkt'] = intern_utils.date_time_in_jp(year=employment.year_end)
+                info['ct'] = intern_utils.convert_to_docx_string(employment.company)
+                info['cv'] = intern_utils.convert_to_docx_string(employment.description)
+                table_employment.append(info)
 
         context['tbl_employ'] = table_employment
 
         table_family = []
-        for i,person in enumerate(intern.family_members):
+        for i,person in enumerate(sorted(intern.family_members,key=lambda x: x.sequence)):
             if i < 5:
                 context['p%dht'%(i+1)] = intern_utils.no_accent_vietnamese(person.name).upper()
                 context['p%dqh'%(i+1)] = person.relationship
-                context['p%ddt'%(i+1)] = str((datetime.now().year)+1- int(person.birth_year))
+                if person.birth_year>0:
+                    context['p%ddt'%(i+1)] = str((datetime.now().year) - int(person.birth_year))
                 # context['p%ddt' % (i + 1)] = person.ages
-                context['p%dnn' % (i + 1)] = person.job
+                if person.job:
+                    context['p%dnn' % (i + 1)] = intern_utils.convert_to_docx_string(person.job)
                 if person.live_together:
                     context['p%dsc' % (i + 1)] = Tick()
                 else:
@@ -624,15 +783,21 @@ class Invoice(models.Model):
             else:
 
                 if person.live_together:
+                    job = person.job
+                    if not person.job:
+                        job=""
                     table_family.append({'ht': intern_utils.no_accent_vietnamese(person.name).upper(), 'qh': person.relationship,
-                                         'dt': str((datetime.now().year)+1- int(person.birth_year)),
+                                         'dt': str((datetime.now().year)- int(person.birth_year)),
                                          # 'dt': person.ages,
-                                             'nn': person.job, 'sc': Tick(),'sr':''})
+                                             'nn': job, 'sc': Tick(),'sr':''})
                 else:
+                    job = person.job
+                    if not person.job:
+                        job = ""
                     table_family.append({'ht': intern_utils.no_accent_vietnamese(person.name).upper(), 'qh': person.relationship,
-                                         'dt': str((datetime.now().year) + 1 - int(person.birth_year)),
+                                         'dt': str((datetime.now().year)  - int(person.birth_year)),
                                          # 'dt': person.ages,
-                                         'nn': person.job, 'sc': '', 'sr': Tick()})
+                                         'nn': job, 'sc': '', 'sr': Tick()})
         context['tbl_family'] = table_family
 
         if intern.family_member_in_jp:
@@ -649,7 +814,7 @@ class Invoice(models.Model):
         else:
             context['gdy'] = CheckBox().init(24)
             context['gpd'] = CheckedBox().init(24)
-
+        tpl.set_fix_table_border()
         tpl.render(context)
 
         # byteIoRespond = BytesIO()
@@ -773,16 +938,31 @@ class Invoice(models.Model):
     subsidize_start_month = fields.Integer("Trợ cấp đầu tháng")
     number_man = fields.Integer("Số lượng nam")
     number_women = fields.Integer("Số lượng nữ")
+    number_total = fields.Integer("Số lượng trúng tuyển")
+
+    @api.multi
+    @api.onchange('number_man','number_women')
+    def _compute_number_total(self):
+        for rec in self:
+            rec.number_total = rec.number_man +rec.number_women
+
     source_man = fields.Integer("Nguồn nam")
     source_women = fields.Integer("Nguồn nữ")
+    source_total = fields.Integer("Số lượng thi tuyển")
+
+    @api.multi
+    @api.onchange('source_man', 'source_women')
+    def _compute_source_total(self):
+        for rec in self:
+            rec.source_total = rec.source_man + rec.source_women
 
     age_from = fields.Integer("Tuổi từ")
     age_to = fields.Integer("Đến tuổi")
     certificate = fields.Many2one("intern.certification","Trình độ")
     marital = fields.Many2one("marital","Hôn nhân")
-    vision = fields.Integer("Thị lực")
-    physical = fields.Integer("Thể lực")
-    preferred_hand = fields.Selection((('0', 'Tay phải'), ('1', 'Tay trái')), string="Tay thuận", default='0')
+    vision = fields.Char("Thị lực")
+    physical = fields.Char("Thể lực")
+    preferred_hand = fields.Selection([('0', 'Tay phải'), ('1', 'Tay trái')], string="Tay thuận", default='0')
     height_man = fields.Integer("Chiều cao nam")
     height_women = fields.Integer("Chiều cao nữ")
     weight_man = fields.Integer("Cân nặng nam")
@@ -894,6 +1074,18 @@ class Invoice(models.Model):
             self.date_exam = ""
 
     #
+    date_exam_short = fields.Date("Ngày thi tuyển", store=True, compute='_date_exam_short')
+
+    @api.multi
+    @api.depends('day_exam', 'month_exam', 'year_exam')
+    def _date_exam_short(self):
+        for rec in self:
+            if rec.day_exam and rec.month_exam and rec.year_exam:
+                rec.date_exam_short = datetime.strptime('%s-%s-%s' % (rec.year_exam, rec.month_exam, rec.day_exam),
+                                                        '%Y-%m-%d')
+            else:
+                rec.date_exam_short = None
+
     day_departure = fields.Char("Ngày", size=2)
     month_departure = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
                                         ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
@@ -919,10 +1111,6 @@ class Invoice(models.Model):
 
     room_responsive = fields.Char("Phòng NB phụ trách")
 
-    status = fields.Selection([('0','Hoàn thành trúng tuyển'),('1','Hoàn thành xuất cảnh'),('2','Đã hủy TCLT-Visa-XC'),
-                               ('3','Đang thực hiện'),('4','Đơn hàng hoãn - hủy thi tuyển'),('5','Đơn hàng hủy sau trung tuyển')],'Trạng thái đơn hàng')
-
-    #
     day_finish = fields.Char("Ngày", size=2)
     month_finish = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
                                         ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
@@ -1059,6 +1247,7 @@ class Invoice(models.Model):
                 rec.date_create_letter_promotion = u'Năm %s' % rec.year_create_letter_promotion
             else:
                 rec.date_create_letter_promotion = ""
+
 
 
     day_create_plan_training = fields.Char("Ngày", size=2)
@@ -1218,21 +1407,34 @@ class Invoice(models.Model):
     length_training = fields.Char("Thời gian đào tạo khóa học (Chữ Hán)")
     hours_training = fields.Integer("Tổng số thời gian đào tạo (số giờ học)")
 
-    training_center = fields.Many2one('trainingcenter','Trung tâm đào tạo')
-    guild = fields.Many2one('intern.guild','Nghiệp đoàn')
+    training_center = fields.Many2one('trainingcenter',string='Trung tâm đào tạo')
+    guild = fields.Many2one('intern.guild',string='Nghiệp đoàn')
 
-    enterprise_doc = fields.Many2one('intern.enterprise','Xí nghiệp')
+    enterprise_doc = fields.Many2one('intern.enterprise',string='Xí nghiệp')
 
-    dispatchcom2 = fields.Many2one('dispatchcom2','Công ty phái cử thứ 2')
+    dispatchcom2 = fields.Many2many('dispatchcom2',string=u'Công ty phái cử thứ 2')
+
     dispatchcom1 = fields.Many2one('dispatchcom1','Pháp nhân')
 
 
 
     name_working_department = fields.Char("Tên bộ phận TTS sẽ làm việc trong xí nghiệp (có trong hợp đồng lương) - Tiếng Nhật ")
 
+    job_predefine = fields.Many2one('intern.job','Ngành nghề xin thư tiến cử')
+
+
+
     job_en = fields.Char("Ngành nghề xin thư tiến cử lấy từ hợp đồng lương (Tiếng Anh)")
     job_jp = fields.Char("Ngành nghề xin thư tiến cử lấy từ hợp đồng lương (Tiếng Nhật)")
     job_vi = fields.Char("Ngành nghề xin thư tiến cử lấy từ hợp đồng lương (Tiếng Việt)")
+
+    @api.onchange('job_predefine')
+    def job_change(self):
+        if self.job_predefine:
+            self.job_en = self.job_predefine.name_en
+            self.job_jp = self.job_predefine.name_jp
+            self.job_vi = self.job_predefine.name
+
 
     day_departure_doc = fields.Char("Ngày", size=2)
     month_departure_doc = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
@@ -1260,8 +1462,8 @@ class Invoice(models.Model):
                 rec.date_departure_doc = ""
 
     person_sign_proletter = fields.Char("Tên người ký thư tiến cử (kiểm tra thường xuyên tránh sai)",default=u"Vũ Trường Giang")
-    position_person_sign = fields.Char("Chức danh người ký thư tiến cử - Tiếng Anh",default=u'Head of Division for Japan - Europe - Southeast Asia')
-    position_person_sign_jp= fields.Char("Chức danh người ký thư tiến cử - Tiếng Nhật",default=u'日本ヨーロッパー東南アジア部長')
+    position_person_sign = fields.Char("Chức danh người ký thư tiến cử - Tiếng Anh",default=u'Head of Division for Japan -  Southeast Asia')
+    position_person_sign_jp= fields.Char("Chức danh người ký thư tiến cử - Tiếng Nhật",default=u'日本東南アジア部長')
     developing_employee = fields.Char("Cán bộ PTTT")
 
     back_to_pc2 = fields.Boolean('Sau khi về nước sẽ quay lại Cty PC2 ')
@@ -1292,6 +1494,22 @@ class Invoice(models.Model):
             else:
                 rec.date_sign_proletter = ""
 
+    date_create_letter_promotion_short = fields.Date('Ngày làm thư tiến cử', store=True,
+                                                     compute='_date_create_letter_promotion_short')
+
+    @api.multi
+    @api.depends('day_create_letter_promotion', 'month_create_letter_promotion', 'year_create_letter_promotion')
+    def _date_create_letter_promotion_short(self):
+        for rec in self:
+            if rec.day_create_letter_promotion and rec.month_create_letter_promotion and rec.year_create_letter_promotion:
+                rec.date_create_letter_promotion_short = datetime.strptime('%s-%s-%s' %
+                                                                           (rec.year_create_letter_promotion,
+                                                                            rec.month_create_letter_promotion,
+                                                                            rec.day_create_letter_promotion),
+                                                                           '%Y-%m-%d')
+            else:
+                rec.date_create_letter_promotion_short = None
+
 
     def create_doc_1_3(self, intern, index):
         docs = self.env['intern.document'].search([('name', '=', "Doc1-3")], limit=1)
@@ -1317,10 +1535,10 @@ class Invoice(models.Model):
             context['a5'] = intern.name_in_japan.replace(u'・', '  ')
             context['a7'] = intern_utils.date_time_in_jp(intern.day,intern.month,intern.year)
             context['a8'] = intern_utils.date_time_in_vn(intern.day,intern.month,intern.year)
-            context['a11'] = str(intern_utils.get_age_jp(intern.day, intern.month,intern.year))
+            context['a11'] = str(intern_utils.get_age_jp(self.date_create_letter_promotion_short,intern.day, intern.month,intern.year))
             if intern.hktt:
                 context['a15_1'] = intern_utils.no_accent_vietnamese(intern.hktt).upper()
-                context['a15'] = intern.hktt.upper()
+                context['a15'] = intern_utils.convert_to_docx_string(intern.hktt).upper()
 
             context['a21'] = u'%s ~ %s'%(intern_utils.date_time_in_vn2(intern.last_education_from_month,intern.last_education_from_year),
                                         intern_utils.date_time_in_vn2( intern.last_education_to_month,
@@ -1328,8 +1546,10 @@ class Invoice(models.Model):
             context['a21_1'] = u'%s ～ %s'%(intern_utils.date_time_in_jp(None,intern.last_education_from_month,intern.last_education_from_year),
                                           intern_utils.date_time_in_jp(None, intern.last_education_to_month,
                                                                        intern.last_education_to_year))
-            context['a22'] = intern.last_school_education_jp
-            context['a23'] = intern.last_school_education
+
+            context['a22'] = intern_utils.convert_to_docx_string(intern.last_school_education_jp)
+            if intern.last_school_education:
+                context['a23'] = intern_utils.convert_to_docx_string(intern.last_school_education)
 
             if intern.last_education_from_month2 and intern.last_education_from_year2 and \
                     intern.last_education_to_month2 and intern.last_education_to_year2 \
@@ -1342,74 +1562,80 @@ class Invoice(models.Model):
                 intern_utils.date_time_in_jp(None, intern.last_education_from_month2, intern.last_education_from_year2),
                 intern_utils.date_time_in_jp(None, intern.last_education_to_month2,
                                              intern.last_education_to_year2))
-                context['b22'] = intern.last_school_education_jp2
-                context['b23'] = intern.last_school_education2
+                context['b22'] = intern_utils.convert_to_docx_string(intern.last_school_education_jp2)
+                if intern.last_school_education2:
+                    context['b23'] = intern_utils.convert_to_docx_string(intern.last_school_education2)
 
             table_jobs = []
             for i in range(0,4):
                 if i == 0:
                     info = {}
-                    if intern.time_employee and intern.job_employee_jp and intern.job_employee_vi:
+                    if intern.time_employee and intern.job_employee_jp:
                         info['a25'] = u'%s ~ %s' % (
                         intern_utils.date_time_in_vn2(intern.time_employee_from_month, intern.time_employee_from_year),
                         intern_utils.date_time_in_vn2(intern.time_employee_to_month,
                                                      intern.time_employee_to_year))
                         info['a25_1'] = intern.time_employee
-                        info['a26'] = intern.job_employee_jp
-                        info['a27'] = intern.job_employee_vi
+                        info['a26'] = intern_utils.convert_to_docx_string(intern.job_employee_jp)
+                        if intern.job_employee_vi:
+                            info['a27'] = intern_utils.convert_to_docx_string(intern.job_employee_vi)
                         table_jobs.append(info)
                     else:
                         break
                 if i == 1:
                     info = {}
-                    if intern.time_employee2 and intern.job_employee2_jp and intern.job_employee2_vi:
+                    if intern.time_employee2 and intern.job_employee2_jp:
                         info['a25'] = u'%s ~ %s' % (
                         intern_utils.date_time_in_vn2(intern.time_employee2_from_month, intern.time_employee2_from_year),
                         intern_utils.date_time_in_vn2(intern.time_employee2_to_month,
                                                      intern.time_employee2_to_year))
                         info['a25_1'] = intern.time_employee2
-                        info['a26'] = intern.job_employee2_jp
-                        info['a27'] = intern.job_employee2_vi
+                        info['a26'] = intern_utils.convert_to_docx_string(intern.job_employee2_jp)
+                        if intern.job_employee2_vi:
+                            info['a27'] = intern_utils.convert_to_docx_string(intern.job_employee2_vi)
                         table_jobs.append(info)
                     else:
                         break
                 if i == 2:
                     info = {}
-                    if intern.time_employee3 and intern.job_employee3_jp and intern.job_employee3_vi:
+                    if intern.time_employee3 and intern.job_employee3_jp :
                         info['a25'] = u'%s ~ %s' % (
                         intern_utils.date_time_in_vn2(intern.time_employee3_from_month, intern.time_employee3_from_year),
                         intern_utils.date_time_in_vn2(intern.time_employee3_to_month,
                                                      intern.time_employee3_to_year))
                         info['a25_1'] = intern.time_employee3
-                        info['a26'] = intern.job_employee3_jp
-                        info['a27'] = intern.job_employee3_vi
+                        info['a26'] = intern_utils.convert_to_docx_string(intern.job_employee3_jp)
+                        if intern.job_employee3_vi:
+                            info['a27'] = intern_utils.convert_to_docx_string(intern.job_employee3_vi)
                         table_jobs.append(info)
                     else:
                         break
                 if i == 3:
                     info = {}
-                    if intern.time_employee4 and intern.job_employee4_jp and intern.job_employee4_vi:
+                    if intern.time_employee4 and intern.job_employee4_jp:
                         info['a25'] = u'%s ~ %s' % (
                         intern_utils.date_time_in_vn2(intern.time_employee4_from_month, intern.time_employee4_from_year),
                         intern_utils.date_time_in_vn2(intern.time_employee4_to_month,
                                                      intern.time_employee4_to_year))
                         info['a25_1'] = intern.time_employee4
-                        info['a26'] = intern.job_employee4_jp
-                        info['a27'] = intern.job_employee4_vi
+                        info['a26'] = intern_utils.convert_to_docx_string(intern.job_employee4_jp)
+                        if intern.job_employee4_vi:
+                            info['a27'] = intern_utils.convert_to_docx_string(intern.job_employee4_vi)
                         table_jobs.append(info)
                     else:
                         break
 
                 if i == 4:
                     info = {}
-                    if intern.time_employee5 and intern.job_employee5_jp and intern.job_employee5_vi:
+                    if intern.time_employee5 and intern.job_employee5_jp:
                         info['a25'] = u'%s ~ %s' % (
                         intern_utils.date_time_in_vn2(intern.time_employee5_from_month, intern.time_employee5_from_year),
                         intern_utils.date_time_in_vn2(intern.time_employee5_to_month,
                                                      intern.time_employee5_to_year))
                         info['a25_1'] = intern.time_employee5
-                        info['a26'] = intern.job_employee5_jp
-                        info['a27'] = intern.job_employee5_vi
+                        info['a26'] = intern_utils.convert_to_docx_string(intern.job_employee5_jp)
+                        if intern.job_employee5_vi:
+                            info['a27'] = intern_utils.convert_to_docx_string(intern.job_employee5_vi)
                         table_jobs.append(info)
                     else:
                         break
@@ -1421,17 +1647,19 @@ class Invoice(models.Model):
                                 intern_utils.date_time_in_vn2(intern.time_start_at_pc_from_month, intern.time_start_at_pc_from_year))
             info['a25_1'] = intern.time_start_at_pc
 
-            info['a26'] = "%s (%s)" %(self.dispatchcom2.name,self.job_jp)
-            info['a27'] = "%s (%s)" %(self.dispatchcom2.name_vn,self.job_vi)
+            tmp = index/10
+            _logger.info("%d TMP "%tmp)
+            info['a26'] = u"%s (%s)" %(intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name),intern_utils.convert_to_docx_string(self.job_jp))
+            if self.dispatchcom2[tmp].name_vn:
+                info['a27'] = u"%s (%s)" %(intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name_vn),intern_utils.convert_to_docx_string(self.job_vi))
             table_jobs.append(info)
             if len(table_jobs) == 1:
                 table_jobs.append({})
 
             context['tbl_jobs'] = table_jobs
 
-
-            context['a38'] = intern.total_time_at_pc_jp
-            context['a39'] = intern.total_time_at_pc_vi
+            context['a38'] = u'%d年%dヶ月'%(intern.time_at_pc_year,intern.time_at_pc_month)
+            context['a39'] = u'%d năm %d tháng'%(intern.time_at_pc_year,intern.time_at_pc_month)
 
 
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,
@@ -1445,9 +1673,10 @@ class Invoice(models.Model):
 
 
 
-            context['a84'] = self.job_jp
-            context['a85'] = self.job_vi
+            context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
+            context['a85'] = intern_utils.convert_to_docx_string(self.job_vi)
 
+            # _logger.info("AAAA %s" % str(context))
 
             tpl.render(context)
 
@@ -1465,12 +1694,20 @@ class Invoice(models.Model):
             tpl = DocxTemplate(stream)
             context = {}
             context['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
-            context['a59'] = self.guild.name_in_jp
-            context['a74'] = self.enterprise_doc.name_jp
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,
                                                           self.month_create_letter_promotion,
                                                           self.year_create_letter_promotion)
-            context['a102'] = self.dispatchcom1.name_en.upper()
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+
+            context['a102_1'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+            if '(' in context['a102_1'] and ')' in context['a102_1']:
+                first = context['a102_1'].rfind('(')
+                last = context['a102_1'].rfind(')')
+                context['a102_1'] = context['a102_1'][:first] + context['a102_1'][last + 1:]
+
+
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
 
             tpl.render(context)
@@ -1498,8 +1735,8 @@ class Invoice(models.Model):
                                                           self.month_create_letter_promotion,
                                                           self.year_create_letter_promotion)
 
-            context['a84'] = self.job_jp
-            context['a85'] = self.job_vi.lower()
+            context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
+            context['a85'] = intern_utils.convert_to_docx_string(self.job_vi).lower()
             tpl.render(context)
 
             tempFile = NamedTemporaryFile(delete=False)
@@ -1518,10 +1755,10 @@ class Invoice(models.Model):
             tpl = DocxTemplate(stream)
             context = {}
 
-            context['a59'] = self.guild.name_in_jp
-            context['a60'] = self.guild.name_in_en
-            context['a74'] = self.enterprise_doc.name_jp
-            context['a75'] = self.enterprise_doc.name_romaji
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a60'] = intern_utils.convert_to_docx_string(self.guild.name_in_en)
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
+            context['a75'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_romaji)
             context['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
             context['a5'] = intern.name_in_japan.replace(u'・', '  ')
             context['a47'] = intern_utils.date_time_in_jp(self.day_pay_finance1,self.month_pay_finance1,self.year_pay_finance1)
@@ -1537,13 +1774,22 @@ class Invoice(models.Model):
                                                           self.month_create_letter_promotion,
                                                           self.year_create_letter_promotion)
 
-            context['a102'] = self.dispatchcom1.name_en.upper()
-            context['a104'] = self.dispatchcom1.name.upper()
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+
+            context['a102_1'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+            if '(' in context['a102_1']:
+                first = context['a102_1'].rfind('(')
+                last = context['a102_1'].rfind(')')
+                context['a102_1'] = context['a102_1'][:first] + context['a102_1'][last + 1:]
+
+            context['a104'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name).upper()
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
             context['a105_1'] = self.dispatchcom1.director.upper()
-            context['a106'] = self.dispatchcom1.position_director
-            context['a123'] = self.dispatchcom1.position_director_vi
+            context['a106'] = intern_utils.convert_to_docx_string(self.dispatchcom1.position_director)
+            context['a123'] = intern_utils.convert_to_docx_string(self.dispatchcom1.position_director_vi)
 
+            context['a72'] = "{:,}".format(self.guild.fee_training_nd_to_pc)
+            context['a72x2'] = "{:,}".format(200*self.guild.fee_training_nd_to_pc)
 
             tpl.render(context)
 
@@ -1553,7 +1799,7 @@ class Invoice(models.Model):
             tempFile.close()
             return tempFile
 
-    def create_doc_1_28(self, intern):
+    def create_doc_1_28(self, intern, index):
         if self.back_to_pc2:
             docs = self.env['intern.document'].search([('name', '=', "Doc1-28")], limit=1)
         else:
@@ -1565,15 +1811,16 @@ class Invoice(models.Model):
 
             context['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
             context['a5'] = intern.name_in_japan.replace(u'・', '  ')
-            context['a84'] = self.job_jp
-            context['a82'] = self.name_working_department
-            context['a92'] = self.dispatchcom2.name
-            context['a95'] = self.dispatchcom2.director.upper()
+            context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
+            context['a82'] = intern_utils.convert_to_docx_string(self.name_working_department)
+            tmp = index/10
+            context['a92'] = intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name)
+            context['a95'] = self.dispatchcom2[tmp].director.upper()
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,self.month_create_letter_promotion,
                                                           self.year_create_letter_promotion)
 
             if self.back_to_pc2:
-                context['a92'] = self.dispatchcom2.name
+                context['a92'] = intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name)
 
             tpl.render(context)
 
@@ -1599,32 +1846,37 @@ class Invoice(models.Model):
             context['a10'] = intern_utils.date_time_in_jp(intern.day_identity,intern.month_identity,intern.year_identity)
             context['a15'] = intern_utils.no_accent_vietnamese(intern.hktt).upper()
             if intern.identity:
-                context['a16'] = u'%s省公安'%(intern_utils.no_accent_vietnamese(intern.place_cmnd.name))
+                context['a16'] = u'%s省公安'%(intern_utils.no_accent_vietnamese(intern.place_cmnd.name).upper())
                 context['a9'] = intern.identity
             else:
                 context['a9'] = intern.identity_2
                 context['a16'] = u'警察局局長'
 
             context['a17'] = intern_utils.no_accent_vietnamese(intern.contact_person).upper()
-            context['a18'] = intern_utils.no_accent_vietnamese(intern.contact_address).upper()
+            context['a18'] = intern_utils.convert_to_docx_string(intern_utils.no_accent_vietnamese(intern.contact_address)).upper()
             context['a19'] = intern.contact_relative.relation_jp
             context['a20'] = intern.contact_phone
             context['a59'] = self.guild.name_in_jp
             context['a70'] = intern_utils.date_time_in_jp(self.guild.day_sign,self.guild.month_sign,self.guild.year_sign)
-            context['a73'] = str("{:,}".format(self.guild.subsidize_start_month))
-            context['a74'] = self.enterprise_doc.name_jp
-            context['a76'] = self.enterprise_doc.address_jp
+
+            if self.guild.note_subsize_jp:
+                context['a73'] = u'%s 円 (%s)'%(str("{:,}".format(self.guild.subsidize_start_month)),self.guild.note_subsize_jp)
+            else:
+                context['a73'] = u'%s 円'%str("{:,}".format(self.guild.subsidize_start_month))
+
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
+            context['a76'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_jp)
             context['a77'] = self.enterprise_doc.phone_number
-            context['a84'] = self.job_jp
+            context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
             context['a86'] = self.year_expire
 
             context['a122'] = intern_utils.date_time_in_jp_missing(self.day_sign_proletter,self.month_sign_proletter,self.year_sign_proletter)
             context['a122_3'] = self.year_sign_proletter
 
-            context['a102'] = self.dispatchcom1.name_en.upper()
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
-            context['a106'] = self.dispatchcom1.position_director
-            context['a112'] = self.dispatchcom1.address_en
+            context['a106'] = intern_utils.convert_to_docx_string(self.dispatchcom1.position_director)
+            context['a112'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
             context['a110'] = self.dispatchcom1.phone_number
             if self.dispatchcom1.fax_number:
                 context['a111'] = self.dispatchcom1.fax_number
@@ -1661,23 +1913,28 @@ class Invoice(models.Model):
             context['a18_1'] = intern.contact_address
             context['a19_1'] = intern.contact_relative.relation
             context['a20'] = intern.contact_phone
-            context['a60_2'] = self.guild.name_in_en.upper().replace('KYODO KUMIAI','')
+            context['a60_2'] = intern_utils.convert_to_docx_string(self.guild.name_in_en.upper()).replace('KYODO KUMIAI','')
             context['a71'] = intern_utils.date_time_in_en(self.guild.day_sign, self.guild.month_sign,
                                                           self.guild.year_sign)
-            context['a73'] = intern_utils.format_number_in_vn(str(self.guild.subsidize_start_month))
-            context['a75'] = self.enterprise_doc.name_romaji.upper()
-            context['a79'] = self.enterprise_doc.address_romoji
+
+            if self.guild.note_subsize_vi:
+                context['a73'] = u'%s Yên (%s)'%(intern_utils.format_number_in_vn(str(self.guild.subsidize_start_month)),self.guild.note_subsize_vi)
+            else:
+                context['a73'] = u'%s Yên'%intern_utils.format_number_in_vn(str(self.guild.subsidize_start_month))
+
+            context['a75'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_romaji).upper()
+            context['a79'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_romoji)
             context['a77'] = self.enterprise_doc.phone_number
-            context['a85'] = self.job_vi
+            context['a85'] = intern_utils.convert_to_docx_string(self.job_vi)
             context['a86'] = self.year_expire
 
             context['a122'] = intern_utils.date_time_in_en_missing(self.day_sign_proletter, self.month_sign_proletter,
                                                            self.year_sign_proletter)
             context['a122_3'] = self.year_sign_proletter
-            context['a104'] = self.dispatchcom1.name
+            context['a104'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name)
             context['a105'] = self.dispatchcom1.director
-            context['a123'] = self.dispatchcom1.position_director_vi
-            context['a124'] = self.dispatchcom1.address_vi
+            context['a123'] = intern_utils.convert_to_docx_string(self.dispatchcom1.position_director_vi)
+            context['a124'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_vi)
             context['a110'] = self.dispatchcom1.phone_number
             if self.dispatchcom1.fax_number:
                 context['a111'] = self.dispatchcom1.fax_number
@@ -1699,7 +1956,7 @@ class Invoice(models.Model):
             context = {}
 
             table_interns = []
-            for i, intern in enumerate(self.interns_pass):
+            for i, intern in enumerate(self.interns_pass_doc):
                 info = {}
                 info['stt'] = str(i + 1)
                 info['htk'] = intern_utils.no_accent_vietnamese(intern.name).upper()
@@ -1711,12 +1968,12 @@ class Invoice(models.Model):
             context['a43'] = intern_utils.date_time_in_jp(self.day_create_plan_training,self.month_create_plan_training,self.year_create_plan_training)
             context['a44'] = intern_utils.date_time_in_jp(self.day_start_training,self.month_start_training,self.year_start_training)
             context['a45'] = intern_utils.date_time_in_jp(self.day_end_training,self.month_end_training,self.year_end_training)
-            context['a53'] = self.training_center.name_jp
+            context['a53'] = intern_utils.convert_to_docx_string(self.training_center.name_jp)
             # context['a54'] = self.training_center.address_jp
-            context['a54'] = self.training_center.address_en
-            context['a59'] = self.guild.name_in_jp
-            context['a61'] = self.guild.address_in_jp
-            context['a66'] = self.guild.position_of_responsive_jp
+            context['a54'] = intern_utils.convert_to_docx_string(self.training_center.address_en)
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a61'] = intern_utils.convert_to_docx_string(self.guild.address_in_jp)
+            context['a66'] = intern_utils.convert_to_docx_string(self.guild.position_of_responsive_jp)
             context['a68'] = self.guild.name_of_responsive_jp
 
             context['tbl_intern'] = table_interns
@@ -1735,11 +1992,11 @@ class Invoice(models.Model):
             stream = BytesIO(docs[0].attachment.decode("base64"))
             tpl = DocxTemplate(stream)
             context = {}
-            intern = self.interns_pass[0]
+            intern = self.interns_pass_doc[0]
             context['a1'] = intern.name.upper()
             context['a2'] = intern.name.upper()
             context['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
-            context['a4'] = str(len(self.interns_pass)-1)
+            context['a4'] = str(len(self.interns_pass_doc)-1)
             context['a5'] = intern.name_in_japan.replace(u'・', ' ')
             context['a6'] = intern_utils.date_time_in_en(intern.day, intern.month, intern.year)
             context['a7'] = intern_utils.date_time_in_jp(intern.day,intern.month,intern.year)
@@ -1752,7 +2009,7 @@ class Invoice(models.Model):
                 context['a16'] = u'警察局局長'
             context['a10'] = intern_utils.date_time_in_jp(intern.day_identity, intern.month_identity,
                                                           intern.year_identity)
-            context['a11'] = str(intern_utils.get_age_jp(intern.day,intern.month,intern.year))
+            context['a11'] = str(intern_utils.get_age_jp(intern.date_create_letter_promotion_short,intern.day,intern.month,intern.year))
             if intern.gender == 'nam':
                 context['a12'] = u'男'
                 context['a13'] = u'MALE'
@@ -1772,30 +2029,30 @@ class Invoice(models.Model):
             context['a19'] = intern.contact_relative.relation_jp
             context['a20'] = intern.contact_phone
             context['a21'] = intern.last_time_education
-            context['a22'] = intern.last_school_education_jp
-            context['a23'] = intern.last_school_education
+            context['a22'] = intern_utils.convert_to_docx_string(intern.last_school_education_jp)
+            context['a23'] = intern_utils.convert_to_docx_string(intern.last_school_education)
             context['a24'] = intern.last_time_education
             context['a25'] = intern.time_employee
-            context['a26'] = intern.job_employee_jp
-            context['a27'] = intern.job_employee_vi
+            context['a26'] = intern_utils.convert_to_docx_string(intern.job_employee_jp)
+            context['a27'] = intern_utils.convert_to_docx_string(intern.job_employee_vi)
 
             if intern.time_employee2 and intern.job_employee2_jp and intern.job_employee2_vi:
                 context['a28'] = intern.time_employee2
-                context['a29'] = intern.job_employee2_jp
-                context['a30'] = intern.job_employee2_vi
+                context['a29'] = intern_utils.convert_to_docx_string(intern.job_employee2_jp)
+                context['a30'] = intern_utils.convert_to_docx_string(intern.job_employee2_vi)
 
             if intern.time_employee3 and intern.job_employee3_jp and intern.job_employee3_vi:
                 context['a31'] = intern.time_employee3
-                context['a32'] = intern.job_employee3_jp
-                context['a33'] = intern.job_employee3_vi
+                context['a32'] = intern_utils.convert_to_docx_string(intern.job_employee3_jp)
+                context['a33'] = intern_utils.convert_to_docx_string(intern.job_employee3_vi)
 
-            context['a34'] = intern_utils.date_time_in_jp(self.dispatchcom2.day_create, self.dispatchcom2.month_create,
-                                                          self.dispatchcom2.year_create)
+            context['a34'] = intern_utils.date_time_in_jp(self.dispatchcom2[0].day_create, self.dispatchcom2[0].month_create,
+                                                          self.dispatchcom2[0].year_create)
             context['a35'] = intern.time_start_at_pc
-            context['a36'] = "%s (%s)" % (self.dispatchcom2.name, self.job_jp)
-            context['a37'] = "%s (%s)" % (self.dispatchcom2.name_vn, self.job_vi)
-            context['a38'] = intern.total_time_at_pc_jp
-            context['a39'] = intern.total_time_at_pc_vi
+            context['a36'] = "%s (%s)" % (intern_utils.convert_to_docx_string(self.dispatchcom2[0].name), intern_utils.convert_to_docx_string(self.job_jp))
+            context['a37'] = "%s (%s)" % (intern_utils.convert_to_docx_string(self.dispatchcom2[0].name_vn), intern_utils.convert_to_docx_string(self.job_vi))
+            context['a38'] = u'%d年%dヶ月' % (intern.time_at_pc_year, intern.time_at_pc_month)
+            context['a39'] = u'%d năm %d tháng' % (intern.time_at_pc_year, intern.time_at_pc_month)
 
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,
                                                           self.month_create_letter_promotion,
@@ -1825,22 +2082,22 @@ class Invoice(models.Model):
             context['a50'] = self.date_pay_finance2
             context['a51'] = self.length_training
             context['a52'] = str(self.hours_training)
-            context['a53'] = self.training_center.name_jp
+            context['a53'] = intern_utils.convert_to_docx_string(self.training_center.name_jp)
             # context['a54'] = self.training_center.address_jp
             context['a55'] = intern_utils.date_time_in_jp(self.training_center.day_create,self.training_center.month_create,self.training_center.year_create)
             context['a56'] = self.training_center.phone_number
             context['a57'] = intern_utils.no_accent_vietnamese(self.training_center.responsive_person)
-            context['a58'] = self.guild.name_acronym
-            context['a59'] = self.guild.name_in_jp
-            context['a60'] = self.guild.name_in_en.upper()
-            context['a61'] = self.guild.address_in_jp
-            context['a62'] = self.guild.address_in_romaji
+            context['a58'] = intern_utils.convert_to_docx_string(self.guild.name_acronym)
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a60'] = intern_utils.convert_to_docx_string(self.guild.name_in_en).upper()
+            context['a61'] = intern_utils.convert_to_docx_string(self.guild.address_in_jp)
+            context['a62'] = intern_utils.convert_to_docx_string(self.guild.address_in_romaji)
             context['a63'] = self.guild.post_code
             context['a64'] = self.guild.phone_number
             if self.guild.fax_number:
                 context['a65'] = self.guild.fax_number
-            context['a66'] = self.guild.position_of_responsive_jp
-            context['a67'] = self.guild.position_of_responsive_vi
+            context['a66'] = intern_utils.convert_to_docx_string(self.guild.position_of_responsive_jp)
+            context['a67'] = intern_utils.convert_to_docx_string(self.guild.position_of_responsive_vi)
             context['a68'] = self.guild.name_of_responsive_jp
             context['a69'] = self.guild.name_of_responsive_romaji
             context['a70'] = intern_utils.date_time_in_jp(self.guild.day_sign, self.guild.month_sign,
@@ -1849,56 +2106,56 @@ class Invoice(models.Model):
                                                           self.guild.year_sign)
             context['a72'] = self.guild.fee_training_nd_to_pc
             context['a73'] = str(self.guild.subsidize_start_month)
-            context['a74'] = self.enterprise_doc.name_jp
-            context['a75'] = self.enterprise_doc.name_romaji
-            context['a76'] = self.enterprise_doc.address_jp
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
+            context['a75'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_romaji)
+            context['a76'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_jp)
             context['a77'] = self.enterprise_doc.phone_number
             if self.enterprise_doc.fax_number:
                 context['a78'] = self.enterprise_doc.fax_number
-            context['a79'] = self.enterprise_doc.address_romoji
+            context['a79'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_romoji)
             context['a80'] = self.enterprise_doc.name_of_responsive_jp
             context['a81'] = self.enterprise_doc.name_of_responsive_en
-            context['a82'] = self.name_working_department
-            context['a83'] = self.job_en
-            context['a84'] = self.job_jp
-            context['a85'] = self.job_vi
+            context['a82'] = intern_utils.convert_to_docx_string(self.name_working_department)
+            context['a83'] = intern_utils.convert_to_docx_string(self.job_en)
+            context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
+            context['a85'] = intern_utils.convert_to_docx_string(self.job_vi)
             context['a86'] = self.year_expire
             context['a87'] = intern_utils.date_time_in_jp(self.day_departure_doc,self.month_departure_doc,self.year_departure_doc)
             context['a88'] = self.year_departure_doc
             context['a89'] = self.month_departure_doc
             context['a90'] = self.person_sign_proletter
-            context['a91'] = self.position_person_sign
-            context['a92'] = self.dispatchcom2.name
-            if self.dispatchcom2.address:
-                context['a93'] = self.dispatchcom2.address
-            context['a95'] = intern_utils.no_accent_vietnamese(self.dispatchcom2.director).upper()
-            context['a96'] = self.dispatchcom2.position_person_sign
-            context['a97'] = self.dispatchcom2.phone_number
-            if self.dispatchcom2.fax_number:
-                context['a98'] = self.dispatchcom2.fax_number
-            context['a99'] = intern_utils.date_time_in_jp(self.dispatchcom2.day_create,self.dispatchcom2.month_create,self.dispatchcom2.year_create)
+            context['a91'] = intern_utils.convert_to_docx_string(self.position_person_sign)
+            context['a92'] = intern_utils.convert_to_docx_string(self.dispatchcom2[0].name)
+            if self.dispatchcom2[0].address:
+                context['a93'] = intern_utils.convert_to_docx_string(self.dispatchcom2[0].address)
+            context['a95'] = intern_utils.no_accent_vietnamese(self.dispatchcom2[0].director).upper()
+            context['a96'] = intern_utils.convert_to_docx_string(self.dispatchcom2[0].position_person_sign)
+            context['a97'] = self.dispatchcom2[0].phone_number
+            if self.dispatchcom2[0].fax_number:
+                context['a98'] = self.dispatchcom2[0].fax_number
+            context['a99'] = intern_utils.date_time_in_jp(self.dispatchcom2[0].day_create,self.dispatchcom2[0].month_create,self.dispatchcom2[0].year_create)
             context['a100'] = self.developing_employee
 
             #Phap nhan
-            context['a101'] = self.dispatchcom1.name_jp
-            context['a102'] = self.dispatchcom1.name_en
-            context['a104'] = self.dispatchcom1.name
+            context['a101'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_jp)
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en)
+            context['a104'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name)
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
             context['a106'] = self.dispatchcom1.position_director
             # context['a107'] = self.dispatchcom1.address_jp
-            context['a108'] = self.dispatchcom1.address_en
+            context['a108'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
             context['a110'] = self.dispatchcom1.phone_number
             if self.dispatchcom1.fax_number:
                 context['a111'] = self.dispatchcom1.fax_number
 
-            context['a112'] = self.dispatchcom1.address_en
+            context['a112'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
             context['a113'] = intern_utils.date_time_in_jp(self.dispatchcom1.day_create,self.dispatchcom1.month_create,self.dispatchcom1.year_create)
 
             counter = 113
             #TTS di cung
-            if len(self.interns_pass) >1:
+            if len(self.interns_pass_doc) >1:
                 table_interns = []
-                for i, itern in enumerate(self.interns):
+                for i, itern in enumerate(self.interns_pass_doc):
                     if i>0:
                         info = {}
                         info['a114'] = intern_utils.no_accent_vietnamese(itern.name).upper()
@@ -1908,7 +2165,7 @@ class Invoice(models.Model):
                         info['a118'] = intern_utils.date_time_in_jp(itern.day, itern.month, itern.year)
                         info['a119'] = intern_utils.date_time_in_en(itern.day, itern.month, itern.year)
                         info['a120'] = intern_utils.date_time_in_vn(itern.day, itern.month, itern.year)
-                        info['a121'] = str(intern_utils.get_age_jp(itern.day, itern.month,itern.year))
+                        info['a121'] = str(intern_utils.get_age_jp(intern.date_create_letter_promotion_short,itern.day, itern.month,itern.year))
 
 
                         if itern.gender == 'nam':
@@ -1935,30 +2192,32 @@ class Invoice(models.Model):
                         if itern.hktt:
                             info['a128'] = intern_utils.no_accent_vietnamese(itern.hktt).upper()
                         info['a129'] = itern.last_time_education
-                        info['a130'] = itern.last_school_education_jp
-                        info['a131'] = itern.last_school_education
+                        info['a130'] = intern_utils.convert_to_docx_string(itern.last_school_education_jp)
+                        info['a131'] = intern_utils.convert_to_docx_string(itern.last_school_education)
                         info['a132'] = itern.last_time_education
 
                         info['a133'] = itern.time_employee
-                        info['a134'] = itern.job_employee_jp
-                        info['a135'] = itern.job_employee_vi
+                        info['a134'] = intern_utils.convert_to_docx_string(itern.job_employee_jp)
+                        info['a135'] = intern_utils.convert_to_docx_string(itern.job_employee_vi)
 
                         if itern.time_employee2 and itern.job_employee2_jp and itern.job_employee2_vi:
                             info['a136'] = itern.time_employee2
-                            info['a137'] = itern.job_employee2_jp
-                            info['a138'] = itern.job_employee2_vi
+                            info['a137'] = intern_utils.convert_to_docx_string(itern.job_employee2_jp)
+                            info['a138'] = intern_utils.convert_to_docx_string(itern.job_employee2_vi)
 
                         if itern.time_employee3 and itern.job_employee3_jp and itern.job_employee3_vi:
                             info['a139'] = itern.time_employee3
-                            info['a140'] = itern.job_employee3_jp
-                            info['a141'] = itern.job_employee3_vi
-                        info['a142'] = intern_utils.date_time_in_jp(self.dispatchcom2.day_create,self.dispatchcom2.month_create,self.dispatchcom2.year_create)
-                        info['a143'] = itern.time_start_at_pc
-                        info['a144'] = "%s (%s)" % (self.dispatchcom2.name, self.job_jp)
-                        info['a145'] = "%s (%s)" % (self.dispatchcom2.name_vn, self.job_vi)
-                        info['a146'] = itern.total_time_at_pc_jp
-                        info['a147'] = itern.total_time_at_pc_vi
+                            info['a140'] = intern_utils.convert_to_docx_string(itern.job_employee3_jp)
+                            info['a141'] = intern_utils.convert_to_docx_string(itern.job_employee3_vi)
 
+                        tmp = i/10
+                        info['a142'] = intern_utils.date_time_in_jp(self.dispatchcom2[tmp].day_create,self.dispatchcom2[tmp].month_create,self.dispatchcom2[tmp].year_create)
+                        info['a143'] = itern.time_start_at_pc
+                        info['a144'] = "%s (%s)" % (intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name), intern_utils.convert_to_docx_string(self.job_jp))
+                        info['a145'] = "%s (%s)" % (intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name_vn), intern_utils.convert_to_docx_string(self.job_vi))
+                        info['a146'] = u'%d年%dヶ月' % (itern.time_at_pc_year, itern.time_at_pc_month)
+                        info['a147'] = u'%d năm %d tháng' % (itern.time_at_pc_year, itern.time_at_pc_month)
+                        _logger.info(u"itern.contact_person %s %s" %(itern.contact_person,itern.name))
                         info['a148'] = intern_utils.no_accent_vietnamese(itern.contact_person).upper()
                         info['a149'] = intern_utils.no_accent_vietnamese(itern.contact_address).upper()
                         info['a150'] = itern.contact_relative.relation_jp
@@ -1985,10 +2244,10 @@ class Invoice(models.Model):
             stream = BytesIO(docs[0].attachment.decode("base64"))
             tpl = DocxTemplate(stream)
             context = {}
-            context['a60'] = self.guild.name_in_en.upper()
-            context['a69'] = self.guild.name_of_responsive_romaji
-            context['a61'] = self.guild.address_in_jp
-            context['a62'] = self.guild.address_in_romaji
+            context['a60'] = intern_utils.convert_to_docx_string(self.guild.name_in_en).upper()
+            context['a69'] = intern_utils.convert_to_docx_string(self.guild.name_of_responsive_romaji)
+            context['a61'] = intern_utils.convert_to_docx_string(self.guild.address_in_jp)
+            context['a62'] = intern_utils.convert_to_docx_string(self.guild.address_in_romaji)
             if self.guild.license_number:
                 context['a120'] = self.guild.license_number
             if self.guild.fax_number:
@@ -1996,15 +2255,15 @@ class Invoice(models.Model):
             else:
                 context['a64_65'] = self.guild.phone_number
 
-            context['a74'] = self.enterprise_doc.name_jp
-            context['a75'] = self.enterprise_doc.name_romaji
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
+            context['a75'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_romaji)
             context['a81'] = self.enterprise_doc.name_of_responsive_en
-            context['a79'] = self.enterprise_doc.address_romoji
+            context['a79'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_romoji)
             context['a77'] = self.enterprise_doc.phone_number
             context['a86'] = self.year_expire
 
             table_interns = []
-            for i, intern in enumerate(self.interns_pass):
+            for i, intern in enumerate(self.interns_pass_doc):
                 info = {}
                 info['stt'] = str(i+1)
                 info['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
@@ -2013,7 +2272,7 @@ class Invoice(models.Model):
                     info['a13'] = 'MALE'
                 else:
                     info['a13'] = 'FEMALE'
-                info['a83'] = self.job_en.upper()
+                info['a83'] = intern_utils.convert_to_docx_string(self.job_en).upper()
                 info['a88'] = self.year_departure_doc
                 info['a89'] = self.month_departure_doc
                 table_interns.append(info)
@@ -2023,12 +2282,12 @@ class Invoice(models.Model):
                                                           self.year_create_letter_promotion)
 
             context['a91'] = self.position_person_sign
-            context['a90'] = intern_utils.no_accent_vietnamese(self.person_sign_proletter)
+            context['a90'] = intern_utils.no_accent_vietnamese(self.person_sign_proletter).upper()
 
-            context['a102'] = self.dispatchcom1.name_en
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en)
             context['a121'] = self.dispatchcom1.license_number
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
-            context['a108'] = self.dispatchcom1.address_en
+            context['a108'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
 
             phone_tax = self.dispatchcom1.phone_number
             if self.dispatchcom1.fax_number and self.dispatchcom1.fax_number != self.dispatchcom1.phone_number:
@@ -2048,11 +2307,11 @@ class Invoice(models.Model):
             stream = BytesIO(docs[0].attachment.decode("base64"))
             tpl = DocxTemplate(stream)
             context = {}
-            context['a59'] = self.guild.name_in_jp
-            context['a60'] = self.guild.name_in_en.upper()
-            context['a68'] = self.guild.name_of_responsive_jp
-            context['a62'] = self.guild.address_in_romaji
-            context['a61'] = self.guild.address_in_jp
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a60'] = intern_utils.convert_to_docx_string(self.guild.name_in_en).upper()
+            context['a68'] = intern_utils.convert_to_docx_string(self.guild.name_of_responsive_jp)
+            context['a62'] = intern_utils.convert_to_docx_string(self.guild.address_in_romaji)
+            context['a61'] = intern_utils.convert_to_docx_string(self.guild.address_in_jp)
             if self.guild.license_number:
                 context['a120'] = self.guild.license_number
             if self.guild.fax_number:
@@ -2060,15 +2319,15 @@ class Invoice(models.Model):
             else:
                 context['a64_65'] = self.guild.phone_number
 
-            context['a74'] = self.enterprise_doc.name_jp
-            context['a75'] = self.enterprise_doc.name_romaji
-            context['a80'] = self.enterprise_doc.name_of_responsive_jp
-            context['a76'] = self.enterprise_doc.address_jp
+            context['a74'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_jp)
+            context['a75'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_romaji)
+            context['a80'] = intern_utils.convert_to_docx_string(self.enterprise_doc.name_of_responsive_jp)
+            context['a76'] = intern_utils.convert_to_docx_string(self.enterprise_doc.address_jp)
             context['a77'] = self.enterprise_doc.phone_number
             context['a86'] = self.year_expire
 
             table_interns = []
-            for i, intern in enumerate(self.interns_pass):
+            for i, intern in enumerate(self.interns_pass_doc):
                 info = {}
                 info['stt'] = str(i+1)
                 info['a3'] = intern_utils.no_accent_vietnamese(intern.name).upper()
@@ -2077,7 +2336,7 @@ class Invoice(models.Model):
                     info['a12'] = u'男'
                 else:
                     info['a12'] = u'女'
-                info['a84'] = self.job_jp
+                info['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
                 info['a88'] = self.year_departure_doc
                 info['a89'] = self.month_departure_doc
                 table_interns.append(info)
@@ -2089,12 +2348,12 @@ class Invoice(models.Model):
                                                           self.year_create_letter_promotion)
 
             context['a91_1'] = self.position_person_sign_jp
-            context['a90_1'] = intern_utils.no_accent_vietnamese(self.person_sign_proletter)
+            context['a90_1'] = intern_utils.no_accent_vietnamese(self.person_sign_proletter).upper()
 
-            context['a102'] = self.dispatchcom1.name_en
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en)
             context['a121'] = self.dispatchcom1.license_number
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director).upper()
-            context['a108'] = self.dispatchcom1.address_en
+            context['a108'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
 
             phone_tax = self.dispatchcom1.phone_number
             if self.dispatchcom1.fax_number and self.dispatchcom1.fax_number != self.dispatchcom1.phone_number:
@@ -2115,14 +2374,14 @@ class Invoice(models.Model):
             tpl = DocxTemplate(stream)
             tempFile = NamedTemporaryFile(delete=False)
             context = {}
-            context['a53'] = self.training_center.name_jp
+            context['a53'] = intern_utils.convert_to_docx_string(self.training_center.name_jp)
             context['a57'] = intern_utils.no_accent_vietnamese(self.training_center.responsive_person)
             context['a55'] = intern_utils.date_time_in_jp(self.training_center.day_create,
                                                           self.training_center.month_create,
                                                           self.training_center.year_create)
 
             context['a56'] = intern_utils.convert_to_vn_phone(self.training_center.phone_number)
-            context['a125'] = self.training_center.address_en
+            context['a125'] = intern_utils.convert_to_docx_string(self.training_center.address_en)
 
             mission = self.training_center.mission
             if '\n' in self.training_center.mission:
@@ -2131,7 +2390,7 @@ class Invoice(models.Model):
                 lineBreak = '<w:br/>'
                 test = self.training_center.mission.replace('\n',lineBreak)
                 mission = pre + test + post
-            context['a126'] = mission
+            context['a126'] = intern_utils.convert_to_docx_string(mission)
             context['a127'] = self.training_center.number_of_employee
 
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,
@@ -2151,7 +2410,12 @@ class Invoice(models.Model):
             tpl = DocxTemplate(stream)
             tempFile = NamedTemporaryFile(delete=False)
             context = {}
-            context['a102'] = self.dispatchcom1.name_en.upper()
+            context['a102'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+            context['a102_1'] = intern_utils.convert_to_docx_string(self.dispatchcom1.name_en).upper()
+            if '(' in context['a102_1']:
+                first = context['a102_1'].rfind('(')
+                last = context['a102_1'].rfind(')')
+                context['a102_1'] = context['a102_1'][:first] + context['a102_1'][last+1:]
             context['a105'] = intern_utils.no_accent_vietnamese(self.dispatchcom1.director)
 
             context['a113'] = intern_utils.date_time_in_jp(self.dispatchcom1.day_create,
@@ -2159,16 +2423,16 @@ class Invoice(models.Model):
                                                           self.dispatchcom1.year_create)
 
             context['a110_1'] = intern_utils.convert_to_vn_phone(self.dispatchcom1.phone_number)
-            context['a112'] = self.dispatchcom1.address_en
+            context['a112'] = intern_utils.convert_to_docx_string(self.dispatchcom1.address_en)
 
             mission = self.dispatchcom1.mission
             if '\n' in mission:
                 pre = '<w:p><w:r><w:t>'
                 post = '</w:t></w:r></w:p>'
                 lineBreak = '<w:br/>'
-                test = self.training_center.mission.replace('\n', lineBreak)
+                test = self.dispatchcom1.mission.replace('\n', lineBreak)
                 mission = pre + test + post
-            context['a128'] = mission
+            context['a128'] = intern_utils.convert_to_docx_string(mission)
             context['a129'] = self.dispatchcom1.number_of_employee
             context['a130'] = self.dispatchcom1.capital
             context['a131'] = self.dispatchcom1.revenue
@@ -2182,3 +2446,491 @@ class Invoice(models.Model):
             tempFile.flush()
             tempFile.close()
             return tempFile
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        if self.env.user.has_group('hh_intern.group_hs_user') and not self.env.user.has_group('hh_intern.group_hs_manager'):
+            employee = self.env['hh.employee'].search([('user_id','=',self.env.user.id)])
+            if employee:
+                if domain is None:
+                    domain = []
+                    domain.append(('room_pttt','in',employee[0].department_hs.ids))
+                else:
+                    domain.append(('room_pttt', 'in', employee[0].department_hs.ids))
+                return super(Invoice,self).search_read(domain,fields,offset,limit,order)
+        else:
+            return super(Invoice, self).search_read( domain, fields, offset, limit, order)
+
+
+    status = fields.Selection([(4,'Khởi tạo'),(5,'Tiến cử'),(1,'Thi tuyển'),(2,'Chốt Trúng tuyển'),(3,'Hoàn thành'),
+                               (6,'Tạm dừng'),(7,'Huỷ bỏ')],string='Trạng thái đơn hàng',default=4)
+
+    @api.one
+    def pass_exam(self):
+        if self.status < 2:
+            self.status = 2
+
+    @api.one
+    def finish_invoice(self):
+        if self.status < 3:
+            self.status = 3
+
+
+
+    def create_certification_end_train(self):
+        doc_certification = self.env['intern.document'].search([('name', '=', "CCDT")], limit=1)
+        if doc_certification:
+            stream = BytesIO(doc_certification[0].attachment.decode("base64"))
+            tpl = DocxTemplate(stream)
+            tempFile = NamedTemporaryFile(delete=False)
+            context = {}
+
+            table_interns = []
+            for i, intern in enumerate(self.interns_pass_doc):
+                info = {}
+                info['name'] = intern.name_without_signal.upper()
+                info['ns'] = intern_utils.date_time_in_jp(intern.day, intern.month, intern.year)
+                table_interns.append(info)
+
+            context['tbl_intern'] = table_interns
+            context['a59']= intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a53'] = intern_utils.convert_to_docx_string(self.training_center.name_jp)
+            context['a54'] = intern_utils.convert_to_docx_string(self.training_center.address_en)
+            context['a56'] = intern_utils.convert_to_vn_phone(self.training_center.phone_number)
+            context['a44'] = intern_utils.date_time_in_jp(self.day_start_training, self.month_start_training,
+                                                          self.year_start_training)
+            context['a45'] = intern_utils.date_time_in_jp(self.day_end_training, self.month_end_training,
+                                                          self.year_end_training)
+
+            context['a46'] = intern_utils.date_time_in_jp(self.day_create_plan_training_report_customer,
+                                                          self.month_create_plan_training_report_customer,
+                                                          self.year_create_plan_training_report_customer)
+            context['a57'] = intern_utils.no_accent_vietnamese(self.training_center.responsive_person)
+
+            tpl.render(context)
+            tpl.save(tempFile)
+            tempFile.flush()
+            tempFile.close()
+            return tempFile
+
+
+    # order_tts = [6,0,()]
+    #
+
+    @api.model
+    def create(self, vals):
+        # arr_intern_order = []
+        # if 'intern_order' in vals:
+        #     arr_intern_order = vals['intern_order']
+        #     del vals['intern_order']
+        #
+        # arr_intern_pass_order = []
+        # if 'intern_pass_order' in vals:
+        #     arr_intern_pass_order = vals['intern_pass_order']
+        #     del vals['intern_pass_order']
+
+        _logger.info("CREATE %s" % str(vals))
+        result = super(Invoice, self).create(vals)
+
+        # _logger.info("RESULT %s" % str(result))
+        # if len(arr_intern_order)>0:
+        #     def getKeySequence(item):
+        #         return item[1]
+        #     arr_intern_order.sort(key=getKeySequence)
+        #
+        #     arrayId = []
+        #     for id in arr_intern_order:
+        #         arrayId.append(id[0])
+        #     self._cr.execute('DELETE FROM intern_order WHERE intern_order.invoice_id = %d' % result.id)
+        #
+        #     query_insert = 'INSERT INTO intern_order (invoice_id, intern_id) VALUES (%d,ARRAY%s)' % (
+        #                 result.id, str(arrayId))
+        #
+        #     _logger.info("EXECUTE %s"%query_insert)
+        #
+        #     self._cr.execute(query_insert)
+        #
+        # if len(arr_intern_pass_order) > 0:
+        #     def getKeySequence(item):
+        #         return item[1]
+        #
+        #     arrayId = []
+        #     arr_intern_pass_order.sort(key=getKeySequence)
+        #     for id in arr_intern_pass_order:
+        #         arrayId.append(id[0])
+        #
+        #     self._cr.execute('DELETE FROM internpass_order WHERE internpass_order.invoice_id = %d' % result.id)
+        #
+        #     query_insert = 'INSERT INTO internpass_order (invoice_id, intern_id) VALUES (%d,ARRAY%s)' % (
+        #         result.id, str(arrayId))
+        #     self._cr.execute(query_insert)
+
+        if 'dispatchcom2' in vals :
+            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%result.id)
+            if len(vals['dispatchcom2'])>0 and len(vals['dispatchcom2'][0][2]) > 0:
+                query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(result.id,str(vals['dispatchcom2'][0][2]))
+                self._cr.execute(query_insert)
+
+        return result
+
+
+
+    @api.multi
+    def write(self, vals):
+
+        # _logger.info("WRITE1111 %s" % str(vals))
+
+        # for intr in self.interns:
+        #     _logger.info("Sequence %d"%intr.sequence)
+
+        # if 'interns' in vals and 'intern_order' in vals:
+        #
+        #     def getKeySequence(item):
+        #         return item[1]
+        #     vals['intern_order'].sort(key=getKeySequence)
+        #     arrayId = []
+        #     for id in vals['intern_order']:
+        #         arrayId.append(id[0])
+        #     self._cr.execute('DELETE FROM intern_order WHERE intern_order.invoice_id = %d' % self.id)
+        #     if len(arrayId) > 0:
+        #         query_insert = 'INSERT INTO intern_order (invoice_id, intern_id) VALUES (%d,ARRAY%s)' % (
+        #                     self.id, str(arrayId))
+        #         self._cr.execute(query_insert)
+        #     del vals['intern_order']
+        #
+        #
+        # if 'interns_pass' in vals and 'intern_pass_order' in vals:
+        #     def getKeySequence(item):
+        #         return item[1]
+        #
+        #     arrayId = []
+        #     vals['intern_pass_order'].sort(key=getKeySequence)
+        #     for id in vals['intern_pass_order']:
+        #         arrayId.append(id[0])
+        #
+        #     self._cr.execute('DELETE FROM internpass_order WHERE internpass_order.invoice_id = %d' % self.id)
+        #     if len(arrayId) > 0:
+        #         query_insert = 'INSERT INTO internpass_order (invoice_id, intern_id) VALUES (%d,ARRAY%s)' % (
+        #             self.id, str(arrayId))
+        #         self._cr.execute(query_insert)
+        #     del vals['intern_pass_order']
+
+        if 'dispatchcom2' in vals:
+            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%self.id)
+
+            if len(vals['dispatchcom2']) > 0 and len(vals['dispatchcom2'][0][2]) > 0:
+                query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(
+                    self.id,str(vals['dispatchcom2'][0][2]))
+                self._cr.execute(query_insert)
+                # _logger.info("AAAA %s" % query_insert)
+            # self._cr.execute('DELETE FROM dispatchcom2_intern_invoice_rel WHERE '
+            #                  'dispatchcom2_intern_invoice_rel.intern_invoice_id = %d' % self.id)
+            # if len(vals['dispatchcom2'][0][2]) > 0:
+            #     query_insert = 'INSERT INTO ' \
+            #                    'dispatchcom2_intern_invoice_rel (intern_invoice_id, dispatchcom2_id) VALUES '
+            #     for i in vals['dispatchcom2'][0][2]:
+            #         query_insert = query_insert + '(%d,%d),' % (self.id, i)
+            #
+            #     self._cr.execute(query_insert[:-1])
+        return super(Invoice, self).write(vals)
+
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        # _logger.info("CONTEXT %s"%self._context)
+        result = super(Invoice,self).read(fields,load)
+        if len(result) == 1:
+            for record in result:
+                # if 'interns_pass' in record:
+                #     try:
+                #         self._cr.execute('SELECT intern_id FROM internpass_order WHERE internpass_order.invoice_id = %d'%record['id'])
+                #         tmpresult = self._cr.dictfetchall()
+                #         # _logger.info("RESULT %s"%tmpresult )
+                #         if len(tmpresult)==1:
+                #             ids = tmpresult[0]['intern_id']
+                #             if len(ids) == len(record['interns_pass']):
+                #                 record['interns_pass'] = ids
+                #     except:
+                #         _logger.info("Loi gi do")
+                # if 'interns' in record:
+                #     try:
+                #         self._cr.execute('SELECT intern_id FROM intern_order WHERE intern_order.invoice_id = %d'%record['id'])
+                #         tmpresult = self._cr.dictfetchall()
+                #         # _logger.info("RESULT %s"%tmpresult )
+                #         if len(tmpresult)==1:
+                #             ids = tmpresult[0]['intern_id']
+                #             if len(ids) == len(record['interns']):
+                #                 record['interns'] = ids
+                #     except:
+                #         _logger.info("Loi gi do")
+
+                if 'dispatchcom2' in record:
+                    try:
+                        self._cr.execute(
+                            'SELECT dispatch_id FROM dispatch_order WHERE dispatch_order.invoice_id = %d' % record['id'])
+                        tmpresult2 = self._cr.dictfetchall()
+                        if len(tmpresult2) == 1:
+                            ids2 = tmpresult2[0]['dispatch_id']
+                            if len(ids2) == len(record['dispatchcom2']):
+                                record['dispatchcom2'] = ids2
+                    except:
+                        _logger.info("LOI GI")
+        return result
+
+    @api.multi
+    def unlink(self):
+        if not self:
+            return True
+
+        if self.env.user.id == SUPERUSER_ID:
+            for id in self.ids:
+                # self._cr.execute('DELETE FROM internpass_order WHERE internpass_order.invoice_id = %s' % id)
+                # self._cr.execute('DELETE FROM intern_order WHERE intern_order.invoice_id = %s' % id)
+                self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %s' % id)
+
+            return super(Invoice, self).unlink()
+
+        for id in self.ids:
+            self._cr.execute('SELECT create_uid, name FROM intern_invoice WHERE intern_invoice.id = %s'%id)
+            tmpresult = self._cr.fetchone()
+            if tmpresult[0] != self.env.uid:
+                raise ValidationError(u"Bạn không có quyền xoá đơn hàng %s"%tmpresult[1])
+
+        for id in self.ids:
+            # self._cr.execute('DELETE FROM internpass_order WHERE internpass_order.invoice_id = %s'%id)
+            # self._cr.execute('DELETE FROM intern_order WHERE intern_order.invoice_id = %s'%id)
+            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %s'%id)
+
+        return super(Invoice,self).unlink()
+
+
+    #fields.Selection([(1,'Thi tuyển'),(2,'Trúng tuyển'),(3,'Hoàn thành'),(4,'Khởi tạo'),(5,'Tiến cử'),
+    #                           (6,'Huỷ bỏ')],string='Trạng thái đơn hàng',default=4)
+    @api.one
+    def start_promotion(self):
+        ensure_one = False
+        for intern in self.interns_clone:
+            if intern.promoted:
+                ensure_one = True
+                break
+
+        if ensure_one:
+            self.write({
+                'status': 5,
+            })
+        else:
+            raise ValidationError(u"Chưa có TTS nào trong danh sách tiến cử")
+
+    @api.one
+    def confirm_exam(self):
+        ensure_one = False
+        for intern in self.interns_clone:
+            if intern.confirm_exam and not intern.escape_exam:
+                ensure_one = True
+                break
+        if ensure_one:
+            self.write({
+                'status': 1,
+            })
+            for intern in self.interns_clone:
+                intern.write({
+                    'exam': True,
+                })
+        else:
+            raise ValidationError(u"Chưa có TTS nào trong danh sách chốt thi tuyển")
+
+    @api.one
+    def confirm_pass(self):
+        ensure_one = False
+        for intern in self.interns_clone:
+            if intern.pass_exam and not intern.escape_exam:
+                ensure_one = True
+                break
+        if ensure_one:
+            self.write({
+                'status': 2,
+            })
+            for intern in self.interns_clone:
+                intern.write({
+                    'done_exam': True,
+                })
+        else:
+            raise ValidationError(u"Chưa có TTS nào trong danh sách trúng tuyển")
+
+
+    reason_pause_cancel = fields.Char('Lý do hoãn/huỷ đơn')
+
+    # @api.one
+    def pause_invoice(self,reason):
+        self.write({
+            'status': 6,
+            'reason_pause_cancel':reason,
+        })
+        for intern in self.interns_clone:
+            intern.write({
+                'cancel_exam': True,
+            })
+
+    # @api.one
+    def cancel_invoice(self,reason):
+        self.write({
+            'status': 7,
+            'reason_pause_cancel': reason,
+        })
+        for intern in self.interns_clone:
+            intern.write({
+                'cancel_exam': True,
+            })
+
+
+    # @api.model
+    # def get_issue_count(self,intern_id,invoice_id):
+    #     self._cr.execute('SELECT * FROM intern_issue WHERE intern_id = %s AND invoice_id = %s' % (intern_id, invoice_id))
+    #     dict = self._cr.dictfetchall()
+    #     return dict
+        # if tmpCount:
+        #     return tmpCount
+        # else:
+        #     return 0
+        # context = self._context.copy()
+        # return {
+        #     'name': 'form_name',
+        #     'view_type': 'form',
+        #     'view_mode': 'form',
+        #     'res_model': 'intern.invoice',
+        #     'view_id': False,
+        #     'type': 'ir.actions.act_window',
+        #     'target':'new',
+        #     'context': context,
+        # }
+
+
+    date_confirm_form = fields.Date('Ngày chốt form')
+    fee_policy = fields.Char('Phí+cơ chế đơn hàng')
+    bonus_target = fields.Char('Thưởng+chỉ tiêu')
+
+
+
+    date_arrival_jp = fields.Date('Ngày tới Nhật')
+    port_of_entry_jp =fields.Char('Cảng nhập cảnh')
+    name_of_airline =fields.Char('Tên hãng hàng không')
+
+
+    def create_visa_application_form(self,intern):
+        doc_form = self.env['intern.document'].search([('name', '=', "VISA_FORM")], limit=1)
+        if doc_form:
+            stream = BytesIO(doc_form[0].attachment.decode("base64"))
+            tpl = DocxTemplate(stream)
+            tempFile = NamedTemporaryFile(delete=False)
+            context = {}
+
+            list_words = intern.name_without_signal.upper().split(' ')
+            context['a3_1'] = list_words[list_words.length-2]
+            context['a3_2'] = ' '.join(list_words[:-1])
+            context['a7'] = intern_utils.date_time_in_en(intern.day,intern.month, intern.year)
+            context['pro'] = intern_utils.no_accent_vietnamese(intern.province.name)
+
+            if intern.gender == 'nam':
+                context['a13_1'] = CheckedBox().init(24)
+                context['a13_2'] = CheckBox().init(24)
+            else:
+                context['a13_1'] = CheckBox().init(24)
+                context['a13_2'] = CheckedBox().init(24)
+
+            if intern.marital_status.id is 0:
+                context['a14_1'] = CheckedBox().init(24)
+                context['a14_2'] = CheckBox().init(24)
+                context['a14_3'] = CheckBox().init(24)
+                context['a14_4'] = CheckBox().init(24)
+            elif intern.marital_status.id is 1:
+                context['a14_1'] = CheckBox().init(24)
+                context['a14_2'] = CheckedBox().init(24)
+                context['a14_3'] = CheckBox().init(24)
+                context['a14_4'] = CheckBox().init(24)
+            elif intern.marital_status.id is 2:
+                context['a14_1'] = CheckBox().init(24)
+                context['a14_2'] = CheckBox().init(24)
+                context['a14_3'] = CheckBox().init(24)
+                context['a14_4'] = CheckedBox().init(24)
+            if intern.identity:
+                context['a9'] = intern.identity
+            else:
+                context['a9'] = intern.identity_2
+
+            if intern.passport_type == '0':
+                context['a160_1'] = CheckedBox().init(24)
+                context['a160_2'] = CheckBox().init(24)
+                context['a160_3'] = CheckBox().init(24)
+                context['a160_4'] = CheckBox().init(24)
+            elif intern.passport_type == '1':
+                context['a160_1'] = CheckBox().init(24)
+                context['a160_2'] = CheckedBox().init(24)
+                context['a160_3'] = CheckBox().init(24)
+                context['a160_4'] = CheckBox().init(24)
+            elif intern.passport_type == '2':
+                context['a160_1'] = CheckBox().init(24)
+                context['a160_2'] = CheckBox().init(24)
+                context['a160_3'] = CheckedBox().init(24)
+                context['a160_4'] = CheckBox().init(24)
+            elif intern.passport_type == '3':
+                context['a160_1'] = CheckBox().init(24)
+                context['a160_2'] = CheckBox().init(24)
+                context['a160_3'] = CheckBox().init(24)
+                context['a160_4'] = CheckedBox().init(24)
+            context['a161'] = intern.passport_no
+            context['a162'] = intern.passport_place
+            context['a163'] = intern.passport_date_issue
+            context['a164'] = intern.passport_issuing_authority
+            context['a165'] = intern.passport_date_expire
+
+            context['a86'] = self.year_expire
+            context['a166'] = self.date_arrival_jp.strftime('%d/%m/%Y')
+            context['a167'] = self.port_of_entry_jp.upper()
+            context['a168'] = self.name_of_airline.upper()
+
+            context['a60'] = intern_utils.convert_to_docx_string(self.guild.name_in_en)
+            context['a64'] = self.guild.phone_number
+            context['a63'] = self.guild.post_code
+            context['a62'] = intern_utils.convert_to_docx_string(self.guild.address_in_romaji)
+
+            context['a169'] = intern.date_duration_previous_in_jp
+            context['sdt'] = intern.phone_number
+
+            tpl.render(context)
+            tpl.save(tempFile)
+            tempFile.flush()
+            tempFile.close()
+            return tempFile
+
+    def add_to_phieutraloi(self):
+        phieutraloi = self.env['intern.phieutraloi'].search([('has_full','=',False)])
+        count_man = 0
+        count_women = 0
+        for rec in phieutraloi:
+            count_man+= rec.total_intern_men - rec.len_interns_man
+            count_women+= rec.total_intern_women - rec.len_interns_women
+        count_current_invoice_man = 0
+        count_current_invoice_women = 0
+        for intern in self.interns_pass_doc:
+            if not intern.phieutraloi_id:
+                if intern.gender and intern.gender=='nam':
+                    count_current_invoice_man+=1
+                else:
+                    count_current_invoice_women+=1
+        if count_current_invoice_man>count_man and count_current_invoice_women>count_women:
+            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam và % nữ'%((count_current_invoice_man-count_man),(count_current_invoice_women-count_women)))
+        elif count_current_invoice_man>count_man:
+            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam' % (count_current_invoice_man - count_man))
+        elif count_current_invoice_women>count_women:
+            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nữ' % (count_current_invoice_women - count_women))
+        else:
+            for intern in self.interns_pass_doc:
+                for rec in phieutraloi:
+                    if intern.gender and intern.gender == 'nam' and rec.total_intern_men>rec.len_interns_man:
+                        rec.interns = [(4, intern.id)]
+                        rec.len_interns_man +=1
+                    elif intern.gender and intern.gender == 'nu' and rec.total_intern_women>rec.len_interns_women:
+                        rec.interns = [(4, intern.id)]
+                        rec.len_interns_women += 1
+
+
+

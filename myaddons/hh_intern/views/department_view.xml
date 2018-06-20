@@ -4,6 +4,7 @@
         <field name="model">department</field>
         <field name="arch" type="xml">
             <form string="Phòng ban">
+                <field name="id" invisible="1"/>
                 <table class="o_group o_inner_group">
                     <tbody>
                         <tr>
@@ -12,7 +13,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="room_type"  style="width:200px"/>
+                                    <field name="room_type"  style="width:200px" attrs="{'readonly':[('id','>',0)]}"/>
                                 </div>
                             </td>
                         </tr>
@@ -34,20 +35,39 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="manager"  style="width:200px" options="{ 'no_open': True,'no_quick_create':True}"/>
+                                    <field name="manager"  style="width:200px"/>
                                 </div>
                             </td>
                         </tr>
+                        <tr attrs="{'invisible':[('room_type', '!=', '0')]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="block"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="block"  style="width:200px" options="{ 'no_open': True,'no_quick_create':True}"/>
+                                </div>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
 
                 <notebook>
-                        <page string="Thành viên">
+                        <page string="Thành viên" attrs="{'invisible':[('room_type', '=', '0')]}">
                             <field name="members" mode="tree">
-                                <tree class="class_education">
+                                <tree >
                                     <field name="name"/>
                                     <field name="gender"/>
                                     <field name="date_of_birth"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string = "Nhóm" attrs="{'invisible':[('room_type', '!=', '0')]}">
+                            <field name="groups" mode="tree">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="members"/>
                                 </tree>
                             </field>
                         </page>
@@ -61,10 +81,8 @@
         <field name="model">department</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="room_type"/>
                 <field name="name"/>
                 <field name="manager"/>
-                <field name="members"/>
             </tree>
         </field>
     </record>
@@ -87,55 +105,62 @@
         <field name="model">hh.employee</field>
         <field name="arch" type="xml">
             <form string="Nhân viên">
-                <table class="o_group o_inner_group">
-                    <tbody>
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="name"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="name"  style="width:250px"/>
-                                </div>
-                            </td>
-                        </tr>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Họ tên"/>
+                        </h1>
+                        <field name="room_type" style="width:200px" placeholder="--Chọn phòng ban--"/>
+                    </div>
 
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="gender"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="gender"  style="width:100px"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="day" string="Ngày sinh"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'"/>
-                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng"/>
-                                    <field name="year" style="width:50px" placeholder="Năm" data-inputmask="'mask': '9999'"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="room_type"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="room_type"  style="width:100px"/>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <notebook>
+                        <page name="public" string="Thông tin cơ bản">
+                            <table class="o_group o_inner_group">
+                             <tbody>
+                                <tr>
+                                    <td colspan="1" width="150px" class="columnDivider">
+                                          <label for="gender" string="Giới tính"/>
+                                    </td>
+                                    <td colspan="1"  width="150px">
+                                        <field name="gender" style="width:100px"/>
+                                    </td>
+                                    <td/>
+                                </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                          <label string="Ngày sinh"/>
+                                    </td>
+                                    <td colspan="1"  width="200px">
+                                        <field name="date_of_birth"/>
+                                    </td>
+                                     <td/>
+                                 </tr>
+                             </tbody>
+                            </table>
+                        </page>
+                        <page string="Quản lý hồ sơ" groups="hh_intern.group_hs_manager">
+                            <group>
+                                <field name="department_hs" widget="many2many_tags" domain="[('room_type', '=', '1')]"/>
+                            </group>
+                        </page>
+                        <page name="hr_settings" string="HR Settings" groups="base.group_erp_manager">
+                            <group>
+                                <group string='Status' name="active_group">
+                                    <field name="user_id" string="Related User"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
@@ -161,6 +186,30 @@
                 <field name="name"/>
                 <field name="room_type"/>
             </search>
+        </field>
+    </record>
+
+    <record id="view_group_form" model="ir.ui.view">
+        <field name="name">Nhóm tuyển dụng</field>
+        <field name="model">department.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+                <notebook>
+                    <page string="Thành viên">
+                        <field name="members" mode="tree" domain="[('room_type','=','0')]">
+                            <tree>
+                                <field name="name"/>
+                                <field name="gender"/>
+                                <field name="date_of_birth"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+
+            </form>
         </field>
     </record>
 </odoo>

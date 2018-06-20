@@ -1,10 +1,17 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data>
         <template id="assets_backend" name="module_name assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hh_intern/static/src/js/list_view_editable.js"></script>
+                <script type="text/javascript" src="/hh_intern/static/src/js/list_view.js"></script>
+                <script type="text/javascript" src="/hh_intern/static/src/js/form_view_custom.js"></script>
+                <script type="text/javascript" src="/hh_intern/static/src/js/widget_tree_intern.js"></script>
+                <script type="text/javascript" src="/hh_intern/static/src/js/widget_custom.js"></script>
                 <link rel="stylesheet" href="/hh_intern/static/src/css/intern.css"/>
+                <!--<link rel="text/javascript" href="/hh_intern/static/src/js/core.js"/>-->
+                <link rel="stylesheet" href="/hh_intern/static/src/css/scroll-fix.css"/>
             </xpath>
         </template>
     </data>
-</openerp>
+</odoo>

@@ -1,0 +1,16 @@
+<odoo>
+    <!-- Action to open To-do list -->
+    <act_window id="action_document_list"
+        name="Document"
+        res_model="intern.document"
+        view_mode="tree,form" />
+
+
+
+
+     <!--<menuitem id="menu_document_root"-->
+        <!--name="Tài liệu mẫu" />-->
+
+    <menuitem id="menu_document_list" parent="hh_intern.menu_common_data"
+        name="Tài liệu mẫu" action="action_document_list" groups="hh_intern.group_manager"/>
+</odoo>

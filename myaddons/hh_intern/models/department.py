@@ -2,43 +2,74 @@
 
 from odoo import models, fields, api
 import logging
+from odoo import tools, _
+from odoo.modules.module import get_module_resource
 _logger = logging.getLogger(__name__)
 
 class Employee(models.Model):
     _name = 'hh.employee'
     _description = u'Nhân viên'
-    name= fields.Char("Tên", required=True)
-    gender = fields.Selection([('nam', 'Nam'), ('nu', 'Nữ')])
 
+    _inherits = {'resource.resource': "resource_id"}
 
+    name_related = fields.Char(related='resource_id.name', string="Resource Name", readonly=True, store=True)
 
-    #ngay sinh
-    day = fields.Char("Ngày", size=2)
-    month = fields.Selection([(1, '01'), (2, '02'), (3, '03'), (4, '04'),
-                              (5, '05'), (6, '06'), (7, '07'), (8, '08'),
-                              (9, '09'), (10, '10'), (11, '11'), (12, '12'), ], "Tháng")
+    #
+    # resource_id = fields.Many2one('resource.resource', string='Resource',
+    #                               ondelete='cascade', required=True, auto_join=True)
 
-    year = fields.Char("Năm", size=4)
+    gender = fields.Selection([('nam', 'Nam'), ('nu', 'Nữ')],string='Giới tính')
 
-    date_of_birth = fields.Char("Ngày sinh", store=False, compute='_date_of_birth')
+    @api.model
+    def _default_image(self):
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
-    @api.one
-    @api.depends('day', 'month', 'year')
-    def _date_of_birth(self):
-        self.date_of_birth = "%s/%s/%s" % (self.day, self.month, self.year)
+    image = fields.Binary("Photo", default=_default_image, attachment=True,
+                          help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+    image_medium = fields.Binary("Medium-sized photo", attachment=True,
+                                 help="Medium-sized photo of the employee. It is automatically "
+                                      "resized as a 128x128px image, with aspect ratio preserved. "
+                                      "Use this field in form views or some kanban views.")
+    image_small = fields.Binary("Small-sized photo", attachment=True,
+                                help="Small-sized photo of the employee. It is automatically "
+                                     "resized as a 64x64px image, with aspect ratio preserved. "
+                                     "Use this field anywhere a small image is required.")
+
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(Employee, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(Employee, self).write(vals)
+
+    @api.onchange('user_id')
+    def _onchange_user(self):
+        self.name = self.user_id.name
+
+    date_of_birth = fields.Date("Ngày sinh")
 
     room_type = fields.Selection(
         [('0', 'Tuyển dụng'), ('1', 'Phát triển thị trường'), ('2', 'Kiểm soát'), ('3', 'Đối ngoại'),
          ('4', 'Hồ sơ'), ('5', 'Kế toán')], string="Phòng ban")
+
+    department_hs = fields.Many2many('department',string='Phụ trách hồ sơ của các phòng')
 
 class Department(models.Model):
     _name = 'department'
     _description = u'Phòng ban'
     room_type = fields.Selection([('0','Tuyển dụng'),('1','Phát triển thị trường'),('2','Kiểm soát'),('3','Đối ngoại'),
                                   ('4','Hồ sơ'),('5','Kế toán')],string="Phòng", required=True)
-    name = fields.Char("Tên")
+    name = fields.Char("Tên phòng")
     manager = fields.Many2one('hh.employee',string="Trưởng phòng")
     members = fields.Many2many('hh.employee')
+
+    groups = fields.One2many("department.group", "department_id", string="Nhóm")
+
+    block = fields.Many2one('department.block',string='Khối TD')
 
     @api.onchange('room_type')
     def domain_for_member(self):
@@ -50,3 +81,40 @@ class Department(models.Model):
         if self.room_type:
             return {'domain': {'manager': [('room_type', '=', self.room_type)]}}
 
+    @api.model
+    def create(self, vals):
+        if vals['room_type'] == '0':
+            if 'members' in vals:
+                vals['members'] = False
+        else:
+            if 'groups' in vals:
+                vals['groups'] = False
+
+            if 'block' in vals:
+                vals['block'] = False
+        return super(Department, self).create(vals)
+
+    @api.onchange('room_type')
+    def onchange_place(self):
+        res = {}
+        if self.room_type:
+            res['domain'] = {'manager': [('room_type', '=', self.room_type)],
+                             'members': [('room_type', '=', self.room_type)]}
+        return res
+
+
+class Group(models.Model):
+    _name= 'department.group'
+    _description = u'Nhóm tuyển dụng'
+
+    name=fields.Char('Tên nhóm')
+
+    department_id= fields.Many2one('department',string='Phòng TD', required=True)
+
+    members = fields.Many2many('hh.employee')
+
+class Block(models.Model):
+    _name = 'department.block'
+    _description = u'Khối tuyển dụng'
+
+    name = fields.Char('Tên khối')

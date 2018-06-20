@@ -1,0 +1,40 @@
+<odoo>
+    <record id="invoice_form_my" model="ir.ui.view">
+
+            <field name="name">Extends Form</field>
+
+            <field name="model">intern.invoice</field>
+
+            <field name="inherit_id" ref="hh_intern.view_manage_invoice_doingoai"/>
+
+            <field name="arch" type="xml">
+
+            	<button name="start_translate_form" position="after">
+
+            		<button string="Tải TB trúng tuyển" type="object" name="download_pass_report" attrs="{'invisible': [('status', '!=', 2)]}"/>
+
+            	</button>
+
+            </field>
+
+    </record>
+
+    <record id="paperformat_euro_landscape"
+        model="report.paperformat">
+        <field name="name">European A4 Landscape</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">3</field>
+        <field name="margin_right">3</field>
+        <field name="orientation">Landscape</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">300</field>
+    </record>
+
+
+</odoo>

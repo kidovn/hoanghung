@@ -1,0 +1,41 @@
+.o_report_content_table  td, .o_fields_head th {
+  white-space: nowrap;
+}
+.o_report_content_table  > thead > tr > th.o_search_options {
+  white-space: nowrap;
+}
+
+
+.table-scroll{
+    border: 1px solid red;
+    height: 250px;
+    overflow: auto;
+}
+.o_report_creator_sidebar{
+    padding-top:30px;
+
+}
+.mypager{
+    padding-top:20px;
+    display: flex;
+}
+
+.o_list_view_scroll_new{
+    width:100%;
+}
+
+.my_cp_pager{
+    margin-left:auto;
+}
+
+.button_selected{
+    border-color: #7c7bad;
+    background-color: #7c7bad;
+    color: white;
+}
+.o_report_field{
+    width:100%
+}
+.o_search_options{
+
+}

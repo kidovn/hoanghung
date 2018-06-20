@@ -1,0 +1,174 @@
+<odoo>
+
+    <report
+        id="interns_pass_report"
+        model="intern.invoice"
+        string="Thông báo Trúng tuyển"
+        report_type="qweb-html"
+        attachment_use="False"
+        name="hh_intern_pass_report.report_intern_pass_view"
+        paperformat="hh_intern_pass_report.paperformat_euro_landscape"
+        menu="False"
+    />
+
+    <template id="pass_report_style">
+        .pass_content thead > tr > th{
+            border: 1px solid #dfdfdf;
+            padding:3px;
+            vertical-align: middle;
+            text-align:center;
+            background-color:#a9d888;
+        }
+        .pass_content tbody > tr > td{
+            border: 1px solid #ddd;
+            padding:3px;
+            vertical-align: middle;
+            text-align:center;
+        }
+        p{
+            margin: 0 0 0px;
+        }
+    </template>
+
+    <template id="report_intern_pass_view">
+
+        <t t-call="report.html_container">
+            <t>
+             <div class="page">
+
+                <style type="text/css">
+					<t t-call="hh_intern_pass_report.pass_report_style"/>
+				</style>
+
+                <h1>THÔNG BÁO DANH SÁCH TTS TRÚNG TUYỂN</h1>
+                 <div>
+                     <div style="display:inline-block; vertical-align: top;">Kính gửi:</div>
+                     <div style="display:inline-block;">
+                         <p>Phòng Tuyển dụng</p>
+                         <p>Phòng Kiểm soát</p>
+                         <p>Phòng Kế toán</p>
+                         <p>Phòng hồ sơ</p>
+                         <p>Trung tâm đào tạo</p>
+                     </div>
+                 </div>
+                 <br/>
+                 <div>Phòng <t t-esc="record.room_pttt.name"/>- Hoàng Hưng Japan xin gửi danh sách TTS trúng tuyển vào Đơn hàng <t t-esc="record.name"/> thi tuyển ngày <t t-esc="record.date_exam"/></div>
+                 <br/>
+                 <div>DANH SÁCH TRÚNG TUYỂN CHÍNH THỨC</div>
+                 <table class="pass_content" style="font-size: 10px;">
+                     <thead>
+                         <tr>
+                             <th style="width: 50px">STT</th>
+                             <th style="width: 150px;">Tên Xí Nghiệp (Tên Công ty đầy đủ bằng tiếng Nhật và tiếng Việt)</th>
+                             <th style="width: 150px;">Nghiệp đoàn</th>
+                             <th style="width: 85px;">Mã số</th>
+                             <th style="width: 250px;">Họ và tên</th>
+                             <th style="width: 180px;">Năm sinh</th>
+                             <th style="width: 200px;">Quê quán</th>
+                             <th style="width: 250px;">Địa chỉ làm việc</th>
+                             <th style="width: 300px;">Ngành nghề</th>
+                             <th style="width: 85px;">Hạn HĐ</th>
+                             <th style="width: 180px;">Ngày trúng tuyển</th>
+                             <th style="width: 180px;">Ngày nhập học trúng tuyển</th>
+                             <th style="width: 180px;">Ngày dự kiến xuất cảnh</th>
+                             <th style="width: 180px;">Pháp nhân</th>
+                             <th style="width: 350px;">Ghi chú</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <t t-foreach="record.interns_clone" t-as="intern" >
+                             <tr t-if="intern.pass_exam">
+                                 <td data-field="stt"><t t-esc="intern_index+1"/></td>
+                                 <td data-field="xi_nghiep" ><t t-esc="record.enterprise_doc.name_jp"/></td>
+                                 <td data-field="nghiep_doan" ><t t-esc="record.guild.name_acronym"/></td>
+                                 <td data-field="ma_so">
+                                     <!--<t t-esc="codes[intern_index]"/> -->
+                                 </td>
+                                 <td data-field="name"><t t-esc="intern.name"/></td>
+                                 <td data-field="birthday"><t t-esc="intern.date_of_birth_short"/></td>
+                                 <td data-field="province"><t t-esc="intern.province.name"/></td>
+                                 <td data-field="place_to_work"><t t-esc="record.place_to_work"/></td>
+                                 <td data-field="job">
+                                     <p><t t-esc="record.job_vi"/></p>
+                                     <p><t t-esc="record.job_jp"/></p>
+                                 </td>
+                                 <td data-field="expire"><t t-esc="record.year_expire"/></td>
+                                 <td data-field="date_pass"><t t-esc="record.date_exam"/></td>
+                                 <td data-field="date_training"><t t-esc="record.date_start_training"/></td>
+                                 <td data-field="date_departure"><t t-esc="record.date_departure"/></td>
+                                 <td data-field="dispatchcom"><t t-esc="record.dispatchcom1.name_short"/></td>
+                                 <td>Trúng tuyển chính thức</td>
+                             </tr>
+                         </t>
+                     </tbody>
+                 </table>
+                 <t t-if="record.interns_preparatory">
+                     <br/>
+                     <div>DANH SÁCH DỰ BỊ</div>
+                     <table class="pass_content" style="font-size: 10px;">
+                         <thead>
+                             <tr>
+                                 <th style="width: 50px">STT</th>
+                                 <th style="width: 150px;">Tên Xí Nghiệp (Tên Công ty đầy đủ bằng tiếng Nhật và tiếng Việt)</th>
+                                 <th style="width: 150px;">Nghiệp đoàn</th>
+                                 <th style="width: 85px;">Mã số</th>
+                                 <th style="width: 250px;">Họ và tên</th>
+                                 <th style="width: 180px;">Năm sinh</th>
+                                 <th style="width: 200px;">Quê quán</th>
+                                 <th style="width: 250px;">Địa chỉ làm việc</th>
+                                 <th style="width: 300px;">Ngành nghề</th>
+                                 <th style="width: 85px;">Hạn HĐ</th>
+                                 <th style="width: 180px;">Ngày trúng tuyển</th>
+                                 <th style="width: 180px;">Ngày nhập học trúng tuyển</th>
+                                 <th style="width: 180px;">Ngày dự kiến xuất cảnh</th>
+                                 <th style="width: 180px;">Pháp nhân</th>
+                                 <th style="width: 350px;">Ghi chú</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <t t-foreach="record.interns_preparatory" t-as="intern" >
+                                 <tr t-if="intern.preparatory_exam">
+                                     <td data-field="stt"><t t-esc="intern_index+1"/></td>
+                                     <td data-field="xi_nghiep" ><t t-esc="record.enterprise_doc.name_jp"/></td>
+                                     <td data-field="nghiep_doan" ><t t-esc="record.guild.name_acronym"/></td>
+                                     <td data-field="ma_so">
+                                         <!--<t t-esc="codes_pre[intern_index]"/> -->
+                                     </td>
+                                     <td data-field="name"><t t-esc="intern.name"/></td>
+                                     <td data-field="birthday"><t t-esc="intern.date_of_birth_short"/></td>
+                                     <td data-field="province"><t t-esc="intern.province.name"/></td>
+                                 </tr>
+                             </t>
+                         </tbody>
+                     </table>
+                 </t>
+                 <br/>
+                 <div>
+                     <div style="display:inline-block;width:30%;font-size:9px">
+                         <p>Nơi nhận: </p>
+                         <p>- BĐH (báo cáo) </p>
+                         <p>- Trưởng phòng TD</p>
+                         <p>- Hiệu trưởng TTĐT</p>
+                         <p>- Kế toán trưởng</p>
+                     </div>
+                     <div style="display:inline-block;width:30%">
+                         <p>Phê duyệt</p>
+                         <br/>
+                         <br/>
+                         <br/>
+                         <p>Nguyễn Minh Huyên</p>
+                     </div>
+                     <div style="display:inline-block;width:35%;text-align:center;">
+                         <p>Hà Nội, <t t-esc="today"/></p>
+                         <p>Đại diện <t t-esc="record.room_pttt.name"/> </p>
+                         <br/>
+                         <br/>
+                         <br/>
+
+                     </div>
+                 </div>
+             </div>
+            </t>
+        </t>
+    </template>
+</odoo>

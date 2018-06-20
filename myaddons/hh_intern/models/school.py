@@ -15,11 +15,11 @@ class School(models.Model):
 
     @api.multi
     def name_get(self):
-        if not self.env.context.get('jp', False):
-            return super(School, self).name_get()
+        # if not self.env.context.get('jp', False):
+        #     return super(School, self).name_get()
         res = []
         for record in self:
-            _logger.info(record)
-            res.append((record.id, record.name_in_jp))
+            # _logger.info(record)
+            res.append((record.id, record.name_in_vn))
 
         return res

@@ -1,0 +1,25 @@
+<odoo>
+    <record model="ir.actions.act_window" id="action_promotion_invoice_history">
+        <field name="name">Đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_promotion_invoice_form')})]"/>
+        <!--<field name="context">{'default_status': 1,'search_default_not_done_filter':1}</field>-->
+    </record>
+
+
+
+    <menuitem id="menu_tien_cu_root" name="Tiến cử" groups="hh_intern.group_tc_user"/>
+
+
+    <menuitem id="menu_tien_cu_history" parent="menu_tien_cu_root"
+        name="Danh sách đơn hàng" action="action_promotion_invoice_history" groups="hh_intern.group_tc_user"/>
+
+   <!--<menuitem id="menu_document_generator" parent="menu_doi_ngoai_root"-->
+        <!--name="Tạo đơn hàng" action="action_document_generator" />-->
+
+    <menuitem id="menu_tien_cu_intern" parent="menu_tien_cu_root"
+        name="Danh sách TTS" action="hh_intern.action_internks_list" groups="hh_intern.group_tc_user"/>
+</odoo>

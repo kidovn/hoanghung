@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <template id="assets_backend" name="module_name assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+
+                <script type="text/javascript" src="/hh_hoso/static/src/js/dynamic_list_view.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/report_creation.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/report_filter.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/maps.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/report_pivot_custom.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/favorite_menu.js"/>
+                <script type="text/javascript" src="/hh_hoso/static/src/js/custom_pyeval.js"/>
+
+                <link rel="stylesheet" href="/hh_hoso/static/src/less/report_template.less" type="text/less"/>
+                <link rel="stylesheet" href="/hh_hoso/static/src/css/scroll-fix.css"/>
+
+
+                <!--<script type="text/javascript" src="/hh_hoso/static/src/js/jquery_extend.js"></script>-->
+                <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>-->
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

@@ -102,9 +102,9 @@
                             </td>
                             <td colspan="1"  width="250px">
                                 <div>
-                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_create" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_create" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -122,6 +122,17 @@
             <form string="Pháp Nhân - Chi tiết">
                 <table class="o_group">
                      <tbody>
+                         <tr>
+                             <td colspan="1" width="300px" class="columnDivider">
+                                 <label for="name_short" />
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="name_short"/>
+                                </div>
+                            </td>
+                         </tr>
+
                          <tr>
                              <td colspan="1" width="300px" class="columnDivider">
                                  <label for="name" />
@@ -254,9 +265,9 @@
                             </td>
                             <td colspan="1"  width="250px">
                                 <div>
-                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_create" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_create" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -447,7 +458,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity"/>
+                                    <field name="identity" data-inputmask-regex="[0-9]+"/>
                                 </div>
                             </td>
 
@@ -461,9 +472,9 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_of_birth" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -473,7 +484,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity_2"/>
+                                    <field name="identity_2" data-inputmask-regex="[0-9]+"/>
                                 </div>
                             </td>
 
@@ -492,9 +503,9 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_identity" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -502,14 +513,14 @@
 
                         </tr>
                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="long_term" invisible="1"/>
-                            </td>
-                             <td colspan="1" >
-                                <div>
-                                     <field name="long_term" style="width:10%" invisible="1"/>
-                                </div>
-                            </td>
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                  <!--<label for="long_term" invisible="1"/>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                     <!--<field name="long_term" style="width:10%" invisible="1"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
                             <td colspan="1" width="150px" class="columnDivider">
                                 <label for="place_cmnd"/>
                             </td>
@@ -526,9 +537,9 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day_sent_doc" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_sent_doc" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_sent_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_sent_doc"  class="oe_read_only"/>
                                 </div>
                             </td>
@@ -587,7 +598,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="phone_number" style="width:150px"/>
+                                     <field name="phone_number" style="width:150px" widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -595,7 +606,7 @@
                             </td>
                             <td colspan="1">
                                 <div>
-                                    <field name="phone_number_relative" style="width: 100px; display: inline-block"/>
+                                    <field name="phone_number_relative" style="width: 100px; display: inline-block" widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
                                     <field name="relative_note" style="width: 80px" placeholder="Quan hệ" widget="selection"/>
                                 </div>
                             </td>
@@ -685,10 +696,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="last_education_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="last_education_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="last_education_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="last_education_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="last_education_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="last_education_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="last_time_education" class="oe_read_only"/>
                                 </div>
@@ -728,10 +739,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="last_education_from_month2" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="last_education_from_year2" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="last_education_from_year2" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="last_education_to_month2" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="last_education_to_year2" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="last_education_to_year2" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="last_time_education2" class="oe_read_only"/>
                                 </div>
@@ -771,10 +782,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="time_employee_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"  widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="time_employee_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="time_employee" class="oe_read_only"/>
                                 </div>
@@ -814,10 +825,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="time_employee2_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee2_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee2_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-bloc;padding-left:5px;padding-right:5pxk" />
                                     <field name="time_employee2_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee2_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee2_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="time_employee2" class="oe_read_only"/>
                                 </div>
@@ -856,10 +867,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="time_employee3_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee3_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee3_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="time_employee3_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee3_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee3_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="time_employee3" class="oe_read_only"/>
                                 </div>
@@ -900,10 +911,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="time_employee4_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee4_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee4_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="time_employee4_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee4_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee4_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="time_employee4" class="oe_read_only"/>
                                 </div>
@@ -944,10 +955,10 @@
                             <td colspan="1" width="350px">
                                 <div>
                                     <field name="time_employee5_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee5_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee5_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="time_employee5_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_employee5_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_employee5_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
 
                                    <field name="time_employee5" class="oe_read_only"/>
                                 </div>
@@ -989,7 +1000,7 @@
                                 <div>
                                     <label string="Từ " class="oe_edit_only" style="display: inline-block"/>
                                     <field name="time_start_at_pc_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="time_start_at_pc_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="time_start_at_pc_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <label string="đến nay" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
                                     <field name="time_start_at_pc" class="oe_read_only"/>
                                 </div>
@@ -1027,25 +1038,15 @@
                      <tbody>
                         <tr>
                             <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="total_time_at_pc_jp"/>
+                                  <label string="Tổng thời gian làm việc tại cty PC2"/>
                             </td>
                             <td colspan="1"  width="350px">
                                 <div>
-                                    <field name="total_time_at_pc_jp" />
+                                    <field name="time_at_pc_year" style="width: 40px;display: inline-block" widget="mask_regex" data-inputmask-regex="[0-9]{0,2}"/> năm
+                                    <field name="time_at_pc_month" style="width: 40px;display: inline-block" widget="mask_regex" data-inputmask-regex="[0-9]{0,2}"/> tháng
                                 </div>
                             </td>
                             <td colspan="1"/>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="total_time_at_pc_vi"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="total_time_at_pc_vi" />
-                                </div>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -1100,9 +1101,9 @@
                             </td>
                             <td colspan="1"  width="400px">
                                 <div>
-                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_create" style="width: 45px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_create" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_create" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_create" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -1306,18 +1307,19 @@
                 <table class="o_group o_inner_group">
                     <tbody>
                         <tr>
-                             <td colspan="1" width="300px" class="columnDivider">
+                             <td colspan="1" width="250px" class="columnDivider">
                                   <label for="date_sign_agreement"/>
                             </td>
-                            <td colspan="1"  width="250px">
+                            <td colspan="1"  width="200px">
                                 <div>
-                                    <field name="day_sign" style="width: 45px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="day_sign" style="width: 45px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_sign" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_sign" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="year_sign" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_sign_agreement" class="oe_read_only"/>
                                 </div>
                             </td>
-                            <td colspan="1"/>
+                            <td colspan="1" width="250px"/>
+                            <td width="200px"/>
                          </tr>
 
                         <tr>
@@ -1330,20 +1332,165 @@
                                 </div>
                             </td>
                         </tr>
-
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <tbody>
                         <tr>
                             <td colspan="1" width="250px" class="columnDivider">
                                   <label for="subsidize_start_month"/>
                             </td>
-                            <td colspan="1" >
+                            <td colspan="1" width="200px">
                                 <div>
                                     <field name="subsidize_start_month" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="note_subsize_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="note_subsize_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td/>
+                            <td/>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="note_subsize_vi"/>
+                            </td>
+                            <td colspan="1" width="300px">
+                                <div>
+                                    <field name="note_subsize_vi" />
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </form>
+        </field>
+    </record>
+
+
+    <record id="invoice_filter" model="ir.ui.view">
+        <field name="name">invoice_filter</field>
+        <field name="model">intern.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Search modules">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="enterprise_doc"/>
+                <field name="guild"/>
+           </search>
+        </field>
+    </record>
+
+    <record id ="view_enterprise_tree" model="ir.ui.view">
+        <field name="name">Xí nghiệp</field>
+        <field name="model">intern.enterprise</field>
+        <field name="arch" type="xml">
+                <tree>
+                    <field name="name_romaji"/>
+                    <field name="name_jp"/>
+                </tree>
+        </field>
+    </record>
+
+     <record id ="view_guide_tree" model="ir.ui.view">
+        <field name="name">Nghiệp đoàn</field>
+        <field name="model">intern.guild</field>
+        <field name="arch" type="xml">
+                <tree>
+                    <field name="name_acronym"/>
+                    <field name="name_in_en"/>
+                </tree>
+        </field>
+    </record>
+
+    <!--<record id="hosoxin_tree" model="ir.ui.view">-->
+        <!--<field name="name">Ho so xin</field>-->
+        <!--<field name="model">intern.hosoxin</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree>-->
+                <!--<field name="name"/>-->
+                <!--<field name="total_intern"/>-->
+                <!--<field name="total_current_intern"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="hosoxin_form" model="ir.ui.view">-->
+        <!--<field name="name">Ho so xin</field>-->
+        <!--<field name="model">intern.hosoxin</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form>-->
+                <!--<group>-->
+                    <!--<field name="name"/>-->
+                    <!--<field name="total_intern"/>-->
+                    <!--<field name="total_intern_women"/>-->
+                    <!--<field name="total_intern_men"/>-->
+                <!--</group>-->
+                <!--<notebook>-->
+                    <!--<page string="Danh sách TTS">-->
+                        <!--<field name="interns"  widget="many2many" domain="[('pass_exam','=',True),('hosoxin_id','=',False)]">-->
+                            <!--<tree >-->
+                                <!--<field name="name"/>-->
+                                <!--<field name='cmnd_or_tcc'/>-->
+                                <!--<field name='date_of_birth'/>-->
+                                <!--<field name='province'/>-->
+                                <!--<field name='pass_exam' invisible="1"/>-->
+                                <!--<field name='hosoxin_id' invisible="1"/>-->
+                            <!--</tree>-->
+                        <!--</field>-->
+                    <!--</page>-->
+                <!--</notebook>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <record id ="view_phieutraloi_form" model="ir.ui.view">
+        <field name="name">Phiếu trả lời</field>
+        <field name="model">intern.phieutraloi</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="total_intern_women"/>
+                    <field name="total_intern_men"/>
+                    <field name="total_intern"/>
+                </group>
+                <notebook>
+                    <page string="Danh sách thực tập sinh">
+                         <field name="interns" string="Danh sách thực tập sinh"  mode="tree"
+                                domain="[('pass_exam','=',True),('cancel_pass','=',False)]" widget="many2many"
+                                options="{'no_create': True,'no_open':True,'not_delete': True}">
+                             <tree edit="false" editable="bottom">
+                                 <field name="name" />
+                                 <field name="gender"/>
+                                 <field name="cmnd_or_tcc" />
+                                 <field name="date_of_birth" />
+                                 <field name="province"/>
+                             </tree>
+                         </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+
+     <record id ="view_intern_pass_tree" model="ir.ui.view">
+        <field name="name">Thực tập sinh trúng tuyển</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="custom_id" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="province" readonly="1"/>
+                    <field name="cmnd_or_tcc" readonly="1"/>
+                    <field name="date_of_birth_short" readonly="1"/>
+                    <field name="invoice_id" readonly="1"/>
+                </tree>
         </field>
     </record>
 </odoo>

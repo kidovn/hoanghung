@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="templatenew" xml:space="preserve">
+
+    <div t-name="ListViewNew" class="table-responsive" style="overflow-x: unset;">
+        <table class="o_list_view table table-condensed">
+            <thead>
+                <tr t-if="options.header">
+                    <th>STT</th>
+                    <t t-foreach="columns" t-as="column">
+                        <th t-if="column.meta">
+                            <t t-esc="column.string"/>
+                        </th>
+                    </t>
+                    <th t-if="options.selectable" class="o_list_record_selector" width="1">
+                        <div class="o_checkbox">
+                            <input type="checkbox"/><span/>
+                        </div>
+                    </th>
+                    <t t-foreach="columns.length" t-as="index">
+                        <th t-if="!columns[index].meta and columns[index].invisible !== '1' and show_column(columns[index])" t-att-data-id="columns[index].id"
+                            t-attf-class="#{((options.sortable and columns[index].sortable !='0' and columns[index].tag !== 'button') ? 'o_column_sortable' : '')}"
+                                t-att-width="columns[index].width()">
+                            <t t-if="columns[index].tag !== 'button'">
+                                <t t-raw="columns[index].heading()"/>
+                                <t t-raw="additional_heading_info(columns[index])"/>
+                            </t>
+                        </th>
+                    </t>
+                    <t t-if="options.deletable and is_list_pre()">
+                        <th  class="o_list_record_delete"/>
+                    </t>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td/>
+                    <td t-if="options.selectable"/>
+                    <td t-foreach="aggregate_columns" t-as="column" t-att-data-field="column.id" t-att-title="column.label">
+                    </td>
+                    <td t-if="options.deletable" class="o_list_record_delete"/>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <t t-name="ListViewNew.rowsnew">
+        <t t-set="counter" t-value="0"/>
+        <t t-foreach="records.length" t-as="index">
+            <t t-if="should_visible(index)">
+                <t t-set="counter" t-value="counter+1"/>
+                <t t-call="ListViewNew.row">
+                    <t t-set="record" t-value="records.at(index)"/>
+                </t>
+            </t>
+        </t>
+    </t>
+    <!--<t t-name="ListViewNew.rowsnew" >-->
+        <!--<t t-foreach="recordsnew" t-as="rc">-->
+            <!--<t t-call="ListViewNew.row">-->
+                <!--<t t-set="record" t-value="rc"/>-->
+            <!--</t>-->
+        <!--</t>-->
+        <!--&lt;!&ndash;<t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr data-id="-1" bgcolor="#FFF000"><td t-attf-colspan="columns_count">TEST</td></tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;<t t-foreach="records_pre" t-as="rc">&ndash;&gt;-->
+            <!--&lt;!&ndash;<t t-call="ListView.row">&ndash;&gt;-->
+                <!--&lt;!&ndash;<t t-set="record" t-value="rc"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;</t>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</t>&ndash;&gt;-->
+    <!--</t>-->
+
+
+
+    <tr t-name="ListViewNew.row"
+            t-att-data-id="record.get('id')"
+            t-attf-style="#{(view.fonts || view.colors) ? view.style_for(record) : ''}"
+            t-attf-bgcolor="#{record.get('condition_count') == 20 ? '#3fe28b' : '#FFFFFF'}"
+            t-attf-class="#{view.compute_decoration_classnames(record)}">
+        <t t-set="asData" t-value="record.toForm().data"/>
+        <td><t t-esc="counter"/></td>
+        <t t-foreach="columns" t-as="column">
+            <td t-if="column.meta"> </td>
+        </t>
+        <td t-if="options.selectable" class="o_list_record_selector">
+            <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
+            <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
+            <div t-if="!options.radio" class="o_checkbox">
+                <input type="checkbox" name="radiogroup" t-att-checked="checked"/><span/>
+            </div>
+        </td>
+        <t t-foreach="columns" t-as="column">
+            <t t-set="number" t-value="column.type === 'integer' or column.type == 'float' or column.type == 'monetary'"/>
+            <t t-set="text" t-value="column.type === 'text'"/>
+            <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
+            <td t-if="!column.meta and column.invisible !== '1' and show_column(column)" t-att-title="column.help"
+                t-attf-class="#{modifiers.readonly ? 'o_readonly' : ''} #{number ? 'o_list_number' : ''} #{text ? 'o_list_text' : ''} #{column.id === 'sequence' ? 'o_handle_cell' : ''}
+                    #{column.tag === 'button' ? 'o_list_button' : ''} #{(column.widget == 'one2many_custom'|| column.widget == 'integer_custom'|| column.widget == 'bool_button_toggle_extend')?'o_one2many_col':''}"
+                t-att-data-field="column.id"
+                ><t t-raw="render_cell(record, column)"/></td>
+        </t>
+        <t t-if="options.deletable and deletable(record)">
+            <td  class='o_list_record_delete'>
+                <span name="delete" class="fa fa-trash-o"/>
+            </td>
+        </t>
+    </tr>
+
+    <t t-extend="ListViewNew.row">
+        <!-- adds back padding to row being rendered after edition, if necessary
+             (if not deletable add back padding), otherwise the row being added is
+             missing columns
+         -->
+        <t t-jquery="&gt; :last" t-operation="after">
+
+            <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
+        </t>
+    </t>
+
+    <t t-name="MyBoolButton">
+        <t t-if="widget.get_value()">
+            <span class="o_stat_text o_not_hover text-success"><t t-esc="widget.string_true"/></span>
+        </t>
+        <t t-if="!widget.get_value()">
+            <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
+        </t>
+    </t>
+
+    <t t-name="MyBoolDelete">
+        <t t-if="widget.get_value()">
+            <td  class='o_list_record_delete_custom'>
+                <span name="delete" class="fa fa-trash-o"/>
+            </td>
+        </t>
+    </t>
+</templates>

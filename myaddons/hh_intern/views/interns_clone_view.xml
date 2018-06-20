@@ -1,0 +1,2828 @@
+<odoo>
+    <record id="view_internks_form_clone" model="ir.ui.view">
+        <field name="name">Chi tiết thực tập sinh</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form string="Thực tập sinh">
+                <!--<header>-->
+                     <!--<field name="intern_status" widget="statusbar"/>-->
+                <!--</header>-->
+
+                <field name="id" invisible="1" />
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cơ bản của ứng viên:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name"/>
+                                    <field name="name_without_signal" invisible="1" />
+                                    <field name="name_in_japan" invisible="1" />
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" rowspan="3" width="150px">
+                                <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Ngày sinh"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_of_birth" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity_2"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity_2"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Giới tính"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="gender" style="width:100px"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_identity" string="Ngày cấp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_identity" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="enter_source"/>
+                            </td>
+                             <td colspan="1" >
+                                <div>
+                                     <field name="enter_source" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="place_cmnd"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr attrs="{'invisible':[('enter_source', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="date_enter_source"/>
+                            </td>
+                            <td colspan="1" >
+                                <div class="column">
+                                    <field name="date_enter_source"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible':[('enter_source', '!=', '4')]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="date_escape_source"/>
+                            </td>
+                            <td colspan="1" >
+                                <div class="column">
+                                    <field name="date_escape_source"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_sent_doc" string="Ngày nộp hồ sơ"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_sent_doc" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_sent_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_sent_doc"  class="oe_read_only"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="address"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address" placeholder="Không bao gồm tỉnh/tp"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="marital_status"/>
+                            </td>
+                            <td colspan="1" width="200px" >
+                                <div>
+                                     <field name="marital_status" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': False}"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="province"/>
+                            </td>
+                            <td colspan="1"  >
+                                <div class="column">
+                                    <field name="province" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                        placeholder="Tỉnh/tp"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="certification" string="Trình độ học vấn"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                     <field name="certification" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': False}"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="phone_number" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number_relative"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="phone_number_relative" style="width: 100px; display: inline-block"/>
+                                    <field name="relative_note" style="width: 100px" placeholder="Quan hệ" widget="selection"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin sức khỏe:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="height"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="height" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="weight"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="weight" />
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="preferred_hand"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="preferred_hand" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="blood_group"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                       <field name="blood_group"  style="width:50%%" placeholder="--Chọn--"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="vision_left"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="vision_left" style="width:30%%"/>/10
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="vision_right"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="vision_right" style="width:30%%"/>/10
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="blindness"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                      <field name="blindness"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="diseases"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                   <field name="diseases"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="smoking"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                   <field name="smoking"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="drink_alcohol"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="drink_alcohol" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="200px" class="columnDivider">
+                                  <label for="surgery"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="surgery" style="width: 20px; display: inline-block"/>
+                                   <field name="surgery_content" placeholder="Nội dung:" style="width: 200px;" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="50px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="note_health"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                      <field name="note_health"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                 </table>
+
+
+                <table class="o_group o_inner_group table_divider" >
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Kiểm tra IQ:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                            </td>
+                            <td colspan="1" width="110px" class="columnDivider">
+                                Số câu đúng
+                            </td>
+                            <td colspan="1" width="120px" class="columnDivider">Số câu đã làm</td>
+                            <td colspan="1" width="100px" class="columnDivider">Phần trăm</td>
+                            <td colspan="1" class="noDivider"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1"  class="columnDivider">
+                                  <label for="logic_correct" string="Logic"/>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="logic_correct" style="width: 2cm;" placeholder="Số câu đúng" data-inputmask="'mask': '99'"/>
+                                </div>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="logic_done" style="width: 2cm;" placeholder="Số câu đã làm"/>
+                                </div>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="logic_percentage" style="width:2cm" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1"  class="columnDivider">
+                                  <label for="add_correct" string="Cộng"/>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="add_correct" style="width: 2cm; " placeholder="Số câu đúng" data-inputmask="'mask': '99'"/>
+                                </div>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="add_done" style="width: 2cm; " placeholder="Số câu đã làm"/>
+                                </div>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="add_percentage" style="width:2cm" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                         <tr>
+                            <td colspan="1"  class="columnDivider">
+                                  <label for="calculation_correct" string="Cộng trừ nhân chia"/>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="calculation_correct" style="width: 2cm;" placeholder="Số câu đúng" data-inputmask="'mask': '99'"/>
+                                </div>
+                            </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="calculation_done" style="width: 2cm" placeholder="Số câu đã làm"/>
+                                </div>
+                             </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="calculation_percentage" style="width:2cm" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="1" class="columnDivider">
+                                  <label for="notice_correct" string="Chú ý"/>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                    <field name="notice_correct" style="width: 2cm;" placeholder="Số câu đúng" data-inputmask="'mask': '99'"/>
+
+                            </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="notice_done" style="width: 2cm; " placeholder="Số câu đã làm"/>
+                                </div>
+                             </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="notice_percentage" style="width:2cm" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="1"  class="columnDivider"></td>
+                            <td colspan="1"  class="columnDivider">Số câu đúng</td>
+                            <td colspan="1" class="columnDivider">Tổng số câu</td>
+                            <td colspan="1" class="columnDivider">Phần trăm</td>
+                        </tr>
+                         <tr>
+                            <td colspan="1" class="columnDivider">
+                                  <label for="total_correct" string="Tổng"/>
+                            </td>
+                            <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="total_correct" style="width: 2cm;" placeholder="Số câu đúng" data-inputmask="'mask': '99'"/>
+                                </div>
+                            </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="total_question" style="width: 2cm;" />
+                                </div>
+                             </td>
+                             <td colspan="1" class="columnDivider">
+                                <div>
+                                    <field name="iq_percentage" style="width:2cm" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="check_kureperin" string="Điểm cộng dồn"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="check_kureperin"  style="width:80px" placeholder="--Chọn--"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <label string="Kinh nghiệm làm việc:" style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;"/>
+                    <group>
+                        <field name="exp_sew"/>
+                    </group>
+                     <group>
+                        <field name="exp_mechanical"/>
+                    </group>
+                     <group>
+                        <field name="exp_building"/>
+                    </group>
+                    <group>
+                        <field name="exp_note"/>
+                    </group>
+                <!--<table>-->
+                    <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th><label for="exp_sew"/></th>-->
+                            <!--<th><label for="exp_mechanical"/></th>-->
+                            <!--<th><label for="exp_building"/></th>-->
+                        <!--</tr>-->
+                    <!--</thead>-->
+                    <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td><field name="exp_sew"/></td>-->
+                            <!--<td><field name="exp_mechanical"/></td>-->
+                            <!--<td><field name="exp_building"/></td>-->
+                        <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+                <field name="employments_vi" mode="tree" >
+                    <tree editable="bottom" class="class_education">
+                        <field name="month_start" string="Tháng"/>
+                        <field name="year_start" string="Năm bắt đầu"/>
+                        <field name="month_end" string="Tháng"/>
+                        <field name="year_end" string="Năm kết thúc"/>
+                        <field name="company"/>
+                        <field name="description"/>
+                    </tree>
+                 </field>
+
+                <table class="o_group">
+
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cán bộ tuyển dụng:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="room_recruitment"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                       <field name="room_recruitment"  domain="[('room_type','=','0')]"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="recruitment_employee" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                       <field name="recruitment_employee"  domain="[('room_type','=','0')]"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <field name="pass_exam" invisible="1"/>
+                <table class="o_group" attrs="{'invisible':[('pass_exam','=',False)]}">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin trúng tuyển:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="date_pass" string="Ngày trúng tuyển"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                    <field name="date_pass" />
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="invoice_id"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="invoice_id"  style="width:150px"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <field name="liquidated" invisible="1"/>
+                <table class="o_group o_inner_group" attrs="{'invisible':[('liquidated','=',False)]}">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin thanh lý:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_liquidated" string="Ngày thanh lý"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="date_liquidated"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="reason_comeback"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="reason_comeback"  style="width:150px; display: inline-block"/>
+                                    <!--<field name="liquidation_note"  style="width:250px;"/>-->
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <group invisible="1">
+                    <field name="user_access" groups="hh_intern.group_manager"  mode="tree" >
+                        <tree>
+                            <field name="name" string="Tên"/>
+                            <field name="login" string="Tài khoản"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+
+     <record id="view_intern_form_clone" model="ir.ui.view">
+        <field name="name">Chi tiết thực tập sinh</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form string="Thực tập sinh">
+                <field name="id" invisible="1" />
+                <p style="color:#f43a07">Lưu ý: Các dòng màu <span style="background-color:#ffff96 ;color:black">VÀNG</span> viết bằng tiếng Nhật, còn lại viết bằng tiếng Việt có dấu</p>
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cơ bản của ứng viên:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name"/>
+                                    <field name="name_without_signal" invisible="1" />
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity" widget="mask_regex" data-inputmask-regex="[0-9]+"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" rowspan="3" width="150px">
+                                <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Ngày sinh"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <field name="date_of_birth" class="oe_read_only"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity_2" string="hoặc Thẻ căn cước"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity_2" widget="mask_regex" data-inputmask-regex="[0-9]+"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Giới tính"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="gender" style="width:70px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_identity" string="Ngày cấp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày"  widget="mask" data-inputmask-mask="99"  class="oe_edit_only"/>
+                                    <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only"  widget="mask" data-inputmask-mask="9999" />
+                                    <field name="date_identity" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="enter_source"/>
+                            </td>
+                             <td colspan="1" >
+                                <div>
+                                     <field name="enter_source" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="place_cmnd"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_sent_doc" string="Ngày nộp hồ sơ"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_sent_doc" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
+                                    <field name="month_sent_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <field name="date_sent_doc"  class="oe_read_only"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="address"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address" placeholder="Không bao gồm tỉnh/tp"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="marital_status"/>
+                            </td>
+                            <td colspan="1" width="200px" >
+                                <div>
+                                     <field name="marital_status" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': True}" widget="selection" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="province"/>
+                            </td>
+                            <td colspan="1"  >
+                                <div class="column">
+                                    <field name="province" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                        placeholder="Tỉnh/tp"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="certification" string="Trình độ học vấn"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                     <field name="certification" widget="selection" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': True}"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="phone_number" style="width:100px"  widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number_relative"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="phone_number_relative" style="width: 100px; display: inline-block" widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
+                                    <field name="relative_note" style="width: 80px" placeholder="Quan hệ" widget="selection" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin sức khỏe:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="height"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="height"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="weight"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="weight" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="preferred_hand"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="preferred_hand" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="blood_group"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                       <field name="blood_group"  style="width:70px" placeholder="-Chọn-"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="vision_left"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                     <field name="vision_left" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}"/>/10
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="vision_right"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="vision_right" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}"/>/10
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="blindness"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                      <field name="blindness"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="diseases"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                   <field name="diseases"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="smoking"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                   <field name="smoking"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="drink_alcohol"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                      <field name="drink_alcohol" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="200px" class="columnDivider">
+                                  <label for="surgery"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="surgery" style="width: 20px; display: inline-block"/>
+                                   <field name="surgery_content" placeholder="Nội dung:" style="width: 200px;background-color: #ffff96" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="50px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="note_health"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                      <field name="note_health"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                 </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="iq_percentage" string="Kiểm tra IQ"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                    <field name="iq_percentage"  style="width:30px" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>%
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="check_kureperin" string="Điểm cộng dồn"/>
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div>
+                                       <field name="check_kureperin"  style="width:80px" placeholder="--Chọn--"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="500px"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin bổ sung CV tiếng Nhật:</caption>
+                    <tbody>
+                        <tr attrs="{'invisible':[('notice_name', '=', '')]}" >
+                            <td colspan="4">
+                                <field name="notice_name" style="color: #ff0000"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name_in_japan" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="name_in_japan" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                            <td colspan="1" width="250px"/>
+                            <field name="show_specialized" invisible="1"/>
+                        </tr>
+                        <tr  attrs="{'invisible':[('show_specialized', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="specialized"  />
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="specialized"  style="width:250px;background-color: #ffff96" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="strong"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="strong" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="weak"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                       <field name="weak" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="favourite"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="favourite" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="family_income" string="Tổng thu nhập gia đình (Vạn yên)"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="family_income" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="teammate"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="teammate"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="cooking"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="cooking"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="motivation"/>
+                            </td>
+                            <td colspan="1"  width="250px" >
+                                <div>
+                                       <field name="motivation" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="income_after_three_year" string = "Sau 3 năm bạn muốn kiếm được bao nhiêu (Vạn yên)"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                       <field name="income_after_three_year" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="job_after_return" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="job_after_return" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="prefer_object" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="prefer_object" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="memory" string="Kỷ niệm đáng nhớ nhất của bạn:"/>
+                            </td>
+                            <td colspan="1" width="250px"  >
+                                <div>
+                                       <field name="memory" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="valuable" string="Điều quý giá nhất đối với bạn trong cuộc sống: "/>
+                            </td>
+                            <td colspan="1" width="250px" >
+                                <div>
+                                       <field name="valuable" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="family_member_in_jp" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="family_member_in_jp" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="education_status" />
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="education_status" style="width: 100px; display: inline-block"/>
+                                    <field name="education_content" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width: 200px;  margin-left: 20px"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!--<label string="Lý lịch học tập, làm việc, gia đình:" style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;"/>-->
+
+                <notebook>
+                    <page string="Lý lịch học tập">
+                        <field name="educations" mode="tree">
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999" />
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc" widget="mask" data-inputmask-mask="9999"/>
+                                <field name="school_type" string="Trường" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                <field name="school" string="Tên trường" style="background-color: #ffff96"/>
+                                <field name="specialization" style="background-color: #ffff96"/>
+                                <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                <field name="graduated"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Lý lịch làm việc">
+                        <field name="employments" mode="tree">
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999"/>
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc"/>
+                                <field name="company" style="background-color: #ffff96"/>
+                                <field name="description" style="background-color: #ffff96"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="Gia đình">
+                        <field name="family_members" mode="tree" >
+                            <tree editable="bottom" default_order="sequence">
+                                <field name="name"/>
+                                <field name="relationship" style="background-color: #ffff96"/>
+                                <field name="ages" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>
+                                <field name="birth_year" invisible="1"/>
+                                <field name="job" style="background-color: #ffff96"/>
+                                <field name="live_together"/>
+                                <field name="sequence" widget="handle"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+
+            </form>
+        </field>
+    </record>
+
+
+
+
+
+    <record id ="view_internhs_form_clone" model="ir.ui.view">
+        <field name="name">TTS</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form string="Chi tiết">
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cơ bản của ứng viên:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name"/>
+                                    <field name="name_without_signal" invisible="1" />
+                                    <field name="name_in_japan" invisible="1" />
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity" data-inputmask-regex="[0-9]+"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" rowspan="3" width="150px">
+                                <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Ngày sinh"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <field name="date_of_birth" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="identity_2" string="hoặc Thẻ căn cước"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity_2" data-inputmask-regex="[0-9]+"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Giới tính"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="gender" style="width:80px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_identity" string="Ngày cấp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
+                                    <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <field name="date_identity" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                  <!--<label for="long_term" invisible="1"/>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                     <!--<field name="long_term" style="width:10%" invisible="1"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                            <td colspan="1" width="150px" class="columnDivider">
+                                <label for="place_cmnd"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day_sent_doc" string="Ngày nộp hồ sơ"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_sent_doc" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
+                                    <field name="month_sent_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <field name="date_sent_doc"  class="oe_read_only"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="address"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address" placeholder="Không bao gồm tỉnh/tp"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="marital_status"/>
+                            </td>
+                            <td colspan="1" width="200px" >
+                                <div>
+                                     <field name="marital_status" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': False}" widget="selection" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider" >
+                                 <label for="province"/>
+                            </td>
+                            <td colspan="1"  >
+                                <div class="column">
+                                    <field name="province" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                        placeholder="Tỉnh/tp" style="width:150px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="certification" string="Trình độ học vấn"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                     <field name="certification" widget="selection" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+                                     context="{'jp': False}"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="phone_number" style="width:150px" widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="phone_number_relative"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="phone_number_relative" style="width: 100px; display: inline-block" widget="mask_regex" data-inputmask-regex="\+?[0-9]{9,13}"/>
+                                    <field name="relative_note" style="width: 80px" placeholder="Quan hệ" widget="selection"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin bổ sung cho hồ sơ:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="name_in_japan"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                     <field name="name_in_japan" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="hktt"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                     <field name="hktt" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <caption style="text-decoration: underline;font-size:14px;">Khi cần liên lạc với:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="contact_person" string="Tên(Tiếng Việt có dấu)"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                     <field name="contact_person" />
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="200px" class="columnDivider">
+                                  <label for="contact_address" string="Địa chỉ (Tiếng Việt có dấu)"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="contact_address" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="contact_relative" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                     <field name="contact_relative" style="width:120px" placeholder="--Chọn--" widget="selection" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="200px" class="columnDivider">
+                                  <label for="contact_phone" string="Số điện thoại"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                     <field name="contact_phone" style="width:150px" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="text-decoration: underline;font-size:14px;">Lý lịch học tập-làm việc:</caption>
+                    <caption style="font-size:12px;color:black;">Trường học mới nhất ghi trong hồ sơ TTS:</caption>
+                    <tbody>
+                         <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_time_education" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_education_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="last_education_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="last_education_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="last_education_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="last_time_education" class="oe_read_only"/>
+                                </div>
+                            </td>
+                             <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_school_education" string="Tên trường (Tiếng Việt)"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_school_education" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_school_education_jp" string="Tên trường (Chữ Hán)"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_school_education_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Nếu có liên thông:</caption>
+                    <tbody>
+                         <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_time_education2" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_education_from_month2" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="last_education_from_year2" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="last_education_to_month2" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="last_education_to_year2" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="last_time_education2" class="oe_read_only"/>
+                                </div>
+                            </td>
+                             <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_school_education2" string="Tên trường (Tiếng Việt)"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_school_education2" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="last_school_education_jp2" string="Tên trường (Chữ Hán)"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="last_school_education_jp2" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty hoặc nơi làm việc Thứ NHẤT (trước khi vào công ty phái cử thứ 2 nếu có):</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_employee" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="time_employee_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only"  widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="time_employee_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="time_employee" class="oe_read_only"/>
+                                </div>
+                            </td>
+                             <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee_vi" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty hoặc nơi làm việc Thứ HAI (trước khi vào công ty phái cử thứ 2 nếu có):</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_employee2" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="time_employee2_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee2_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-bloc;padding-left:5px;padding-right:5pxk" />
+                                    <field name="time_employee2_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee2_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="time_employee2" class="oe_read_only"/>
+                                </div>
+                            </td>
+                             <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee2_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee2_vi" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee2_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee2_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty hoặc nơi làm việc Thứ BA (trước khi vào công ty phái cử thứ 2 nếu có):</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_employee3" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="time_employee3_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee3_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="time_employee3_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee3_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="time_employee3" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee3_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee3_vi" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee3_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee3_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty hoặc nơi làm việc Thứ TƯ (trước khi vào công ty phái cử thứ 2 nếu có):</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_employeeư4" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="time_employee4_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee4_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="time_employee4_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee4_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="time_employee4" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee4_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee4_vi" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee4_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee4_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty hoặc nơi làm việc Thứ NĂM (trước khi vào công ty phái cử thứ 2 nếu có):</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_employee5" string="Thời gian"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div>
+                                    <field name="time_employee5_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee5_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="time_employee5_to_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_employee5_to_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+
+                                   <field name="time_employee5" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" />
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee5_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee5_vi" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="job_employee5_jp"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="job_employee5_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-size:12px;color:black;">Công ty phái cử thứ 2:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="time_start_at_pc_from_month" string="Thời gian bắt đầu làm việc"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <label string="Từ " class="oe_edit_only" style="display: inline-block"/>
+                                    <field name="time_start_at_pc_from_month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="time_start_at_pc_from_year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
+                                    <label string="đến nay" class="oe_edit_only" style="display: inline-block;padding-left:5px;padding-right:5px"/>
+                                    <field name="time_start_at_pc" class="oe_read_only"/>
+                                </div>
+                            </td>
+                            <td colspan="1" />
+                        </tr>
+                        <!--<tr>-->
+                            <!--<td colspan="1" width="250px" class="columnDivider">-->
+                                  <!--<label for="name_and_job_position_pc2_jp"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                    <!--<field name="name_and_job_position_pc2_jp" />-->
+                                <!--</div>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    </tbody>
+                </table>
+                <!--<table class="o_group o_inner_group">-->
+                    <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td colspan="1" width="250px" class="columnDivider">-->
+                                  <!--<label for="name_and_job_position_pc2_vn"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1"  width="350px">-->
+                                <!--<div>-->
+                                    <!--<field name="name_and_job_position_pc2_vn" />-->
+                                <!--</div>-->
+                            <!--</td>-->
+                            <!--<td colspan="1"/>-->
+                        <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+
+                 <table class="o_group o_inner_group">
+                     <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label string="Tổng thời gian làm việc tại cty PC2"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="time_at_pc_year" style="width: 20px;display: inline-block" widget="mask_regex" data-inputmask-regex="[0-9]{0,2}"/> năm
+                                    <field name="time_at_pc_month" style="width: 20px;display: inline-block" widget="mask_regex" data-inputmask-regex="[0-9]{0,2}"/> tháng
+                                </div>
+                            </td>
+                            <td colspan="1"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin hộ chiếu:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="passport_no"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_no"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                <label for="passport_type"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_type"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="passport_place"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_place"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                <label for="passport_date_issue"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_date_issue"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="passport_issuing_authority"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_issuing_authority"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                <label for="passport_date_expire"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="passport_date_expire"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_duration_previous_in_jp"/>
+                            </td>
+                            <td colspan="1"  width="350px">
+                                <div>
+                                    <field name="date_duration_previous_in_jp"/>
+                                </div>
+                            </td>
+                            <td/>
+                            <td/>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </form>
+        </field>
+    </record>
+
+
+
+    <record id="view_doc_generate_clone" model="ir.ui.view">
+        <field name="name">Tạo đơn hàng</field>
+        <field name="model">intern.invoice</field>
+         <field name="arch" type="xml">
+             <form >
+                 <header>
+                    <button name="create_doc_new" string="Tạo Đơn hàng" type="object" class="oe_highlight"/>
+                    <button name="create_list_exam_excel" string="Tạo danh sách TTS(Excel)" type="object" class="oe_highlight"/>
+                     <field name="status" invisible="1"/>
+
+                </header>
+
+                 <table class="o_group">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="name"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="room_pttt" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                    <field name="order" invisible="1"/>
+                                    <field name="room_pttt" widget="selection" domain="[('room_type', '=', '1')]"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="enterprise_doc" required="True"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="enterprise_doc" required="True"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="place_to_work" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                   <field name="place_to_work"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="guild" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="guild" required="True"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="legal_name" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="legal_name"/>
+                                </div>
+                            </td>
+                         </tr>
+                     </tbody>
+                 </table>
+
+
+                 <table class="o_group" invisible="1">
+                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin chi tiết:</caption>
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="job" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="job"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="year_expire" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="year_expire"/>
+                                </div>
+                            </td>
+                         </tr>
+                     </tbody>
+                 </table>
+
+                  <table class="o_group" invisible="1">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="salary_base" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="salary_base" style="width:100px"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="salary_real" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="salary_real" style="width:100px"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="subsidize_start_month" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="subsidize_start_month" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="number_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="number_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="number_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="number_women" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="age_from" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="age_from" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                          <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_women" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="age_to" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="age_to" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                     </tbody>
+                  </table>
+                  <table class="o_group" invisible="1">
+                     <tbody>
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="certificate" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="certificate" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="marital" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="marital" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="preferred_hand" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="preferred_hand" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                          <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="vision" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="vision" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="physical" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="physical" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="smoking" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="smoking" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="height_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="height_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="height_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="height_women" style="width:100px"/>
+                                </div>
+                            </td>
+
+                         </tr>
+
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="weight_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="weight_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="weight_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="weight_women" style="width:100px"/>
+                                </div>
+                            </td>
+
+                         </tr>
+                     </tbody>
+                 </table>
+                 <group invisible="1">
+                     <field name="job_description" style="width:300px"/>
+                     <field name="other_requirement" style="width:300px"/>
+                     <field name="note" style="width:300px"/>
+                 </group>
+                 <notebook>
+                    <page string="Danh sách thi tuyển" >
+                        <field name="interns_exam_doc" string="Danh sách thực tập sinh"  mode="tree"
+                               context="{'form_view_ref':'hh_intern.view_intern_form_clone'}"  >
+
+                             <tree string="Chi tiết thực tập sinh"  create="false" default_order="sequence_exam">
+                                 <field name="name_without_signal" />
+                                 <field name="identity" />
+                                 <field name="identity_2"/>
+                                 <field name="date_of_birth" />
+                                 <field name="address" />
+                                 <field name="province"/>
+                                 <field name="avatar" widget="image"/>
+                                 <field name="height"/>
+                                 <field name="sequence_exam" widget="handle"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                 </notebook>
+             </form>
+         </field>
+    </record>
+
+
+
+    <record id="view_doc_after_exam_clone" model="ir.ui.view">
+        <field name="name">Đơn hàng</field>
+        <field name="model">intern.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="finish_invoice" string="Xong hồ sơ" type="object" style="margin-right:150px"  attrs="{'invisible':[('status','!=',False),('status','=',2)]}" class="oe_highlight"/>
+                    <button name="create_extern_doc" string="Tạo hồ sơ" type="object" />
+                    <button name="create_proletter_doc" string="Tạo thư tiến cử" type="object"/>
+                    <button name="add_to_phieutraloi" string="Đưa vào phiếu trả lời" type="object" style="margin-right:150px"/>
+                    <field name="status" widget="statusbar" statusbar_visible="2,3"/>
+                </header>
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="document" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="document" placeholder="Tất cả"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px">
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="name" readonly="1"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="room_pttt" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="order" invisible="1"/>
+                                    <field name="room_pttt" widget="selection" domain="[('room_type', '=', '1')]" readonly="1"/>
+                                </div>
+                            </td>
+                         </tr>
+                          <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="developing_employee"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="developing_employee" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="enterprise" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="enterprise"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="place_to_work" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="place_to_work"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="name_of_guild" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="name_of_guild"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="legal_name" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="100px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="legal_name" />-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+                     </tbody>
+                 </table>
+
+                 <table class="o_group">
+                      <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin tiến độ HS:</caption>
+                      <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_receive_hard_profile"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="date_receive_hard_profile"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_receive_contract"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="date_receive_contract"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_send_letter_pro"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="date_send_letter_pro"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_expected_send_to_customer"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="date_expected_send_to_customer"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                          <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="note_hs"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="note_hs"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_real_send_to_customer"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="date_real_send_to_customer"/>
+                                </div>
+                            </td>
+                        </tr>
+                      </tbody>
+                 </table>
+
+
+                <table class="o_group">
+                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin bổ sung cho hồ sơ:</caption>
+                     <tbody>
+                         <tr>
+                              <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_create_plan_training"/>
+                            </td>
+                            <td colspan="1"  width="250px">
+                                <div>
+                                    <field name="day_create_plan_training" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_create_plan_training" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_create_plan_training" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_create_plan_training" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+
+                             <td colspan="1" width="350px" class="columnDivider">
+                                  <label for="date_create_plan_training_report_customer" string=""/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_create_plan_training_report_customer" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_create_plan_training_report_customer" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_create_plan_training_report_customer" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_create_plan_training_report_customer" class="oe_read_only"/>
+                                </div>
+                            </td>
+                         </tr>
+                     </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+                          <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_start_training"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_start_training" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_start_training" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_start_training" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_start_training" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="350px" class="columnDivider">
+                                  <label for="date_end_training"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_end_training" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_end_training" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_end_training" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_end_training" class="oe_read_only"/>
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_pay_finance1"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_pay_finance1" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_pay_finance1" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_pay_finance1" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_pay_finance1" class="oe_read_only"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="350px" class="columnDivider">
+                                  <label for="date_pay_finance2"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_pay_finance2" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_pay_finance2" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_pay_finance2" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_pay_finance2" class="oe_read_only"/>
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_sign_proletter"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_sign_proletter" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_sign_proletter" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_sign_proletter" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_sign_proletter" class="oe_read_only"/>
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="training_center" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="training_center"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="300px" class="columnDivider">
+                                 <label for="length_training" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="length_training"/>
+                                </div>
+                            </td>
+
+                         </tr>
+                         <tr>
+
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="guild" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="guild"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="300px" class="columnDivider">
+                                 <label for="hours_training" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                    <field name="hours_training" data-inputmask="'mask': '99999'"/>
+                                </div>
+                            </td>
+
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                <label for="dispatchcom1" />
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="dispatchcom1"/>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="200px" class="columnDivider">
+                                <label for="dispatchcom2" />
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="dispatchcom2" widget="many2many_tags"/>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                         <tr>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="back_to_pc2"/>
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="back_to_pc2"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="enterprise_doc" />
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="enterprise_doc"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="200px"/>
+                            <td colspan="1" width="100px"/>
+                        </tr>
+
+                        <tr>
+
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="name_working_department" />
+                            </td>
+                            <td colspan="1" width="350px">
+                                <div class="column">
+                                        <field name="name_working_department"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="200px"/>
+                            <td colspan="1" width="100px"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="job_predefine" string="Ngành nghề xin thư tiến cử"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="job_predefine" class="oe_edit_only" />
+
+                                </div>
+                            </td>
+                         </tr>
+                        <tr >
+                             <td colspan="1" width="250px" class="columnDivider">
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                     <field name="job_en" placeholder="Tiếng Anh" />
+                                </div>
+                            </td>
+                         </tr>
+                         <tr >
+                             <td colspan="1" width="250px" class="columnDivider">
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="job_jp" placeholder="Tiếng Nhật" />
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="job_vi" placeholder="Tiếng Việt"/>
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+                         <tr>
+                             <td colspan="1" width="250" class="columnDivider">
+                                  <label for="date_departure_doc"/>
+                            </td>
+                            <td colspan="1" width="230px">
+                                <div>
+                                    <field name="day_departure_doc" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_departure_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_departure_doc" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_departure_doc" class="oe_read_only"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="300px" class="columnDivider">
+                                 <label for="year_expire" string="Thời gian làm việc ở Nhật (1 hoặc 3 năm)" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                    <field name="year_expire"/>
+                                </div>
+                            </td>
+                         </tr>
+                    </tbody>
+                </table>
+                <table class="o_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px">
+                                <label string="Thư tiến cử:"/>
+                            </td>
+                            <td colspan="1" width="250px"/>
+                            <td colspan="1" width="250px"/>
+                            <td colspan="1" width="250px"/>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="date_create_letter_promotion"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="day_create_letter_promotion" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_create_letter_promotion" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_create_letter_promotion" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_create_letter_promotion" class="oe_read_only"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="person_sign_proletter" string="Tên người ký"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="person_sign_proletter"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="position_person_sign" string="Chức danh (Tiếng Anh)"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="position_person_sign"/>
+                                </div>
+                            </td>
+                         </tr>
+                        <tr>
+                            <td colspan="1" width="250px"/>
+                            <td colspan="1" width="250px"/>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="position_person_sign_jp" string="Chức danh (Tiếng Nhật)"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="position_person_sign_jp"/>
+                                </div>
+                            </td>
+                        </tr>
+                     </tbody>
+                </table>
+
+                <table class="o_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin xuất cảnh:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="date_arrival_jp" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="date_arrival_jp"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="port_of_entry_jp" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="port_of_entry_jp"/>
+                                </div>
+                            </td>
+                         </tr>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="name_of_airline" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                   <field name="name_of_airline"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <notebook>
+                    <page string="Danh sách trúng tuyển" >
+                        <field name="interns" invisible="1"/>
+                        <!--domain="[('id', 'in', interns[0][2])]"-->
+                        <field name="interns_pass_doc" string="Danh sách thực tập sinh"  mode="tree"
+                               context="{'form_view_ref':'hh_intern.view_internhs_form_clone'}">
+                             <tree string="Chi tiết thực tập sinh" default_order="sequence_pass" create="false">
+                                <field name="name_without_signal"  />
+                                <field name="identity"  />
+                                <field name="identity_2"/>
+                                <field name="date_of_birth" />
+                                <field name="province" />
+                                 <field name="phieutraloi_id"/>
+                                 <field name="sequence_pass" widget="handle"/>
+                            </tree>
+                        </field>
+                    </page>
+                 </notebook>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_internclone_search" model="ir.ui.view">
+        <field name="name">intern.internclone</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="intern_id"/>
+                <field name="name" string="Tên TTS"/>
+                <field name="province" />
+                <field name="identity" string="CMND"/>
+                <filter name="passed_exam" string="Đã trúng tuyển" domain="[('pass_exam','=',True)]"/>
+                <filter name="departured" string="Đã xuất cảnh" domain="[('departure','=',True)]"/>
+                <filter string="Đơn hàng trong năm" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="Đơn hàng trong tháng" name="month" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+            </search>
+        </field>
+    </record>
+
+     <record id="view_intern_form_reason_cancel_pass" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason_cancel_pass"/>
+                    <field name="issues_resolve"/>
+                    <field name="fine_employee"/>
+                    <field name="fine_intern"/>
+                </group>
+                <!--<table class="o_group o_inner_group">-->
+                    <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td colspan="1" width="250px" class="columnDivider">-->
+                                  <!--<label for="reason_cancel_pass"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                    <!--<field name="reason_cancel_pass" style="width:250px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+
+
+                    <!--</tbody>-->
+                <!--</table>-->
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_internclone" model="ir.ui.view">
+        <field name="name">Danh sách thực tập sinh</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="name"/>
+                <field name="province"/>
+                <field name="date_of_birth"/>
+                <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
+                <field name="invoice_id"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

@@ -45,10 +45,11 @@
         res_model="relation"
         view_mode="tree,form" />
 
-    <!--<act_window id="action_job"-->
-        <!--name="Ngành nghề"-->
-        <!--res_model="intern.job"-->
-        <!--view_mode="tree,form" />-->
+
+    <act_window id="action_job"
+        name="Ngành nghề"
+        res_model="intern.job"
+        view_mode="tree,form" />
 
 
     <menuitem id="menu_common_data"
@@ -79,8 +80,8 @@
               name="Quan hệ với TTS"
               action="action_relation" />
 
-    <!--<menuitem id="menu_job"-->
-              <!--parent="menu_common_data"-->
-              <!--name="Ngành nghề"-->
-              <!--action="action_job" />-->
+    <menuitem id="menu_job"
+              parent="menu_common_data"
+              name="Ngành nghề"
+              action="action_job" />
 </odoo>

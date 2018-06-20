@@ -56,3 +56,9 @@ td.noDivider {
     display:inline-block;
     width:80%
 }
+
+.btn_toggle{
+    color: white;
+    background-color: #b71c14;
+    border-color: #b71c14;
+}

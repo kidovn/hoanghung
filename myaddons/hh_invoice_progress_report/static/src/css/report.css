@@ -1,0 +1,8 @@
+.pass_content thead > tr > th{
+    border: 1px solid #dfdfdf;
+    padding:3px;
+}
+.pass_content tbody > tr > td{
+    /*border: 1px solid #ddd;*/
+    padding:3px;
+}

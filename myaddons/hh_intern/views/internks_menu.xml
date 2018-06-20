@@ -9,9 +9,41 @@
             (0, 0, {'view_mode': 'form', 'view_id': ref('view_internks_form')})]"/>
     </record>
 
+     <record model="ir.actions.act_window" id="action_kiemsoat_invoice_history">
+        <field name="name">Đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_ks_invoice_form')})]"/>
+        <!--<field name="context">{'default_status': 1,'search_default_not_done_filter':1}</field>-->
+    </record>
+
+
+
     <menuitem id="menu_internks"
-        name="Kiểm soát" />
+        name="Kiểm soát" groups="hh_intern.group_ks_user"/>
 
     <menuitem id="menu_list_internks" parent="menu_internks"
-        name="Thực tập sinh" action="action_internks_list" groups="base.group_user"/>
+        name="Thực tập sinh" action="action_internks_list" groups="hh_intern.group_ks_user"/>
+
+    <menuitem id="menu_list_invoiceks" parent="menu_internks"
+        name="Danh sách đơn hàng" action="action_kiemsoat_invoice_history" groups="base.group_user"/>
+
+
+
+
+
+    <record model="ir.actions.act_window" id="action_internks_departure_list">
+        <field name="name">TTS theo đơn hàng</field>
+        <field name="res_model">intern.internclone</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_passed_exam':1}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('hh_intern.view_internks_tree_internclone')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hh_intern.view_internks_form_clone')})]"/>
+    </record>
+
+     <!--<menuitem id="menu_list_internks_departure" parent="hh_intern.menu_internks"-->
+        <!--name="Thực tập sinh theo đơn hàng" action="action_internks_departure_list" groups="hh_intern.group_ks_user"/>-->
 </odoo>

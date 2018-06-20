@@ -1,0 +1,179 @@
+<odoo>
+    <!-- Action to open To-do list -->
+    <act_window id=""
+        name="Document"
+        res_model="hh.report"
+        view_mode="tree,createreport" />
+
+
+     <record model="ir.actions.act_window" id="action_report_list">
+        <field name="name">Report</field>
+        <field name="res_model">hh.report</field>
+        <field name="view_mode">tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_tree_report')}),
+            (0, 0, {'view_mode': 'createreport', 'view_id': ref('view_form_report')})]"/>
+     </record>
+
+    <record model="ir.actions.act_window" id="action_internclone_list">
+        <field name="name">Danh sách thực tập sinh</field>
+        <field name="res_model">intern.internclone</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('hh_intern.view_tree_internclone')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hh_intern.view_intern_form_clone')})]"/>
+    </record>
+
+
+    <record id="action_intern_report_all" model="ir.actions.act_window">
+        <field name="name">Thống kê TTS</field>
+        <field name="res_model">intern.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot_extend</field>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="context">{'search_default_month':1}</field>
+        <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+    </record>
+
+    <record id="filter_number_resouce_report" model="ir.filters">
+        <field name="name">Thống kê số liệu nguồn</field>
+        <field name="model_id">intern.report</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['date_create_info:month'],
+                                'measures': ['enter_source_short','enter_source_long','enter_source_bcd',
+                                                'escape_source']}</field>
+    </record>
+
+    <record id="filter_tts_escape_source_report" model="ir.filters">
+        <field name="name">Danh sách TTS rút bỏ nguồn</field>
+        <field name="model_id">intern.report</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('escape_source','=', True)]</field>
+        <field name="context">{'group_by': ['intern_id'],
+                                'measures': ['custom_id','date_of_birth_short','gender','province',
+                                                'date_enter_source','date_escape_source'],
+                                }</field>
+    </record>
+
+    <record id="action_internclone_report" model="ir.actions.act_window">
+        <field name="name">Intern CLONE Analysis</field>
+        <field name="res_model">internclone.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id"></field>
+    </record>
+
+
+
+
+
+    <!--TTS THEO DON HANG-->
+
+    <record id="action_intern_internclone_report" model="ir.actions.act_window">
+        <field name="name">TTS theo đơn hàng</field>
+        <field name="res_model">intern.internclone</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot_extend</field>
+        <field name="view_id"></field>
+         <field name="context">{'search_default_month':1,
+             'pivot_measures': ['gender','date_of_birth_short','province',
+            'promoted','confirm_exam','escape_exam','pass_exam','preparatory_exam','cancel_pass','year_expire','job_vi'
+             ,'dispatchcom','departure','date_departure','recruitment_employee','room_recruitment']}</field>
+    </record>
+
+
+    <record id="filter_tts_issues_report" model="ir.filters">
+        <field name="name">Danh sách phát sinh</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">['|',('issues_raise','=',True),('cancel_pass','=',True)]</field>
+        <field name="context">{'group_by': ['intern_id','invoice_id'],
+                                'measures': ['gender','custom_id','date_join_school','date_of_birth_short','province','recruitment_employee',
+                                               'room_recruitment','employee_pttt','room_pttt','issues_reason',
+                                                'issues_resolve','fine_employee','fine_intern']}</field>
+    </record>
+
+
+    <record id="filter_tts_pass_report" model="ir.filters">
+        <field name="name">Danh sách trúng tuyển</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('pass_exam','=',True)]</field>
+        <field name="context">{'group_by': ['room_pttt','intern_id'],
+                                'measures': ['date_of_birth_short','date_join_school','province','date_pass',
+                                                'invoice_id','year_expire','dispatchcom']}</field>
+    </record>
+
+    <record id="filter_tts_escape_pass_report" model="ir.filters">
+        <field name="name">Danh sách rút bỏ trúng tuyển</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('cancel_pass','=',True)]</field>
+        <field name="context">{'group_by': ['intern_id'],
+                                'measures': ['date_of_birth_short','province',
+                                                'recruitment_employee','invoice_id','reason_cancel_pass']}</field>
+    </record>
+
+    <record id="filter_tts_escape_exam_report" model="ir.filters">
+        <field name="name">Danh sách rút bỏ thi tuyển</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('escape_exam','=',True)]</field>
+        <field name="context">{'group_by': ['intern_id'],
+                                'measures': ['date_of_birth_short','province',
+                                                'recruitment_employee','invoice_id']}</field>
+    </record>
+
+    <record id="filter_tts_departured_report" model="ir.filters">
+        <field name="name">Danh sách TTS đã xuất cảnh</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('departure','=',True)]</field>
+        <field name="context">{'group_by': ['intern_id'],
+                                'measures': ['date_of_birth_short','gender','province','year_expire',
+                                                'date_departure','job_vi','dispatchcom',
+                                                'recruitment_employee']}</field>
+    </record>
+
+    <record id="filter_tts_comback_liquidation_report" model="ir.filters">
+        <field name="name">Danh sách TTS đã về nước, thanh lý</field>
+        <field name="model_id">intern.internclone</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">['|',('liquidated','=',True),('comeback','=',True)]</field>
+        <field name="context">{'group_by': ['intern_id'],
+                                'measures': ['date_of_birth_short','gender',
+                                                'date_departure','date_comeback','date_liquidated','reason_comeback']}</field>
+    </record>
+
+    <menuitem id="menu_report_root"
+        name="Báo cáo" />
+
+    <!--<menuitem id="menu_report_list" name="Danh sách mẫu báo cáo" parent="menu_report_root"-->
+        <!--action="action_report_list"/>-->
+
+    <!--<menuitem id="menu_intern_clone_list" name="Danh sách TTS tien cu" parent="menu_report_root"-->
+        <!--action="action_internclone_list"/>-->
+
+    <menuitem id="report_intern_pass_monthly" name="Thống kê TTS" parent="menu_report_root"
+              action="action_intern_report_all"/>
+
+
+    <menuitem id="report_intern_internclone" name="Thống kê TTS theo đơn hàng" parent="menu_report_root"
+              action="action_intern_internclone_report"/>
+
+
+    <record id="action_invoice_report" model="ir.actions.act_window">
+        <field name="name">Đơn hàng</field>
+        <field name="res_model">intern.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot_extend</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot_extend', 'view_id': ref('hh_hoso.view_invoice_pivot')})
+            ]"/>
+        <field name="search_view_id" ref="view_invoice_search_report"/>
+        <field name="context">{'pivot_measures': ['total_pass']}</field>
+    </record>
+
+    <menuitem id="report_invoice" name="Thống kê đơn hàng" parent="menu_report_root"
+              action="action_invoice_report"/>
+</odoo>

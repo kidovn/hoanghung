@@ -1,0 +1,111 @@
+<odoo>
+
+    <report
+        id="invoice_progress_report"
+        model="intern.invoice"
+        string="Tiến độ hồ sơ"
+        report_type="qweb-html"
+        attachment_use="False"
+        name="hh_invoice_progress_report.report_invoice_progress_view"
+        paperformat="hh_intern_pass_report.paperformat_euro_landscape"
+        menu="False"
+    />
+
+    <!--<template id="pass_report_style">-->
+        <!--.pass_content thead > tr > th{-->
+            <!--border: 1px solid #dfdfdf;-->
+            <!--padding:3px;-->
+            <!--vertical-align: middle;-->
+            <!--text-align:center;-->
+            <!--background-color:#a9d888;-->
+        <!--}-->
+        <!--.pass_content tbody > tr > td{-->
+            <!--border: 1px solid #ddd;-->
+            <!--padding:3px;-->
+            <!--vertical-align: middle;-->
+            <!--text-align:center;-->
+        <!--}-->
+        <!--p{-->
+            <!--margin: 0 0 0px;-->
+        <!--}-->
+    <!--</template>-->
+
+    <template id="report_invoice_progress_view">
+
+        <t t-call="report.html_container">
+            <t>
+             <div class="page">
+
+                <style type="text/css">
+					<t t-call="hh_intern_pass_report.pass_report_style"/>
+				</style>
+
+                <h3>BẢNG TỔNG HỢP TIẾN ĐỘ HỒ SƠ PHÒNG <t t-esc="department.name"/></h3>
+                 <br/>
+                 <table class="pass_content" style="font-size: 10px;">
+                     <thead>
+                         <tr>
+                             <th style="width: 50px">STT</th>
+                             <th style="width: 150px;">Họ và tên</th>
+                             <th style="width: 150px;">Năm sinh</th>
+                             <th style="width: 85px;">Quê quán</th>
+                             <th style="width: 250px;">Xí nghiệp</th>
+                             <th style="width: 180px;">Nghiệp đoàn</th>
+                             <th style="width: 250px;">Địa chỉ làm việc</th>
+                             <th style="width: 300px;">Ngành nghề</th>
+                             <th style="width: 85px;">Hạn HĐ</th>
+                             <th style="width: 180px;">Ngày trúng tuyển</th>
+                             <th style="width: 180px;">Ngày nhập học trúng tuyển</th>
+                             <th style="width: 180px;">Ngày dự kiến xuất cảnh</th>
+                             <th style="width: 180px;">Pháp nhân</th>
+                             <th style="width: 350px;">Ngày nhận hồ sơ cứng</th>
+                             <th style="width: 350px;">Ngày nhận HĐL</th>
+                             <th style="width: 350px;">Ngày trình thư</th>
+                             <th style="width: 350px;">Ngày dự kiến gửi hồ sơ cho KH</th>
+                             <th style="width: 350px;">Ngày gửi thực tế</th>
+                             <th style="width: 350px;">Ghi chú</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <t t-foreach="record" t-as="invoice" >
+                            <t t-foreach="invoice.interns_pass_doc" t-as="intern" >
+                                <tr>
+                                    <t t-if="intern_index == 0">
+                                        <td data-field="stt" t-att-rowspan="invoice.count_pass"><t t-esc="invoice_index+1"/></td>
+                                    </t>
+                                     <td data-field="name"><t t-esc="intern.name"/></td>
+                                     <td data-field="birthday"><t t-esc="intern.date_of_birth_short"/></td>
+                                     <td data-field="province"><t t-esc="intern.province.name"/></td>
+                                    <t t-if="intern_index == 0">
+                                         <td data-field="xi_nghiep" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.enterprise_doc.name_vi"/></td>
+                                         <td data-field="nghiep_doan" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.guild.name_acronym"/></td>
+                                         <td data-field="place_to_work" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.place_to_work"/></td>
+                                         <td data-field="job" t-att-rowspan="invoice.count_pass">
+                                             <p><t t-esc="invoice.job_vi"/></p>
+                                             <p><t t-esc="invoice.job_jp"/></p>
+                                         </td>
+                                         <td data-field="expire" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.year_expire"/></td>
+                                         <td data-field="date_pass" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_exam"/></td>
+                                         <td data-field="date_training" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_start_training"/></td>
+                                         <td data-field="date_departure" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_departure"/></td>
+                                         <td data-field="dispatchcom" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.dispatchcom1.name_short"/></td>
+
+                                         <td data-field="date_receive_hard_profile" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_receive_hard_profile"/></td>
+                                         <td data-field="date_receive_contract" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_receive_contract"/></td>
+                                         <td data-field="date_send_letter_pro" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_send_letter_pro"/></td>
+                                         <td data-field="date_expected_send_to_customer" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_expected_send_to_customer"/></td>
+                                         <td data-field="date_real_send_to_customer" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.date_real_send_to_customer"/></td>
+                                         <td data-field="note_hs" t-att-rowspan="invoice.count_pass"><t t-esc="invoice.note_hs"/></td>
+                                    </t>
+                                </tr>
+                             </t>
+
+                         </t>
+                     </tbody>
+                 </table>
+
+             </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,11 +1,21 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_intern_internks_manager,intern_internks manager,model_intern_internks,group_manager,1,1,1,1
 access_intern_internks_user,intern_internks user,model_intern_internks,group_user,1,1,1,1
+access_intern_internks_hsuser,intern_internks hs user,model_intern_internks,group_hs_user,1,1,1,1
+access_intern_internks_ksuser,intern_internks ks user,model_intern_internks,group_ks_user,1,1,1,1
 access_intern_interndn_manager,intern_interndn manager,model_intern_interndn,group_manager,1,1,1,1
 access_intern_interndn_user,intern_interndn user,model_intern_interndn,group_user,1,1,1,1
-access_intern_internhs_user,intern_internhs manager,model_intern_internhs,group_manager,1,1,1,1
+access_intern_interndn_ksuser,intern_interndn ks user,model_intern_interndn,group_ks_user,1,1,1,1
+access_intern_interndn_hsuser,intern_interndn hs user,model_intern_interndn,group_hs_user,1,1,1,1
+access_intern_interndn_tcuser,intern_interndn tc user,model_intern_interndn,group_tc_user,1,1,1,1
+access_intern_internhs_user,intern_internhs user,model_intern_internhs,group_user,1,1,1,1
+access_intern_internhs_manager,intern_internhs manager,model_intern_internhs,group_manager,1,1,1,1
+access_intern_internhs_hsuser,intern_internhs  hs user,model_intern_internhs,group_hs_user,1,1,1,1
+access_intern_internhs_ksuser,intern_internhs  ks user,model_intern_internhs,group_ks_user,1,1,1,1
 access_intern_intern_manager,intern_intern manager,model_intern_intern,group_manager,1,1,1,1
-access_intern_intern_user,intern_intern user,model_intern_intern,group_user,1,1,1,0
+access_intern_intern_user,intern_intern user,model_intern_intern,group_user,1,1,1,1
+access_intern_intern_user_hs,intern_intern userhs,model_intern_intern,group_hs_user,1,1,1,1
+access_intern_intern_user_ks,intern_intern userks,model_intern_intern,group_ks_user,1,1,1,1
 access_res_user_manager,res user manager,base.model_res_users,group_manager,1,1,1,1
 access_res_user_user,res user normal,base.model_res_users,group_user,1,0,0,0
 access_translator,translator right,model_intern_translator,,1,1,1,1
@@ -13,16 +23,46 @@ access_province,province right,model_province,,1,1,1,1
 access_marital,marital right,model_marital,,1,0,0,0
 access_school,school right,model_school,,1,0,0,0
 access_certification,certification right,model_intern_certification,,1,0,0,0
+access_intern_family,intern_family normal,model_intern_family,,1,0,0,0
 access_intern_family_user,intern_family user,model_intern_family,group_user,1,1,1,1
+access_intern_employment,intern_employment,model_intern_employment,,1,0,0,0
 access_intern_employment_user,intern_employment user,model_intern_employment,group_user,1,1,1,1
+access_intern_employment_ksuser,intern_employment ksuser,model_intern_employment,group_ks_user,1,1,1,1
+access_intern_education,intern_education normal,model_intern_education,,1,0,0,0
 access_intern_education_user,intern_education user,model_intern_education,group_user,1,1,1,1
 access_promotion,intern_promotion manager,model_intern_promotion,group_user,1,1,1,1
-access_department_manager,department manager,model_department,group_user,1,1,1,1
-access_employee_manager,employee manager,model_hh_employee,group_user,1,1,1,1
-access_dispatchcom2_manager,dispatchcom2 manager,model_dispatchcom2,group_user,1,1,1,1
-access_dispatchcom1_manager,dispatchcom1 manager,model_dispatchcom1,group_user,1,1,1,1
-access_trainingcenter_manager,trainingcenter manager,model_trainingcenter,group_user,1,1,1,1
-access_intern_enterprise_manager,intern enterprise manager,model_intern_enterprise,group_user,1,1,1,1
-access_intern_guild_manager,intern guild manager,model_intern_guild,group_user,1,1,1,1
-access_intern_externdoc_manager,intern externdoc manager,model_intern_externdoc,group_user,1,1,1,1
-access_relation_manager,intern relation manager,model_relation,group_user,1,1,1,1
+access_promotion_ks,intern_promotion ksmanager,model_intern_promotion,group_ks_user,1,1,1,1
+access_employmentvi_ks,intern_employmentvi ksmanager,model_intern_employmentvi,,1,1,1,1
+access_department_manager_hs,department manager hs,model_department,,1,1,1,1
+access_employee_manager,employee manager,model_hh_employee,,1,1,1,1
+access_dispatchcom2_manager,dispatchcom2 manager,model_dispatchcom2,,1,1,1,1
+access_dispatchcom1_manager,dispatchcom1 manager,model_dispatchcom1,,1,1,1,1
+access_trainingcenter_manager,trainingcenter manager,model_trainingcenter,,1,1,1,1
+access_intern_enterprise_manager,intern enterprise manager,model_intern_enterprise,,1,1,1,1
+access_intern_guild_manager,intern guild manager,model_intern_guild,,1,1,1,1
+access_intern_externdoc_manager,intern externdoc manager,model_intern_externdoc,,1,1,1,1
+access_relation_manager,intern relation manager,model_relation,,1,1,1,1
+access_intern_document,document manager,model_intern_document,,1,1,1,1
+access_intern_invoice user,invoice user,model_intern_invoice,hh_intern.group_user,1,1,1,1
+access_intern_invoice user_hs,invoice user hs,model_intern_invoice,hh_intern.group_hs_user,1,1,0,1
+access_intern_invoice manager,invoice manager,model_intern_invoice,hh_intern.group_manager,1,1,1,1
+access_intern_job,job user,model_intern_job,hh_intern.group_hs_user,1,1,1,1
+access_intern_job_other,job user other,model_intern_job,,1,0,0,0
+access_intern_invoice tc,invoice user tc,model_intern_invoice,hh_intern.group_tc_user,1,1,1,1
+access_intern_intern tc,invoice user tc,model_intern_intern,hh_intern.group_tc_user,1,1,1,1
+access_intern_internclone,internclone,model_intern_internclone,,1,1,1,1
+access_intern_internclone hs,internclone hs,model_intern_internclone,group_hs_user,1,1,0,1
+access_intern_internks,interks,model_intern_internks,hh_intern.group_tc_user,1,1,1,1
+access_intern_internhs,interks,model_intern_internhs,hh_intern.group_tc_user,1,1,1,1
+access_employee tc,employee tc,model_hh_employee,hh_intern.group_tc_user,1,1,1,1
+access_intern_invoice ks,invoice user ks,model_intern_invoice,hh_intern.group_ks_user,1,1,0,0
+access_intern_issue,intern issues,model_intern_issue,,1,1,1,1
+access_intern_issueafter,intern issueafter,model_intern_issueafter,,1,1,1,1
+access_intern_discipline,intern discipline,model_intern_discipline,,1,1,1,1
+access_department_group,department_group,model_department_group,,1,1,1,1
+access_department_block,department_block,model_department_block,,1,1,1,1
+access_resource_resource_kiemsoat,resource.resource ks,resource.model_resource_resource,hh_intern.group_ks_user,1,1,1,1
+access_resource_resource_tiencu,resource.resource tc,resource.model_resource_resource,hh_intern.group_tc_user,1,1,1,1
+access_test hs,internclone hs,model_intern_phieutraloi,group_hs_user,1,1,1,1
+access_educationvi_ks,intern_educationvi ksmanager,model_intern_educationvi,,1,1,1,1
+access_familyvi_ks,intern_familyvi ksmanager,model_intern_familyvi,,1,1,1,1

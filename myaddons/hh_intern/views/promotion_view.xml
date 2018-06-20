@@ -1,0 +1,434 @@
+<odoo>
+    <record id="view_promotion_invoice_form" model="ir.ui.view">
+        <field name="name">Chi tiết đơn hàng</field>
+        <field name="model">intern.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                 <header>
+                    <button name="start_promotion" string="Tiến cử" type="object" class="oe_highlight" attrs="{'invisible': [('status', '!=', 4)]}"
+                            confirm="Hành động này không thể thay đổi. Bạn có chắc muốn tiến cử?"/>
+                     <field name="status" widget="statusbar" statusbar_visible="4,5"/>
+                </header>
+
+                 <table class="o_group">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="name"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="room_pttt" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                    <field name="room_pttt" widget="selection" domain="[('room_type', '=', '1')]"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="enterprise" required="True"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="enterprise" required="True" style="background-color: #ffff96"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="place_to_work" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                   <!--<field name="place_to_work"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="name_of_guild" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="name_of_guild" style="background-color: #ffff96" required="True"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="legal_name" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="100px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="legal_name"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+                     </tbody>
+                 </table>
+
+
+                 <table class="o_group">
+                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin chi tiết:</caption>
+                     <tbody>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="job_predefine" string="Ngành nghề xin thư tiến cử"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="job_predefine" class="oe_edit_only" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                <label for="date_exam"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                 <div>
+                                    <field name="day_exam" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
+                                    <field name="month_exam" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
+                                    <field name="year_exam" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
+                                    <field name="date_exam" class="oe_read_only"/>
+                                </div>
+                            </td>
+                         </tr>
+                        <tr invisible="1">
+                             <td colspan="1" width="250px" class="columnDivider">
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                     <field name="job_en" placeholder="Tiếng Anh" />
+                                </div>
+                            </td>
+                         </tr>
+                         <tr invisible="1">
+                             <td colspan="1" width="250px" class="columnDivider">
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="job_jp" placeholder="Tiếng Nhật" />
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="job_vi" placeholder="Tiếng Việt"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                     </tbody>
+                 </table>
+
+                  <table class="o_group" >
+                     <tbody>
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="year_expire" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="year_expire"/>
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="number_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="number_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="number_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="number_women" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="number_total" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="number_total" style="width:100px"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="age_from" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="age_from" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                          <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_man" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_women" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_total" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_total" style="width:100px"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="age_to" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="age_to" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                     </tbody>
+                  </table>
+                  <table class="o_group" >
+                     <tbody>
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="certificate" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="certificate" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="marital" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="marital" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="preferred_hand" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="preferred_hand" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                          <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="vision" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="vision" />
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="physical" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="physical" />
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="smoking" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="smoking" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="height_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="height_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="height_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="height_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+
+                         <!--</tr>-->
+
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="weight_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="weight_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="weight_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="weight_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+
+                         <!--</tr>-->
+                     </tbody>
+                 </table>
+                 <group>
+                     <field name="job_description" style="width:300px"/>
+                     <field name="other_requirement" style="width:300px"/>
+                     <field name="note" style="width:300px"/>
+                 </group>
+                <group>
+                     <field name="fee_policy" style="width:300px"/>
+                     <field name="bonus_target" style="width:300px"/>
+                 </group>
+                 <notebook>
+                    <page string="Dự kiến tiến cử" >
+                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'promotion'}">
+
+                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc">
+                                 <field name="name" readonly="1"/>
+                                 <field name="cmnd_or_tcc" readonly="1"/>
+                                 <!--<field name="identity_2" readonly="1"/>-->
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="have_form" />
+                                 <field name="avatar" widget="image"/>
+                                 <field name="have_health"/>
+                                 <field name="have_deposit"/>
+                                 <field name="condition_count" invisible="1"/>
+                                 <field name="intern_id" invisible="1"/>
+                                 <field name="promoted" widget="bool_button" options='{"terminology":
+                                    {"string_true": "Đã tiến cử", "action_true": "", "string_false": "Chưa tiến cử", "action_false": "Tiến cử"} }'
+                                />
+                                 <field name="confirm_exam" invisible="1"/>
+                                 <field name="escape_exam" invisible="1"/>
+                                 <field name="pass_exam" invisible="1"/>
+                                 <field name="preparatory_exam" invisible="1"/>
+                                 <field name="preparatory_exam" invisible="1"/>
+                                 <field name="cancel_pass" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Danh sách Tiến cử">
+                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'promotion'}">
+                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc" create="false">
+                                 <field name="name" readonly="1"/>
+                                 <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="have_form" />
+                                 <field name="avatar" widget="image"/>
+                                 <field name="have_health"/>
+                                 <field name="have_deposit"/>
+                                 <field name="condition_count" invisible="1"/>
+                                <field name="promoted" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Chốt thi tuyển">
+                        <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
+                        <field name="interns_confirm_exam" widget="one2many_intern" context="{'page':'promotion'}" readonly="1">
+                            <tree create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                            </tree>
+                        </field>
+                        <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
+                        <field name="interns_escape_exam" widget="one2many_intern" readonly="1">
+                            <tree create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                     <page string="Trúng tuyển/Dự bị">
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN</p>
+                        <field name="interns_pass_new" widget="one2many_intern" readonly="1">
+                            <tree create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                            </tree>
+                        </field>
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN DỰ BỊ</p>
+                         <field name="interns_preparatory" widget="one2many_intern" readonly="1">
+                            <tree create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                            </tree>
+                        </field>
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH HỦY SAU TRÚNG TUYỂN</p>
+                          <field name="interns_cancel_pass" widget="one2many_intern" readonly="1">
+                            <tree create="false">
+                                <field name="name" readonly="1"/>
+                                <field name="cmnd_or_tcc" readonly="1"/>
+                                 <field name="date_of_birth" context=""/>
+                                 <field name="province" readonly="1"/>
+                                 <field name="reason_cancel_pass" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                 </notebook>
+             </form>
+        </field>
+    </record>
+</odoo>

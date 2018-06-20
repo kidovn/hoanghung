@@ -5,7 +5,26 @@
         <field name="model">intern.intern</field>
         <field name="arch" type="xml">
             <form string="Thực tập sinh">
+                <!--<header>-->
+                     <!--<field name="intern_status" widget="statusbar"/>-->
+                <!--</header>-->
+
                 <field name="id" invisible="1" />
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="custom_id" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                     <field name="custom_id" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td/>
+                        </tr>
+                    </tbody>
+                </table>
                 <table class="o_group o_inner_group">
                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cơ bản của ứng viên:</caption>
                     <tbody>
@@ -81,13 +100,14 @@
 
 
                         </tr>
+                        <field name="enter_source_tmp" invisible="1"/>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="long_term"/>
+                                  <label for="enter_source"/>
                             </td>
                              <td colspan="1" >
                                 <div>
-                                     <field name="long_term" style="width:10%"/>
+                                     <field name="enter_source" style="width:100px"/>
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -99,7 +119,26 @@
                                 </div>
                             </td>
                         </tr>
-
+                        <tr attrs="{'invisible':[('enter_source', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="date_enter_source"/>
+                            </td>
+                            <td colspan="1" >
+                                <div class="column">
+                                    <field name="date_enter_source"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible':[('enter_source', '!=', '4')]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="date_escape_source"/>
+                            </td>
+                            <td colspan="1" >
+                                <div class="column">
+                                    <field name="date_escape_source"/>
+                                </div>
+                            </td>
+                        </tr>
                          <tr>
                             <td colspan="1" width="150px" class="columnDivider">
                                   <label for="day_sent_doc" string="Ngày nộp hồ sơ"/>
@@ -176,7 +215,21 @@
                             <td colspan="1">
                                 <div>
                                     <field name="phone_number_relative" style="width: 100px; display: inline-block"/>
-                                    <field name="relative_note" style="width: 70px" placeholder="Quan hệ"/>
+                                    <field name="relative_note" style="width: 100px" placeholder="Quan hệ" widget="selection"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px"/>
+                        </tr>
+                        <tr>
+                            <td/>
+                            <td/>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="phone_number_relative_2"/>-->
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="phone_number_relative_2" style="width: 100px; display: inline-block"/>
+                                    <field name="relative_note_2" style="width: 100px" placeholder="Quan hệ" widget="selection"/>
                                 </div>
                             </td>
                             <td colspan="1" width="150px"/>
@@ -289,7 +342,7 @@
                             <td colspan="1" width="250px">
                                 <div>
                                    <field name="surgery" style="width: 20px; display: inline-block"/>
-                                   <field name="surgery_content" placeholder="Nội dung:" style="width: 200px;" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}"/>
+                                   <field name="surgery_content_vi" placeholder="Nội dung:" style="width: 200px;" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}"/>
                                 </div>
                             </td>
                             <td colspan="1" width="50px"/>
@@ -445,17 +498,243 @@
                     </tbody>
                 </table>
 
+                <!--THONG TIN BO SUNG-->
+                <table class="o_group o_inner_group">
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin bổ sung CV:</caption>
+                    <tbody>
+                        <tr>
+                            <field name="show_specialized" invisible="1"/>
+                        </tr>
+                        <tr  attrs="{'invisible':[('show_specialized', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="specialized"  />
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="specialized_vi"  style="width:250px;background-color: #ffff96" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="o_group o_inner_group">
+                    <tbody>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="strong_vi"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="strong_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="weak_vi"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                       <field name="weak_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="favourite_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="favourite_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="family_income_vi" string="Tổng thu nhập gia đình (VND)"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="family_income_vi"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="teammate"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="teammate"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="cooking"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="cooking"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="motivation_vi"/>
+                            </td>
+                            <td colspan="1"  width="250px" >
+                                <div>
+                                       <field name="motivation_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="income_after_three_year_vi"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                       <field name="income_after_three_year_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="job_after_return_vi" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="job_after_return_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="prefer_object_vi" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="prefer_object_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="memory_vi" string="Kỷ niệm đáng nhớ nhất của bạn:"/>
+                            </td>
+                            <td colspan="1" width="250px"  >
+                                <div>
+                                       <field name="memory_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="valuable_vi" string="Điều quý giá nhất đối với bạn trong cuộc sống: "/>
+                            </td>
+                            <td colspan="1" width="250px" >
+                                <div>
+                                       <field name="valuable_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="family_member_in_jp_vi" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="family_member_in_jp_vi" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="education_status" />
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="education_status" style="width: 100px; display: inline-block" />
+                                    <field name="education_content_vi" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width: 200px;  margin-left: 20px"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <!--END-->
+
                 <label string="Kinh nghiệm làm việc:" style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;"/>
-                <field name="employments_vi" mode="tree" >
-                    <tree editable="bottom" class="class_education">
-                        <field name="month_start" string="Tháng"/>
-                        <field name="year_start" string="Năm bắt đầu"/>
-                        <field name="month_end" string="Tháng"/>
-                        <field name="year_end" string="Năm kết thúc"/>
-                        <field name="company"/>
-                        <field name="description"/>
-                    </tree>
-                 </field>
+                    <group>
+                        <field name="exp_sew"/>
+                    </group>
+                     <group>
+                        <field name="exp_mechanical"/>
+                    </group>
+                     <group>
+                        <field name="exp_building"/>
+                    </group>
+                    <group>
+                        <field name="exp_note"/>
+                    </group>
+
+
+
+                <notebook>
+                    <page string="Lý lịch học tập">
+                        <field name="educations_vi" mode="tree">
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999" />
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc" widget="mask" data-inputmask-mask="9999"/>
+                                <field name="school_type" string="Trường" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': False}"/>
+                                <field name="school" string="Tên trường" style="background-color: #ffff96" />
+                                <field name="specialization" style="background-color: #ffff96"/>
+                                <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': False}"/>
+                                <field name="graduated"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Lý lịch làm việc">
+                        <field name="employments_vi" mode="tree" >
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu"/>
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc"/>
+                                <field name="company" style="width:250px"/>
+                                <field name="description"/>
+                            </tree>
+                         </field>
+                    </page>
+                    <page string="Gia đình">
+                        <field name="family_members_vi" mode="tree">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="relationship" style="background-color: #ffff96"/>
+                                <field name="ages" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>
+                                <field name="birth_year" invisible="1"/>
+                                <field name="job" style="background-color: #ffff96"/>
+                                <field name="live_together"/>
+
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
 
                 <table class="o_group">
 
@@ -467,7 +746,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div>
-                                       <field name="room_recruitment" options='{"no_open": True}'/>
+                                       <field name="room_recruitment" domain="[('room_type','=','0')]"/>
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -475,187 +754,16 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div>
-                                       <field name="recruitment_employee" options="{ 'no_open': True,'no_quick_create':True}"/>
+                                       <field name="recruitment_employee" domain="[('room_type','=','0')]"/>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <label string="Tiến cử:" style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;"/>
 
-                <field name="promotions" mode="tree">
-                    <tree editable="bottom" class="class_promotion">
-                        <field name="day"/>
-                        <field name="month" />
-                        <field name="year" />
-                        <field name="invoice"/>
-                    </tree>
-                </field>
-
-
-                <table class="o_group o_inner_group" >
-                    <tbody>
-                        <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="pass_recruitment"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="pass_recruitment"  style="width:100px"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                <table class="o_group" attrs="{'invisible':['|',('pass_recruitment','=',False),('pass_recruitment', '!=', '1')]}">
-                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin trúng tuyển:</caption>
-                    <tbody>
-                        <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="day_pass" string="Ngày trúng tuyển"/>
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div>
-                                    <field name="day_pass" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
-                                    <field name="month_pass" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_pass" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
-                                    <field name="date_pass"  class="oe_read_only"/>
-                                </div>
-                            </td>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="syndication"/>
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div>
-                                    <field name="syndication"  style="width:150px"/>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="invoice_name_vi"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="invoice_name_vi"  style="width:150px"/>
-                                </div>
-                            </td>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="place_to_work"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="place_to_work"  style="width:150px"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="fee_departure"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="fee_departure"  style="width:150px"/>
-                                </div>
-                            </td>
-
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="legal_name"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="legal_name"  style="width:150px"/>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                        <tr >
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="day_join_school" string="Ngày nhập học "/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="day_join_school" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
-                                    <field name="month_join_school" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_join_school" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
-                                    <field name="date_join_school"  class="oe_read_only"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="day_leave" string="Dự kiến xuất cảnh"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="day_leave" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only" />
-                                    <field name="month_leave" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_leave" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
-                                    <field name="date_leave" class="oe_read_only"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                         <tr>
-                            <td colspan="1"  class="columnDivider">
-                                  <label for="pttt_employee"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="pttt_employee"  options="{ 'no_open': True,'no_quick_create':True}"/>
-                                </div>
-                            </td>
-
-                             <td colspan="1"  class="columnDivider">
-                                  <label for="pttt_room"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="pttt_room"  options="{ 'no_open': True,'no_quick_create':True}"/>
-                                </div>
-                            </td>
-                         </tr>
-
-                    </tbody>
-                </table>
-
-                <table class="o_group o_inner_group" attrs="{'invisible':['|',('pass_recruitment','=',False),('pass_recruitment', '!=', '0')]}">
-                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin thanh lý:</caption>
-                    <tbody>
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="day_liquidation" string="Ngày thanh lý"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="day_liquidation" style="width: 40px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>
-                                    <field name="month_liquidation" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
-                                    <field name="year_liquidation" style="width:50px" placeholder="Năm" class="oe_edit_only"/>
-                                    <field name="date_liquidation" class="oe_read_only"/>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1" width="250px" class="columnDivider">
-                                  <label for="liquidation_reason"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="liquidation_reason"  style="width:150px; display: inline-block"/>
-                                    <field name="liquidation_note"  style="width:250px;"/>
-                                </div>
-                            </td>
-                         </tr>
-                    </tbody>
-                </table>
-                <group>
-                    <field name="user_access" groups="hh_intern.group_manager"  mode="tree">
+                <group invisible="1">
+                    <field name="user_access" groups="hh_intern.group_manager"  mode="tree" >
                         <tree>
                             <field name="name" string="Tên"/>
                             <field name="login" string="Tài khoản"/>
@@ -671,24 +779,27 @@
         <field name="model">intern.intern</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="custom_id"/>
+                <field name="enter_source"/>
                 <field name="name"/>
                 <field name="province"/>
                 <field name="date_of_birth"/>
                 <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
+                <field name="current_status"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_filter_internks" model="ir.ui.view">
-        <field name="name">Lọc thực tập sinh</field>
-        <field name="model">intern.intern</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <field name="province"/>
-            </search>
-        </field>
-    </record>
+    <!--<record id="view_filter_internks" model="ir.ui.view">-->
+        <!--<field name="name">Lọc thực tập sinh</field>-->
+        <!--<field name="model">intern.intern</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<search>-->
+                <!--<field name="name"/>-->
+                <!--<field name="province"/>-->
+            <!--</search>-->
+        <!--</field>-->
+    <!--</record>-->
 
     <record id="view_promotion_form" model="ir.ui.view">
         <field name="name">Tiến cử</field>
@@ -724,7 +835,6 @@
                     </tbody>
                 </table>
 
-
             </form>
         </field>
     </record>
@@ -739,4 +849,463 @@
             </tree>
         </field>
     </record>
+
+     <record id="view_ks_invoice_form" model="ir.ui.view">
+        <field name="name">Chi tiết đơn hàng</field>
+        <field name="model">intern.invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                 <header>
+                     <field name="status" widget="statusbar" statusbar_visible="4,5"/>
+                </header>
+
+                 <table class="o_group">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="name" readonly="1"/>
+                                </div>
+                            </td>
+                              <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="room_pttt" />
+                            </td>
+                            <td colspan="1" width="400px">
+                                <div class="column">
+                                    <field name="room_pttt" readonly="1" style="width: 60px; display: inline-block" />
+                                    <label style="width: 100px; display: inline-block" string="Cán bộ PTTT"/>
+                                    <field name="employee_pttt" style="width: 200px; display: inline-block" domain="[('room_type','=','0')]"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="enterprise_doc"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="enterprise_doc" readonly="1"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="place_to_work" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                   <field name="place_to_work" readonly="1"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="guild" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="guild"  readonly="1"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="dispatchcom1" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                    <field name="dispatchcom1"  readonly="1"/>
+                                </div>
+                            </td>
+                         </tr>
+                     </tbody>
+                 </table>
+                 <table class="o_group">
+                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin chi tiết:</caption>
+                     <tbody>
+                         <tr>
+                             <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="job_vi" string="Ngành nghề xin thư tiến cử"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="job_vi" placeholder="Tiếng Việt" readonly="1"/>
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="year_expire" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="year_expire" readonly="1"/>
+                                </div>
+                            </td>
+                         </tr>
+                     </tbody>
+                 </table>
+                 <notebook>
+                    <page string="Dự kiến tiến cử" >
+                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+
+                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false">
+                                 <field name="name" readonly="1" sortable='0'/>
+                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <!--<field name="identity_2" readonly="1"/>-->
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+                                 <field name="room_recruitment" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="recruitment_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="recruitment_r_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="have_form" sortable='0'/>
+                                 <field name="avatar" widget="image" sortable='0'/>
+                                 <field name="have_health" sortable='0'/>
+                                 <field name="have_deposit" sortable='0'/>
+                                 <field name="condition_count" invisible="1"/>
+                                 <field name="promoted" invisible="1"/>
+                                 <field name="confirm_exam" invisible="1"/>
+                                 <field name="escape_exam" invisible="1"/>
+                                 <field name="pass_exam" invisible="1"/>
+                                 <field name="preparatory_exam" invisible="1"/>
+                                 <field name="preparatory_exam" invisible="1"/>
+                                 <field name="cancel_pass" invisible="1"/>
+                                 <!--<field name="issues_before" invisible="1"/>-->
+                                 <!--<field name="issues_after" invisible="1"/>-->
+                                 <field name="issues_raise" invisible="1"/>
+                                 <field name="issues_resolve" invisible="1"/>
+                                 <field name="fine_employee" invisible="1"/>
+                                 <field name="fine_intern" invisible="1"/>
+                                 <field name="admission_late" invisible="1"/>
+                                 <field name="admission_late_des" invisible="1"/>
+                                 <field name="discipline" invisible="1"/>
+                                 <field name="deportation" invisible="1"/>
+                                 <field name="departure" invisible="1"/>
+                                 <field name="comeback" invisible="1"/>
+                                 <field name="reason_comeback" invisible="1"/>
+                                 <field name="liquidated" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Danh sách Tiến cử">
+                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false">
+                                 <field name="name" readonly="1" sortable='0'/>
+                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+                                 <field name="room_recruitment" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="recruitment_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="recruitment_r_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
+                                 <field name="have_form" sortable='0'/>
+                                 <field name="avatar" widget="image" sortable='0'/>
+                                 <field name="have_health" sortable='0'/>
+                                 <field name="have_deposit" sortable='0'/>
+
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Chốt thi tuyển">
+                        <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
+                        <field name="interns_confirm_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                            <tree create="false">
+                                <field name="name" readonly="1" sortable='0'/>
+                                <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+                                 <!--<field name="issues_before" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_before'}" sortable='0'/>-->
+                                 <!--<field name="issues_after" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_after'}" sortable='0'/>-->
+                                <field name="issues_raise" widget="bool_button_toggle_extend" options='{"terminology":
+                                    {"string_true": "Có phát sinh", "action_true": "Có phát sinh", "string_false": " ", "action_false": "Huỷ phát sinh"},
+                                    }' sortable='0' context="{'form_view_ref':'hh_intern.view_intern_form_issues_raise'}" />
+                            </tree>
+                        </field>
+                        <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
+                        <field name="interns_escape_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                            <tree create="false">
+                                <field name="name" readonly="1" sortable='0'/>
+                                <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+                                 <!--<field name="issues_before" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_before'}" sortable='0'/>-->
+                            </tree>
+                        </field>
+                    </page>
+                     <page string="Trúng tuyển/Dự bị">
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN</p>
+                        <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" >
+                            <tree create="false">
+                                <field name="name" readonly="1" sortable='0'/>
+                                <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                <field name="date_of_birth" context="" sortable='0'/>
+                                <field name="province" readonly="1" sortable='0'/>
+                                <field name="cancel_pass" widget="bool_button_toggle_extend" options='{ "terminology":{"string_true": "Đã huỷ", "action_true": "Huỷ sau TT", "string_false": " ","action_false": "Huỷ sau TT"},
+                                                    "invisible":{"status":[1,3,4,5,6]}}' context="{'related':['preparatory_exam','pass_exam'],'form_view_ref':'hh_intern.view_intern_form_reason_cancel_pass'}" />
+                                <field name="admission_late" widget="integer_custom" context="{'form_view_ref':'hh_intern.view_intern_form_admission_late'}" sortable='0'/>
+                                <field name="join_school" widget="bool_button_toggle" options='{"terminology":
+                                    {"string_true": "Đã nhập học", "action_true": "Đã nhập học", "string_false": " ", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0'/>
+                                <!--<field name="issues_after" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_after'}" sortable='0'/>-->
+                                <field name="discipline" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_discipline'}" sortable='0'/>
+                                <field name="deportation" widget="bool_button_toggle"
+                                       options='{"terminology":
+                                    {"string_true": "Đã đuổi học", "action_true": "Đuổi học", "string_false": "", "action_false": "Huỷ đuổi học"}}' sortable='0'/>
+
+                                <field name="visa_failure" widget="bool_button_toggle" options='{"terminology":
+                                    {"string_true": "Hỏng Visa", "action_true": "Hỏng Visa", "string_false": " ", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0'/>
+
+                                <field name="tclt_failure" widget="bool_button_toggle_extend" options='{"terminology":
+                                    {"string_true": "Hỏng TCLT", "action_true": "Hỏng TCLT", "string_false": " ", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0' context="{'form_view_ref':'hh_intern.view_intern_form_reason_failure_tclt'}" />
+
+                                <field name="check_heath_before_departure" widget="bool_button_toggle" options='{"terminology":
+                                    {"string_true": "Đã check", "action_true": "Đã check", "string_false": "Chưa check", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0'/>
+
+                                <field name="check_before_fly" widget="bool_button_toggle" options='{"terminology":
+                                    {"string_true": "Đã check", "action_true": "Đã check", "string_false": "Chưa check", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0'/>
+
+                                <field name="departure" widget="bool_button_toggle" options='{"terminology":
+                                    {"string_true": "Đã xuất cảnh", "action_true": "Đã xuất cảnh", "string_false": "Chưa xuất cảnh", "action_false": "Huỷ chọn"},
+                                    "invisible":{"status":[1,4,5,6]}}' sortable='0'/>
+                            </tree>
+                        </field>
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN DỰ BỊ</p>
+                         <field name="interns_preparatory" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                            <tree create="false">
+                                <field name="name" readonly="1" sortable='0'/>
+                                <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+
+                            </tree>
+                        </field>
+                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH HỦY SAU TRÚNG TUYỂN</p>
+                          <field name="interns_cancel_pass" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                            <tree create="false">
+                                <field name="name" readonly="1" sortable='0'/>
+                                <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="province" readonly="1" sortable='0'/>
+                                 <field name="reason_cancel_pass" readonly="1" sortable='0'/>
+                                 <field name="fine_employee" readonly="1" sortable='0'/>
+                                 <field name="fine_intern" readonly="1" sortable='0'/>
+                                <field name="pass_exam" widget="bool_button" string=" "
+                                        options='{"terminology":{"string_true": "", "action_true": "Trúng tuyển", "string_false": " ","action_false": "Trúng tuyển"},
+                                                    "invisible":{"status":[1,3,4,5,6]}}'  context="{'related':['preparatory_exam','cancel_pass']}" sortable='0'/>
+
+                            </tree>
+                        </field>
+                    </page>
+                     <page string="Xuất cảnh">
+                          <field name="interns_departure" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                              <tree editable="bottom">
+                                  <field name="name" readonly="1" sortable='0'/>
+                                  <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
+                                  <field name="date_of_birth" context="" sortable='0'/>
+                                  <field name="province" readonly="1" sortable='0'/>
+                                  <field name="comeback" />
+                                  <field name="reason_comeback" />
+                                  <field name="liquidated"/>
+                              </tree>
+                          </field>
+                     </page>
+                 </notebook>
+
+             </form>
+        </field>
+    </record>
+
+    <!--<record id="view_ks_invoice_issues_tree" model="ir.ui.view">-->
+        <!--<field name="name">Chi tiết phát sinh</field>-->
+        <!--<field name="model">intern.issue</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree editable="bottom">-->
+                <!--&lt;!&ndash;<field name="name"/>&ndash;&gt;-->
+                <!--<field name="description"/>-->
+                <!--<field name="fine_employee"/>-->
+                <!--<field name="fine_intern"/>-->
+                <!--<field name="intern_id" invisible="1"/>-->
+                <!--<field name="create_date" string="Ngày tạo" readonly="1"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+    <!--<record id="view_ks_invoice_issue_after_exam" model="ir.ui.view">-->
+        <!--<field name="model">intern.issueafter</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form>-->
+                <!--<group>-->
+                    <!--&lt;!&ndash;<field name="name"/>&ndash;&gt;-->
+                    <!--<field name="description"/>-->
+                    <!--<field name="resolve"/>-->
+                <!--</group>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
+    <!--<record id="view_ks_invoice_issues_after_exam_tree" model="ir.ui.view">-->
+        <!--<field name="name">Chi tiết phát sinh</field>-->
+        <!--<field name="model">intern.issueafter</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree editable="bottom">-->
+                <!--&lt;!&ndash;<field name="name"/>&ndash;&gt;-->
+                <!--<field name="description"/>-->
+                <!--<field name="resolve"/>-->
+                <!--<field name="fine_employee"/>-->
+                <!--<field name="fine_intern"/>-->
+                <!--<field name="intern_id" invisible="1"/>-->
+                <!--<field name="create_date" string="Ngày tạo" readonly="1"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!--<record id="view_ks_invoice_late_document" model="ir.ui.view">-->
+        <!--<field name="model">intern.latedoc</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form>-->
+                <!--<group>-->
+                    <!--<field name="number_of_date"/>-->
+                    <!--<field name="description"/>-->
+                <!--</group>-->
+                <!--<field name="intern_id" invisible="1"/>-->
+                <!--<field name="invoice_id" invisible="1"/>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
+
+
+    <!--<record id="view_intern_form_issues_before" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="issues_before"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_intern_form_issues_after" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="issues_after"/>
+            </form>
+        </field>
+    </record>-->
+
+    <record id="view_intern_form_admission_late" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="admission_late" />
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="admission_late" style="width:20px"/> ngày
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="admission_late_des"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="admission_late_des" style="width:250px"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_intern_form_discipline" model="ir.ui.view">
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="discipline" mode="tree">
+                    <tree editable="bottom">
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_intern_form_reason_failure_tclt" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="250px" class="columnDivider">
+                                  <label for="tclt_failure_reason"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="tclt_failure_reason" style="width:250px"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_internks_tree_internclone" model="ir.ui.view">
+        <field name="name">TTS theo đơn hàng</field>
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="province"/>
+                <field name="date_of_birth_short"/>
+                <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
+                <field name="cmnd_or_tcc"/>
+                <field name="date_departure"/>
+                <field name="date_comeback"/>
+                <field name="date_liquidated"/>
+                <field name="reason_comeback"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_intern_form_issues_raise" model="ir.ui.view">
+        <field name="model">intern.internclone</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="issues_reason"/>
+                    <field name="issues_resolve"/>
+                    <field name="fine_employee"/>
+                    <field name="fine_intern"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!--<record id="view_intern_form_issues_raise_after_exam" model="ir.ui.view">-->
+        <!--<field name="model">intern.internclone</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form>-->
+                <!--<group>-->
+                    <!---->
+                <!--</group>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
 </odoo>

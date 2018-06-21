@@ -350,7 +350,7 @@
                                     {"string_true": "Đã tiến cử", "action_true": "", "string_false": "Chưa tiến cử", "action_false": "Tiến cử"} }'
                                 />
                                  <field name="confirm_exam" invisible="1"/>
-                                 <field name="escape_exam" invisible="1"/>
+                                 <field name="issues_raise" invisible="1"/>
                                  <field name="pass_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>

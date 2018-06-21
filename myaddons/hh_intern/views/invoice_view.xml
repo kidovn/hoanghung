@@ -19,7 +19,7 @@
                      <field name="status" widget="statusbar" statusbar_visible="4,5,1,2"/>
                      <button name="start_translate_form" string="Dịch form" type="object"/>
                  </header>
-                 <field name="interns_clone" widget="one2many_intern" invisible="1"/>
+                 <field name="interns_clone" widget="one2many_intern" invisible="1" context="{'page':'doingoai'}"/>
                  <table class="o_group">
                      <tbody>
                          <tr>
@@ -44,11 +44,11 @@
 
                          <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="enterprise_doc" required="True"/>
+                                 <label for="enterprise_doc"/>
                             </td>
                             <td colspan="1" width="250px">
                                 <div class="column">
-                                        <field name="enterprise_doc" required="True"/>
+                                        <field name="enterprise_doc" />
                                 </div>
                             </td>
                              <td colspan="1" width="200px" class="columnDivider">
@@ -187,8 +187,8 @@
                                  <field name="promoted" invisible="1" sortable='0'/>
                                  <field name="confirm_exam" widget="bool_button" options='{"terminology":
                                     {"string_true": "Đã chốt thi", "action_true": "", "string_false": "Chưa chốt thi", "action_false": "Chốt thi"},
-                                    "invisible":{"status":[1,2,3,6]}}' sortable='0'/>
-                                 <field name="escape_exam" invisible="1" sortable='0'/>
+                                    "invisible":{"status":[2,3,6]}}' sortable='0'/>
+                                 <field name="issues_raise" invisible="1" sortable='0'/>
                                  <field name="pass_exam" invisible="1" sortable='0'/>
                                  <field name="preparatory_exam" invisible="1" sortable='0'/>
                                  <field name="cancel_pass" invisible="1" sortable='0'/>
@@ -204,15 +204,17 @@
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
-                                 <field name="escape_exam" widget="bool_button" string=" " options='{"terminology":
-                                    {"string_true": "", "action_true": "", "string_false": " ", "action_false": "Rút bỏ chốt thi"},
-                                    "invisible":{"status":[2,3,4,5,6]},
-                                    "invisible_content":{"pass_exam":"true","preparatory_exam":"true"}}'
-                                    sortable='0'/>
-                                 <field name="confirm_exam" widget="bool_delete" string=" "
-                                        options='{"invisible":{"status":[1,2,3,4,6]},
-                                                    }' sortable='0'
-                                    />
+                                 <!--<field name="issues_raise" widget="bool_button" string=" " options='{"terminology":-->
+                                    <!--{"string_true": "", "action_true": "", "string_false": " ", "action_false": "Rút bỏ chốt thi"},-->
+                                    <!--"invisible":{"status":[2,3,4,5,6]},-->
+                                    <!--"invisible_content":{"pass_exam":"true","preparatory_exam":"true"}}'-->
+                                    <!--sortable='0'/>-->
+
+                                <field name="issues_raise" widget="bool_button_toggle_extend" options='{"terminology":
+                                    {"string_true": "Có phát sinh", "action_true": "Có phát sinh", "string_false": " ", "action_false": "Huỷ phát sinh"},
+                                    }' sortable='0' context="{'form_view_ref':'hh_intern.view_intern_form_issues_raise'}" />
+
+
 
                                  <field name="pass_exam" widget="bool_button" string=" "
                                         options='{"terminology":{"string_true": "Đã trúng tuyển", "action_true": "", "string_false": " ","action_false": "Trúng tuyển"},
@@ -221,6 +223,11 @@
                                  <field name="preparatory_exam" widget="bool_button" options='{ "terminology":{"string_true": "Đã dự bị", "action_true": "", "string_false": " ","action_false": "Dự bị"},
                                                     "invisible":{"status":[2,3,4,5,6]},
                                                     "invisible_content":{"pass_exam":"true"}}' string=" " sortable='0'/>
+
+                                 <field name="confirm_exam" widget="bool_delete" string=" "
+                                        options='{"invisible":{"status":[2,3,4,6]},
+                                                    }' sortable='0'
+                                    />
                             </tree>
                         </field>
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
@@ -230,11 +237,11 @@
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
-                                <field name="escape_exam" widget="bool_button_reverse" string=" " options='{"terminology":
+                                <field name="issues_raise" widget="bool_button_reverse" string=" " options='{"terminology":
                                     {"string_true": "", "action_true": "Chốt thi", "string_false": "", "action_false": ""},
                                     "invisible":{"status":[2,3,4,6]},}' sortable='0'
                                      />
-                                <field name="confirm_exam" widget="bool_delete" string=" " context="{'related':['escape_exam']}"
+                                <field name="confirm_exam" widget="bool_delete" string=" " context="{'related':['issues_raise']}"
                                        options='{"invisible":{"status":[1,2,3,4,6]}}' sortable='0'
                                     />
                             </tree>
@@ -243,11 +250,12 @@
                      <page string="Trúng tuyển/Dự bị">
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN</p>
                         <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
-                            <tree create="false">
+                            <tree create="false" editable="bottom">
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
+                                 <field name="enterprise" sortable='0'/>
                                 <field name="preparatory_exam" widget="bool_button" options='{ "terminology":{"string_true": "Đã dự bị", "action_true": "", "string_false": " ","action_false": "Dự bị"},
                                                     "invisible":{"status":[1,3,4,6]}}' string=" " context="{'related':['pass_exam']}" sortable='0'/>
 

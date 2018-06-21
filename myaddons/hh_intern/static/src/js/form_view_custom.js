@@ -251,10 +251,14 @@ FormView.include({
                         // Write save
                         save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
                             self.display_translation_alert(values);
-                            if (self.dataset.child_name=='interns_pass_new'){
+                            if (self.dataset.child_name=='interns_pass_new' ){
                                 var tmp = self.getParent().getParent().getParent().getParent();
 //                                tmp.view_form.reload();
                                 tmp.field_manager.fields.interns_cancel_pass.reload_current_view();
+                            }
+                            else if(self.dataset.child_name=='interns_confirm_exam'){
+                                var tmp = self.getParent().getParent().getParent().getParent();
+                                tmp.field_manager.fields.interns_escape_exam.reload_current_view();
                             }
                             return self.record_saved(r);
                         }, null);

@@ -966,7 +966,7 @@
                                  <field name="condition_count" invisible="1"/>
                                  <field name="promoted" invisible="1"/>
                                  <field name="confirm_exam" invisible="1"/>
-                                 <field name="escape_exam" invisible="1"/>
+                                 <field name="issues_raise" invisible="1"/>
                                  <field name="pass_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>
@@ -1006,7 +1006,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Chốt thi tuyển">
+                    <page string="DS thi tuyển">
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
                         <field name="interns_confirm_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
                             <tree create="false">
@@ -1023,11 +1023,20 @@
                         </field>
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
                         <field name="interns_escape_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
-                            <tree create="false">
+                            <tree create="false" editable="bottom" >
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
+                                 <field name="issues_reason" sortable='0'/>
+                                 <field name="issues_resolve"  sortable='0'/>
+                                 <field name="fine_employee" sortable='0'/>
+                                 <field name="fine_intern" sortable='0'/>
+                                 <field name="issues_raise" widget="bool_button_reverse" string=" " options='{"terminology":
+                                    {"string_true": "", "action_true": "Chốt thi", "string_false": "", "action_false": ""},
+                                    "invisible":{"status":[2,3,4,6]},}' sortable='0'
+                                     />
+
                                  <!--<field name="issues_before" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_before'}" sortable='0'/>-->
                             </tree>
                         </field>

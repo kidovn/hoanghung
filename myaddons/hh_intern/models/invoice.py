@@ -1412,6 +1412,14 @@ class Invoice(models.Model):
 
     enterprise_doc = fields.Many2one('intern.enterprise',string='Xí nghiệp')
 
+    @api.multi
+    @api.onchange('enterprise_doc','interns_clone')
+    def _onchange_enterprise_doc(self):
+        for rec in self:
+            for intern in rec.interns_clone:
+                intern.enterprise = rec.enterprise_doc
+
+
     dispatchcom2 = fields.Many2many('dispatchcom2',string=u'Công ty phái cử thứ 2')
 
     dispatchcom1 = fields.Many2one('dispatchcom1','Pháp nhân')
@@ -2724,7 +2732,7 @@ class Invoice(models.Model):
     def confirm_exam(self):
         ensure_one = False
         for intern in self.interns_clone:
-            if intern.confirm_exam and not intern.escape_exam:
+            if intern.confirm_exam and not intern.issues_raise:
                 ensure_one = True
                 break
         if ensure_one:
@@ -2742,10 +2750,14 @@ class Invoice(models.Model):
     def confirm_pass(self):
         ensure_one = False
         for intern in self.interns_clone:
-            if intern.pass_exam and not intern.escape_exam:
+            if intern.pass_exam and not intern.issues_raise:
                 ensure_one = True
                 break
         if ensure_one:
+            for intern in self.interns_clone:
+                if not intern.enterprise:
+                    raise ValidationError(u"Chưa có thông tin xí nghiệp của TTS %s"%intern.name)
+
             self.write({
                 'status': 2,
             })

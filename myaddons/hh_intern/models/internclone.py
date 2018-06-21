@@ -59,7 +59,7 @@ class InternInvoice(models.Model):
     #chot thi
     confirm_exam = fields.Boolean('Chốt thi tuyển')
 
-    escape_exam = fields.Boolean('Rút bỏ chốt thi')
+    # escape_exam = fields.Boolean('Rút bỏ chốt thi')
 
     date_escape_exam = fields.Date('Ngày rút bỏ chốt thi')
 
@@ -91,7 +91,7 @@ class InternInvoice(models.Model):
 
     #Phat sinh
     issues_raise = fields.Boolean('Phát sinh trước thi')
-    issues_reason = fields.Text('Lý do')
+    issues_reason = fields.Text('Lý do phát sinh')
     issues_resolve = fields.Text('Hình thức xử lý')
     fine_employee = fields.Integer('Phạt CBTD')
     fine_intern = fields.Integer('Phạt TTS')
@@ -154,8 +154,8 @@ class InternInvoice(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'escape_exam' in vals:
-            if vals['escape_exam']:
+        if 'issues_raise' in vals:
+            if vals['issues_raise']:
                 vals['date_escape_exam'] = fields.date.today()
             else:
                 vals['date_escape_exam'] = False
@@ -174,8 +174,8 @@ class InternInvoice(models.Model):
 
     @api.one
     def write(self, vals):
-        if 'escape_exam' in vals:
-            if vals['escape_exam']:
+        if 'issues_raise' in vals:
+            if vals['issues_raise']:
                 vals['date_escape_exam'] = fields.date.today()
             else:
                 vals['date_escape_exam'] = False
@@ -241,6 +241,9 @@ class InternInvoice(models.Model):
             tmpresult = self._cr.dictfetchall()
             count_exam = 0
             for record in tmpresult:
-                if record['confirm_exam'] and not record['escape_exam']:
+                if record['confirm_exam'] and not record['issues_raise']:
                     count_exam += 1
             obj.current_status_2 = u'Đã TC %d lần, TT %d lần' % (len(tmpresult), count_exam)
+
+
+    enterprise = fields.Many2one('intern.enterprise',string='Xí nghiệp')

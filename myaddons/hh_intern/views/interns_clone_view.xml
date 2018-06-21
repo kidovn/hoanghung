@@ -887,10 +887,29 @@
                             <td colspan="1" width="250px">
                                 <div>
                                    <field name="surgery" style="width: 20px; display: inline-block"/>
-                                   <field name="surgery_content" placeholder="Nội dung:" style="width: 200px;background-color: #ffff96" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}" />
+                                    <field name="surgery_content_vi" placeholder="Nội dung:" style="width: 200px;" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}" readonly="1"/>
                                 </div>
                             </td>
                             <td colspan="1" width="50px"/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="note_health_vi"/>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <field name="note_health_vi" readonly="1"/>
+                                </div>
+                            </td>
+                            <td/>
+                            <td/>
+                            <td class="columnDivider">
+                            </td>
+                            <td>
+                                <div>
+                                    <field name="surgery_content" placeholder="Nội dung:" style="width: 200px;background-color: #ffff96" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}" />
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -957,6 +976,16 @@
                             </td>
                             <td colspan="1" >
                                 <div>
+                                    <field name="specialized_vi"  style="width:250px;background-color: #ffff96" readonly="1" />
+                                </div>
+                            </td>
+                        </tr>
+                         <tr  attrs="{'invisible':[('show_specialized', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="specialized"  />-->
+                            </td>
+                            <td colspan="1" >
+                                <div>
                                     <field name="specialized"  style="width:250px;background-color: #ffff96" />
                                 </div>
                             </td>
@@ -966,9 +995,28 @@
                 <table class="o_group o_inner_group">
                     <tbody>
 
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="strong_vi" string="Điểm mạnh"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="strong_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="weak_vi" string="Điểm yếu"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                   <field name="weak_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="strong"/>
+                                  <!--<label for="strong"/>-->
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
@@ -976,7 +1024,7 @@
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="weak"/>
+                                  <!--<label for="weak"/>-->
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
@@ -986,8 +1034,27 @@
                         </tr>
 
                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="favourite_vi"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="favourite_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="family_income_vi" string="Tổng thu nhập gia đình (VND)"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                       <field name="family_income_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="favourite"/>
+                                  <!--<label for="favourite"/>-->
                             </td>
                             <td colspan="1" >
                                 <div>
@@ -995,11 +1062,11 @@
                                 </div>
                             </td>
                              <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="family_income" string="Tổng thu nhập gia đình (Vạn yên)"/>
+                                  <label for="family_income" string="(Vạn yên)"/>
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="family_income" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
+                                   <field name="family_income" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
                                 </div>
                             </td>
                         </tr>
@@ -1028,9 +1095,30 @@
 
                 <table class="o_group o_inner_group">
                     <tbody>
+
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="motivation"/>
+                                  <label for="motivation_vi"/>
+                            </td>
+                            <td colspan="1"  width="250px" >
+                                <div>
+                                   <field name="motivation_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="income_after_three_year_vi" string = "Sau 3 năm bạn muốn kiếm được bao nhiêu(VND)"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                       <field name="income_after_three_year_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="motivation"/>-->
                             </td>
                             <td colspan="1"  width="250px" >
                                 <div>
@@ -1039,7 +1127,7 @@
                             </td>
 
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="income_after_three_year" string = "Sau 3 năm bạn muốn kiếm được bao nhiêu (Vạn yên)"/>
+                                  <label for="income_after_three_year" string = "(Vạn yên)"/>
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
@@ -1052,9 +1140,30 @@
 
                 <table class="o_group o_inner_group">
                     <tbody>
+
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="job_after_return" />
+                                  <label for="job_after_return_vi" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="job_after_return_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="prefer_object_vi" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div>
+                                    <field name="prefer_object_vi" style="background-color: #ffff96" readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="job_after_return" />-->
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
@@ -1063,7 +1172,7 @@
                             </td>
 
                              <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="prefer_object" />
+                                  <!--<label for="prefer_object" />-->
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
@@ -1078,7 +1187,26 @@
                     <tbody>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="memory" string="Kỷ niệm đáng nhớ nhất của bạn:"/>
+                                  <label for="memory_vi" string="Kỷ niệm đáng nhớ nhất của bạn"/>
+                            </td>
+                            <td colspan="1" width="250px"  >
+                                <div>
+                                       <field name="memory_vi" style="background-color: #ffff96"  readonly="1"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="valuable_vi" string="Điều quý giá nhất đối với bạn trong cuộc sống"/>
+                            </td>
+                            <td colspan="1" width="250px" >
+                                <div>
+                                   <field name="valuable_vi" style="background-color: #ffff96"  readonly="1"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="memory" string="Kỷ niệm đáng nhớ nhất của bạn:"/>-->
                             </td>
                             <td colspan="1" width="250px"  >
                                 <div>
@@ -1086,7 +1214,7 @@
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="valuable" string="Điều quý giá nhất đối với bạn trong cuộc sống: "/>
+                                  <!--<label for="valuable" string="Điều quý giá nhất đối với bạn trong cuộc sống: "/>-->
                             </td>
                             <td colspan="1" width="250px" >
                                 <div>
@@ -1101,11 +1229,11 @@
                     <tbody>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="family_member_in_jp" />
+                                  <label for="family_member_in_jp_vi" />
                             </td>
                             <td colspan="1" width="150px">
                                 <div>
-                                       <field name="family_member_in_jp" style="background-color: #ffff96"/>
+                                       <field name="family_member_in_jp_vi" style="background-color: #ffff96"  readonly="1"/>
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -1113,7 +1241,27 @@
                             </td>
                             <td colspan="1">
                                 <div>
-                                    <field name="education_status" style="width: 100px; display: inline-block"/>
+                                    <field name="education_status" style="width: 100px; display: inline-block"  readonly="1" context="{'jp':True}"/>
+                                    <field name="education_content_vi" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width: 200px;  margin-left: 20px"  readonly="1"/>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="family_member_in_jp" />-->
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="family_member_in_jp" style="background-color: #ffff96"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <!--<label for="education_status" />-->
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <!--<field name="education_status" style="width: 100px; display: inline-block"  class="oe_read_only"/>-->
                                     <field name="education_content" nolabel="1" placeholder="Nội dung" attrs="{'invisible':[('education_status', '==', False)]}" style="width: 200px;  margin-left: 20px"/>
                                 </div>
                             </td>
@@ -1124,6 +1272,50 @@
 
                 <!--<label string="Lý lịch học tập, làm việc, gia đình:" style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;"/>-->
 
+
+                <notebook>
+                    <page string="Lý lịch học tập">
+                        <field name="educations_vi" mode="tree" readonly="1">
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999" />
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc" widget="mask" data-inputmask-mask="9999"/>
+                                <field name="school_type" string="Trường" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                <field name="school" string="Tên trường" style="background-color: #ffff96"/>
+                                <field name="specialization" style="background-color: #ffff96"/>
+                                <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
+                                <field name="graduated"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Lý lịch làm việc">
+                        <field name="employments_vi" mode="tree" readonly="1">
+                            <tree editable="bottom" class="class_education">
+                                <field name="month_start" string="Tháng"/>
+                                <field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999"/>
+                                <field name="month_end" string="Tháng"/>
+                                <field name="year_end" string="Năm kết thúc"/>
+                                <field name="company" style="background-color: #ffff96"/>
+                                <field name="description" style="background-color: #ffff96"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="Gia đình">
+                        <field name="family_members_vi" mode="tree" readonly="1">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="relationship" style="background-color: #ffff96"/>
+                                <field name="ages" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>
+                                <field name="birth_year" invisible="1"/>
+                                <field name="job" style="background-color: #ffff96"/>
+                                <field name="live_together"/>
+
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
                 <notebook>
                     <page string="Lý lịch học tập">
                         <field name="educations" mode="tree">
@@ -1914,7 +2106,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div class="column">
-                                        <field name="enterprise_doc" required="True"/>
+                                        <field name="enterprise_doc" />
                                 </div>
                             </td>
                              <td colspan="1" width="200px" class="columnDivider">

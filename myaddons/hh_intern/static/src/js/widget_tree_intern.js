@@ -324,13 +324,13 @@ var X2ManyListNew = ListView.List.extend({
                             return false;
                         }
                         else if(self.view.x2m.name=='interns_confirm_exam'){
-                            if(self.records.records[index].attributes.confirm_exam && !self.records.records[index].attributes.escape_exam){
+                            if(self.records.records[index].attributes.confirm_exam && !self.records.records[index].attributes.issues_raise){
                                 return true;
                             }
                             return false;
                         }
                         else if(self.view.x2m.name=='interns_escape_exam'){
-                            if(self.records.records[index].attributes.confirm_exam && self.records.records[index].attributes.escape_exam){
+                            if(self.records.records[index].attributes.confirm_exam && self.records.records[index].attributes.issues_raise){
                                 return true;
                             }
                             return false;
@@ -485,6 +485,15 @@ var X2ManyListNew = ListView.List.extend({
                 }
             }
         }
+//        else if(this.view.x2m.name == 'interns_confirm_exam'){
+//            if(context.__contexts && context.__contexts.length>0 && context.__contexts[0].length>0 && context.__contexts[0].includes("'page':'doingoai'")){
+//                var parentTmp = this.group.view.ViewManager.x2m.getParent();
+//                if (parentTmp.datarecord.status ==5 || parentTmp.datarecord.status==1){
+//                    return true;
+//                }
+//            }
+//
+//        }
 
         return false;
     },

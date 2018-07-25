@@ -15,7 +15,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="name" readonly="1"/>
+                                    <field name="name" />
                                     <field name="name_without_signal" invisible="1" />
                                 </div>
                             </td>
@@ -25,7 +25,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity" widget="mask_regex" data-inputmask-regex="[0-9]+" readonly="1"/>
+                                    <field name="identity" widget="mask_regex" data-inputmask-regex="[0-9]+"/>
                                 </div>
                             </td>
 
@@ -39,9 +39,9 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only" readonly="1"/>
-                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only" readonly="1"/>
-                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999" readonly="1"/>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only" />
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only" />
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999" />
                                     <field name="date_of_birth" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -50,7 +50,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity_2" widget="mask_regex" data-inputmask-regex="[0-9]+" readonly="1"/>
+                                    <field name="identity_2" widget="mask_regex" data-inputmask-regex="[0-9]+" />
                                 </div>
                             </td>
                         </tr>
@@ -60,7 +60,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="gender" style="width:70px" readonly="1"/>
+                                     <field name="gender" style="width:70px" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -68,9 +68,9 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày"  widget="mask" data-inputmask-mask="99"  class="oe_edit_only" readonly="1"/>
-                                    <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only" readonly="1"/>
-                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only"  widget="mask" data-inputmask-mask="9999" readonly="1"/>
+                                    <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày"  widget="mask" data-inputmask-mask="99"  class="oe_edit_only" />
+                                    <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only" />
+                                    <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only"  widget="mask" data-inputmask-mask="9999" />
                                     <field name="date_identity" class="oe_read_only"/>
                                 </div>
                             </td>
@@ -90,7 +90,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px" readonly="1"/>
+                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px" />
                                 </div>
                             </td>
                         </tr>
@@ -121,7 +121,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="address" placeholder="Không bao gồm tỉnh/tp" readonly="1"/>
+                                    <field name="address" placeholder="Không bao gồm tỉnh/tp" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -130,7 +130,7 @@
                             <td colspan="1" width="200px" >
                                 <div>
                                      <field name="marital_status" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                     context="{'jp': True}" widget="selection" readonly="1"/>
+                                     context="{'jp': True}" widget="selection" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px"/>
@@ -142,7 +142,7 @@
                             <td colspan="1"  >
                                 <div class="column">
                                     <field name="province" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                        placeholder="Tỉnh/tp" readonly="1"/>
+                                        placeholder="Tỉnh/tp" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -151,7 +151,7 @@
                             <td colspan="1">
                                 <div>
                                      <field name="certification" widget="selection" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                     context="{'jp': True}" readonly="1"/>
+                                     context="{'jp': True}" />
                                 </div>
                             </td>
 
@@ -445,7 +445,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="family_income_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                       <field name="family_income_vi" readonly="1"/>
                                 </div>
                             </td>
                         </tr>
@@ -508,7 +508,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                       <field name="income_after_three_year_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                       <field name="income_after_three_year_vi" readonly="1"/>
                                 </div>
                             </td>
                         </tr>
@@ -725,6 +725,7 @@
                                 <field name="specialization" style="background-color: #ffff96"/>
                                 <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
                                 <field name="graduated"/>
+                                <field name="sequence" widget="handle"/>
                             </tree>
                         </field>
                     </page>
@@ -737,6 +738,7 @@
                                 <field name="year_end" string="Năm kết thúc"/>
                                 <field name="company" style="background-color: #ffff96"/>
                                 <field name="description" style="background-color: #ffff96"/>
+                                <field name="sequence" widget="handle"/>
                             </tree>
                         </field>
                     </page>
@@ -750,7 +752,7 @@
                                 <field name="birth_year" invisible="1"/>
                                 <field name="job" style="background-color: #ffff96"/>
                                 <field name="live_together"/>
-
+                                <field name="sequence" widget="handle"/>
                             </tree>
                         </field>
                     </page>

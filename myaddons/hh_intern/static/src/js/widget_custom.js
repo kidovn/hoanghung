@@ -147,6 +147,27 @@ odoo.define('hh_intern.WidgetCustom', function (require) {
 
     });
 
+    var ColumnColor = Column.extend({
+        /**
+         * If password field, only display replacement characters (if value is
+         * non-empty)
+         */
+         get_value:function(row_data){
+            var value = row_data[this.id].value;
+            if (value){
+                return 'background:'+value;
+            }
+            else{
+                return '';
+            }
+
+        },
+        _format: function (row_data, options) {
+            return '<div style="height:20px;width:100%;'+this.get_value(row_data)+'"></div>';
+        },
+    });
+
+
     var FieldBooleanDelete = common.AbstractField.extend({
         init: function() {
             this._super.apply(this, arguments);
@@ -214,15 +235,50 @@ odoo.define('hh_intern.WidgetCustom', function (require) {
     });
 
 
+    var ColorWidget = common.AbstractField.extend({
+        template: 'ColorWidget',
+        start: function() {
+            this._super();
+            this.on("change:value", this, function() {
+                this.render_value();
+                this._toggle_label();
+            });
+        },
+
+        get_value:function(){
+            var value = this.get('value');
+            if (value){
+                return value;
+            }
+            else{
+                return '#FFFFFF';
+            }
+
+        },
+
+        render_value: function() {
+//            this._super.apply(this, arguments);
+//            this.$el.removeClass('o_form_field_empty');
+            this.$el.empty();
+            this.$el.html('<div style="height:20px;width:100%; background:'+this.get_value()+'"></div>')
+        },
+    });
+
 
     list_widget_registry.add('field.bool_button', ColumnBoolButton);
     list_widget_registry.add('field.bool_delete', ColumnBoolDelete);
     list_widget_registry.add('field.bool_button_reverse', ColumnBoolButtonReverse);
     list_widget_registry.add('field.bool_button_toggle', ColumnToggleButton);
     list_widget_registry.add('field.one2many_custom', ColumnOne2Many);
+
     list_widget_registry.add('field.integer_custom', ColumnIntegerCustom);
     list_widget_registry.add('field.bool_button_toggle_extend', ColumnToggleButtonExtend);
+
+    list_widget_registry.add('field.color', ColumnColor);
+
     core.form_widget_registry.add('bool_button', FieldBooleanButton);
     core.form_widget_registry.add('bool_button_reverse', FieldBooleanButtonReverse);
+
+    core.form_widget_registry.add('color_widget', ColorWidget);
 //    core.form_widget_registry.add('bool_delete', FieldBooleanDelete);
 });

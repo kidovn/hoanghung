@@ -511,7 +511,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                    <field name="specialized_vi"  style="width:250px;background-color: #ffff96" />
+                                    <field name="specialized_vi"  style="width:250px;" />
                                 </div>
                             </td>
                         </tr>
@@ -526,7 +526,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                   <field name="strong_vi" style="background-color: #ffff96"/>
+                                   <field name="strong_vi" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -534,7 +534,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                       <field name="weak_vi" style="background-color: #ffff96"/>
+                                       <field name="weak_vi" />
                                 </div>
                             </td>
                         </tr>
@@ -545,7 +545,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="favourite_vi" style="background-color: #ffff96"/>
+                                       <field name="favourite_vi" />
                                 </div>
                             </td>
                              <td colspan="1" width="150px" class="columnDivider">
@@ -588,7 +588,7 @@
                             </td>
                             <td colspan="1"  width="250px" >
                                 <div>
-                                       <field name="motivation_vi" style="background-color: #ffff96"/>
+                                       <field name="motivation_vi" />
                                 </div>
                             </td>
 
@@ -597,7 +597,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                       <field name="income_after_three_year_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+"/>
+                                       <field name="income_after_three_year_vi"/>
                                 </div>
                             </td>
                         </tr>
@@ -612,7 +612,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                    <field name="job_after_return_vi" style="background-color: #ffff96"/>
+                                    <field name="job_after_return_vi" />
                                 </div>
                             </td>
 
@@ -621,7 +621,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                    <field name="prefer_object_vi" style="background-color: #ffff96"/>
+                                    <field name="prefer_object_vi" />
                                 </div>
                             </td>
                         </tr>
@@ -636,7 +636,7 @@
                             </td>
                             <td colspan="1" width="250px"  >
                                 <div>
-                                       <field name="memory_vi" style="background-color: #ffff96"/>
+                                       <field name="memory_vi" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -644,7 +644,7 @@
                             </td>
                             <td colspan="1" width="250px" >
                                 <div>
-                                       <field name="valuable_vi" style="background-color: #ffff96"/>
+                                       <field name="valuable_vi" />
                                 </div>
                             </td>
                         </tr>
@@ -659,7 +659,7 @@
                             </td>
                             <td colspan="1" width="150px">
                                 <div>
-                                       <field name="family_member_in_jp_vi" style="background-color: #ffff96"/>
+                                       <field name="family_member_in_jp_vi" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -691,7 +691,59 @@
                         <field name="exp_note"/>
                     </group>
 
-
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="had_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="had_go_abroad" />
+                                </div>
+                            </td>
+                            <td/>
+                        </tr>
+                        <tr  attrs="{'invisible':[('had_go_abroad', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="country_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="country_go_abroad" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr  attrs="{'invisible':[('had_go_abroad', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="year_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="year_go_abroad" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="had_visa_jp" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="had_visa_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<group>-->
+                    <!--<group>-->
+                        <!--<field name="had_go_abroad"/>-->
+                        <!--<field name="country_go_abroad" attrs="{'invisible':[('had_go_abroad', '==', False)]}"/>-->
+                        <!--<field name="year_go_abroad" attrs="{'invisible':[('had_go_abroad', '==', False)]}"/>-->
+                    <!--</group>-->
+                    <!--<group/>-->
+                <!--</group>-->
 
                 <notebook>
                     <page string="Lý lịch học tập">
@@ -730,10 +782,20 @@
                                 <field name="birth_year" invisible="1"/>
                                 <field name="job" style="background-color: #ffff96"/>
                                 <field name="live_together"/>
-
                             </tree>
                         </field>
                     </page>
+                    <!--<page string="Đã từng đi nước ngoài">-->
+                        <!--<field name="go_abroad" mode="tree">-->
+                            <!--<tree editable="bottom">-->
+                                <!--<field name="country"/>-->
+                                <!--<field name="month_start" string="Tháng"/>-->
+                                <!--<field name="year_start" string="Năm bắt đầu" widget="mask" data-inputmask-mask="9999" />-->
+                                <!--<field name="month_end" string="Tháng"/>-->
+                                <!--<field name="year_end" string="Năm kết thúc" widget="mask" data-inputmask-mask="9999"/>-->
+                            <!--</tree>-->
+                        <!--</field>-->
+                    <!--</page>-->
                 </notebook>
 
                 <table class="o_group">
@@ -783,7 +845,7 @@
                 <field name="enter_source"/>
                 <field name="name"/>
                 <field name="province"/>
-                <field name="date_of_birth"/>
+                <field name="date_of_birth_short"/>
                 <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
                 <field name="current_status"/>
             </tree>
@@ -857,12 +919,39 @@
             <form>
                  <header>
                      <field name="status" widget="statusbar" statusbar_visible="4,5"/>
+                     <button name="toggle_red" string="Cảnh báo đỏ" type="object" class="oe_highlight"/>
+                     <button name="toggle_yellow" string="Cảnh báo vàng" type="object" class="oe_highlight"/>
+                     <button name="toggle_green" string="Cảnh báo xanh" type="object" class="oe_highlight"/>
+                     <button name="toggle_remove_notice" string="Huỷ cảnh báo" type="object" class="oe_highlight"/>
                 </header>
+                <field name="color_notice" widget="color_widget"/>
+
 
                  <table class="o_group">
                      <tbody>
                          <tr>
                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="custom_id_2" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="custom_id_2"/>
+                                </div>
+                            </td>
+                              <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="room_pttt" />
+                            </td>
+                            <td colspan="1" width="500px">
+                                <div class="column">
+                                    <field name="room_pttt"  widget="selection" style="width: 100px; display: inline-block" />
+                                    <label style="width: 100px; display: inline-block" string="Cán bộ PTTT:"/>
+                                    <field name="employee_pttt" style="width: 200px; display: inline-block" domain="[('room_type','=','1')]"/>
+                                </div>
+                            </td>
+                         </tr>
+
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
                                  <label for="name" />
                             </td>
                             <td colspan="1" width="250px">
@@ -871,13 +960,11 @@
                                 </div>
                             </td>
                               <td colspan="1" width="200px" class="columnDivider">
-                                 <label for="room_pttt" />
+                                 <label string="Phòng TD hỗ trợ:"/>
                             </td>
-                            <td colspan="1" width="400px">
+                            <td colspan="1" width="250px">
                                 <div class="column">
-                                    <field name="room_pttt" readonly="1" style="width: 60px; display: inline-block" />
-                                    <label style="width: 100px; display: inline-block" string="Cán bộ PTTT"/>
-                                    <field name="employee_pttt" style="width: 200px; display: inline-block" domain="[('room_type','=','0')]"/>
+                                   <field name="room_td_care" style="width: 200px;" widget="selection" domain="[('room_type','=','0')]"/>
                                 </div>
                             </td>
                          </tr>
@@ -919,6 +1006,37 @@
                                 </div>
                             </td>
                          </tr>
+                          <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="note_report" string="Note báo cáo" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="note_report"/>
+                                </div>
+                            </td>
+
+                              <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="date_exam_short" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="date_exam_short"/>
+                                </div>
+                            </td>
+                          </tr>
+                         <tr>
+                             <td/><td/>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="date_departure" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="date_departure"/>
+                                </div>
+                            </td>
+                         </tr>
+
                      </tbody>
                  </table>
                  <table class="o_group">
@@ -944,17 +1062,45 @@
                                 </div>
                             </td>
                          </tr>
+                         <tr>
+                              <td colspan="1" width="250px" class="columnDivider">
+                                 <label for="source_man" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="source_man" style="width:100px"/>
+                                </div>
+                            </td>
+
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_women" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_women" style="width:100px"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="source_total" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="source_total" style="width:100px"/>
+                                </div>
+                            </td>
+                         </tr>
                      </tbody>
                  </table>
                  <notebook>
                     <page string="Dự kiến tiến cử" >
-                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
+                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" limit="5000">
 
-                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false">
+                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false" limit="5000">
                                  <field name="name" readonly="1" sortable='0'/>
+                                 <field name="custom_id" readonly="1" sortable='0'/>
                                  <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <!--<field name="identity_2" readonly="1"/>-->
-                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="date_of_birth_short" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
                                  <field name="room_recruitment" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
                                  <field name="recruitment_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
@@ -989,11 +1135,12 @@
                         </field>
                     </page>
                     <page string="Danh sách Tiến cử">
-                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
-                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false">
+                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" limit="5000">
+                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" create="false" limit="5000">
                                  <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                  <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
-                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="date_of_birth_short" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
                                  <field name="room_recruitment" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
                                  <field name="recruitment_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
@@ -1008,11 +1155,12 @@
                     </page>
                     <page string="DS thi tuyển">
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
-                        <field name="interns_confirm_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
-                            <tree create="false">
+                        <field name="interns_confirm_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" limit="5000">
+                            <tree create="false" limit="5000">
                                 <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
-                                 <field name="date_of_birth" context="" sortable='0'/>
+                                 <field name="date_of_birth_short" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
                                  <!--<field name="issues_before" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_before'}" sortable='0'/>-->
                                  <!--<field name="issues_after" widget="one2many_custom" context="{'form_view_ref':'hh_intern.view_intern_form_issues_after'}" sortable='0'/>-->
@@ -1025,6 +1173,7 @@
                         <field name="interns_escape_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
                             <tree create="false" editable="bottom" >
                                 <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
@@ -1043,9 +1192,10 @@
                     </page>
                      <page string="Trúng tuyển/Dự bị">
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN</p>
-                        <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" >
-                            <tree create="false">
+                        <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}" limit="5000">
+                            <tree create="false" limit="5000">
                                 <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                 <field name="date_of_birth" context="" sortable='0'/>
                                 <field name="province" readonly="1" sortable='0'/>
@@ -1086,6 +1236,7 @@
                          <field name="interns_preparatory" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
                             <tree create="false">
                                 <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
@@ -1096,6 +1247,7 @@
                           <field name="interns_cancel_pass" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
                             <tree create="false">
                                 <field name="name" readonly="1" sortable='0'/>
+                                <field name="custom_id" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
@@ -1113,6 +1265,7 @@
                           <field name="interns_departure" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'kiemsoat','form_view_ref': 'hh_intern.view_internks_form_clone'}">
                               <tree editable="bottom">
                                   <field name="name" readonly="1" sortable='0'/>
+                                  <field name="custom_id" readonly="1" sortable='0'/>
                                   <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                   <field name="date_of_birth" context="" sortable='0'/>
                                   <field name="province" readonly="1" sortable='0'/>
@@ -1124,6 +1277,17 @@
                      </page>
                  </notebook>
 
+                 <notebook class="targets">
+                     <page string="Khoán chỉ tiêu">
+                        <field name="targets">
+                            <tree editable="bottom" >
+                                <field name="department_id" domain="[('room_type','=','0')]" widget="selection"/>
+                                <field name="target_men"/>
+                                <field name="target_women"/>
+                            </tree>
+                        </field>
+                     </page>
+                </notebook>
              </form>
         </field>
     </record>

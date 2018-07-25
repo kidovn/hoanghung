@@ -44,7 +44,7 @@
             (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_after_exam_clone')})]"/>
         <!--<field name="view_id" ref="view_intern_form_extends"/>-->
          <!--<field name="form_view_id" ref="view_intern_form_extends"/>-->
-        <field name="context">{'search_default_pass_exam_filter':1}</field>
+        <field name="context">{'search_default_group_by_pttt':1,'search_default_pass_exam_filter':1}</field>
     </record>
 
 

@@ -32,4 +32,71 @@
         <field name="context">{'action': context.get('action', False)}</field>
         <field name="target">new</field>
     </record>
+
+
+    <record id="dialog_cancel_invoice" model="ir.ui.view">
+        <field name="name">invoice.printdoc.wizard</field>
+        <field name="model">invoice.printdoc.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="enterprise_ids" invisible="1"/>
+                    <field name="enterprise" domain="[('id','in',enterprise_ids[0][2])]" options="{'no_create':True}"/>
+                    <field name="document" placeholder="Tất cả"/>
+                </group>
+                <footer>
+                    <button name="confirm_request"
+                        string="OK" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel"
+                        class="btn-default"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialog_select_enterprise_wizard" model="ir.actions.act_window">
+        <field name="name">Lựa chọn Xí nghiệp và tài liệu muốn in</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">invoice.printdoc.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dialog_cancel_invoice"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="dialog_select_interns" model="ir.ui.view">
+        <field name="name">invoice.printform.wizard</field>
+        <field name="model">invoice.printform.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="interns_list" invisible="1"/>
+                    <field name="interns" domain="[('id','in',interns_list[0][2])]" options="{'no_create':True}"/>
+                </group>
+                <footer>
+                    <button name="confirm_request"
+                        string="OK" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel"
+                        class="btn-default"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialog_select_interns_wizard" model="ir.actions.act_window">
+        <field name="name">Lựa chọn TTS muốn in form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">invoice.printform.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dialog_select_interns"/>
+        <field name="target">new</field>
+    </record>
+
+
 </odoo>

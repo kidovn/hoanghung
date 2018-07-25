@@ -46,10 +46,13 @@ class InternInvoice(models.Model):
 
     _order = 'id desc'
 
-    intern_id = fields.Many2one('intern.intern', required=True, ondelete='restrict', auto_join=True,
-                                  string='Thực tập sinh', help='Intern-related data of the user')
+    _sql_constraints = [('unique_invoice', 'unique(intern_id, invoice_id)',
+                         'Lỗi trùng TTS trong danh sách dự kiến tiến cử. F5 nếu bạn ko thấy.')]
 
-    invoice_id = fields.Many2one("intern.invoice",string='Đơn hàng', ondelete='cascade')
+    intern_id = fields.Many2one('intern.intern', required=True, ondelete='restrict', auto_join=True,
+                                  string='Thực tập sinh', help='Intern-related data of the user',index=True)
+
+    invoice_id = fields.Many2one("intern.invoice",string='Đơn hàng', ondelete='cascade',index=True)
 
 
     #du kien tien cu
@@ -192,7 +195,7 @@ class InternInvoice(models.Model):
         super(InternInvoice, self).write(vals)
 
     #danh sach xin tclt
-    phieutraloi_id = fields.Many2one('intern.phieutraloi',string='Phiếu trả lời')
+    phieutraloi_id = fields.Many2one('intern.phieutraloi',string='Phiếu trả lời',index=True)
 
     @api.multi
     def name_get(self):
@@ -208,22 +211,60 @@ class InternInvoice(models.Model):
     time_at_pc_month = fields.Integer('Tổng thời gian làm việc tại công ty PC2 (tháng)',compute='compute_time_at_pc')
     time_at_pc_year = fields.Integer('Tổng thời gian làm việc tại công ty PC2 (năm)',compute='compute_time_at_pc')
 
-    def compute_time_at_pc(self):
-        if self.invoice_id:
-            # invoice = self.env['intern.invoice'].browse(self.invoice_id)
-            if self.invoice_id.month_create_letter_promotion and self.invoice_id.year_create_letter_promotion \
-                and self.time_start_at_pc_from_month and self.time_start_at_pc_from_year:
-                try:
-                    total_month = (int(self.invoice_id.year_create_letter_promotion) - int(self.time_start_at_pc_from_year))*12 + int(self.invoice_id.month_create_letter_promotion) - int(self.time_start_at_pc_from_month)
-                    self.time_at_pc_month = total_month%12
-                    self.time_at_pc_year = total_month/12
-                except Exception:
-                    self.time_at_pc_month = False
-                    self.time_at_pc_year = False
+    # day_create_letter_promotion = fields.Char("Ngày", size=2, compute='compute_time_create_letter')
+    # month_create_letter_promotion = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+    #                                                   ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+    #                                                   ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ],
+    #                                                  "Tháng", compute='compute_time_create_letter')
+    # year_create_letter_promotion = fields.Char("Năm", compute='compute_time_create_letter')
+    #
+    #
+    # @api.multi
+    # def compute_time_create_letter(self):
+    #     for rec in self:
+    #         if rec.invoice_id:
+    #             rec.day_create_letter_promotion = rec.invoice_id.day_create_letter_promotion
+    #             rec.month_create_letter_promotion = rec.invoice_id.month_create_letter_promotion
+    #             rec.year_create_letter_promotion = rec.invoice_id.year_create_letter_promotion
 
-            else:
-                self.time_at_pc_month = False
-                self.time_at_pc_year = False
+
+    @api.multi
+    @api.onchange('time_start_at_pc_from_month', 'time_start_at_pc_from_year')
+    def compute_time_at_pc(self):
+        for rec in self:
+            if rec.invoice_id:
+                if rec.invoice_id.month_create_letter_promotion and rec.invoice_id.year_create_letter_promotion \
+                    and rec.time_start_at_pc_from_month and rec.time_start_at_pc_from_year:
+                    try:
+                        total_month = (int(rec.invoice_id.year_create_letter_promotion) - int(rec.time_start_at_pc_from_year))*12 + int(rec.invoice_id.month_create_letter_promotion) - int(rec.time_start_at_pc_from_month)
+                        rec.time_at_pc_month = total_month%12
+                        rec.time_at_pc_year = total_month/12
+                    except Exception:
+                        rec.time_at_pc_month = False
+                        rec.time_at_pc_year = False
+
+                else:
+                    rec.time_at_pc_month = False
+                    rec.time_at_pc_year = False
+
+    # @api.multi
+    # @api.onchange('time_start_at_pc_from_month','time_start_at_pc_from_year','month_create_letter_promotion','year_create_letter_promotion')
+    # @api.depends('time_start_at_pc_from_month','time_start_at_pc_from_year','month_create_letter_promotion','year_create_letter_promotion')
+    # def compute_time_at_pc(self):
+    #     for rec in self:
+    #         if rec.month_create_letter_promotion and rec.year_create_letter_promotion \
+    #             and rec.time_start_at_pc_from_month and rec.time_start_at_pc_from_year:
+    #             try:
+    #                 total_month = (int(rec.year_create_letter_promotion) - int(rec.time_start_at_pc_from_year))*12 + int(rec.month_create_letter_promotion) - int(rec.time_start_at_pc_from_month)
+    #                 rec.time_at_pc_month = total_month%12
+    #                 rec.time_at_pc_year = total_month/12
+    #             except Exception:
+    #                 rec.time_at_pc_month = False
+    #                 rec.time_at_pc_year = False
+    #
+    #         else:
+    #             rec.time_at_pc_month = False
+    #             rec.time_at_pc_year = False
 
 
     current_status_2 = fields.Char("Trạng thái", store=False, compute='_compute_status_2')
@@ -247,3 +288,74 @@ class InternInvoice(models.Model):
 
 
     enterprise = fields.Many2one('intern.enterprise',string='Xí nghiệp')
+    dispatchcom2 = fields.Many2one('dispatchcom2', string=u'Công ty phái cử thứ 2')
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        if domain is not None:
+            _logger.info("DOMAIN %s" % str(domain))
+            for x in domain:
+                if x[0] == 'name':
+                    x[0] = 'name_without_signal'
+                    x[2] = intern_utils.no_accent_vietnamese(x[2])
+                if x[0] == 'identity' and len(domain) == 1:
+                    term = x[2]
+                    domain = ['|', ['identity', 'ilike', term], ['identity_2', 'ilike', term]]
+                    break
+            _logger.info("DOMAIN %s" % str(domain))
+        return super(InternInvoice, self).search_read(domain, fields, offset, limit, order)
+
+    @api.multi
+    @api.depends('name')
+    def _calculate_name(self):
+        for rec in self:
+            rec.notice_name = ""
+            if rec.name:
+                tmpName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(rec.name))
+                words = tmpName.split()
+                for i, word in enumerate(words):
+                    jps = self.env['intern.translator'].search([('vi_word', '=', word.upper())], limit=1)
+                    if not jps:
+                        rec.notice_name = "Một số từ trong tên TTS không có trong từ điển, vui lòng nhập tên tiếng Nhật của TTS"
+                        return
+
+    @api.onchange('name')  # if these fields are changed, call method
+    def name_change(self):
+        if self.name:
+            self.name_without_signal = intern_utils.no_accent_vietnamese(self.name)
+            tmp = self.convertToJP(intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name)))
+            if tmp is not None:
+                self.name_in_japan = tmp
+
+    def convertToJP(self, name):
+        words = name.split()
+        final = ""
+        for i, word in enumerate(words):
+            jps = self.env['intern.translator'].search([('vi_word', '=', word.upper())], limit=1)
+            if jps:
+                if i > 0:
+                    final = final + u"・"
+                final = final + jps[0].jp_word
+            else:
+                return ""
+        return final
+
+    @api.multi
+    @api.depends('certification')
+    @api.onchange('certification')  # if these fields are changed, call method
+    def certification_change(self):
+        for rec in self:
+            if rec.certification:
+                if rec.certification.id == 1:
+                    rec.specialized = u'無し'
+                    rec.show_specialized = False
+
+                elif rec.certification.id == 2:
+                    rec.specialized = u'無し'
+                    rec.show_specialized = False
+                else:
+                    rec.specialized = ""
+                    rec.show_specialized = True
+            else:
+                rec.show_specialized = False
+

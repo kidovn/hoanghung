@@ -182,8 +182,8 @@ var ListViewNew = ListView.extend({
             show_column: function(column){
                 if(column.options_tmp  && column.options_tmp.invisible){
                     for(var condition in column.options_tmp.invisible){
-                        if (column.options_tmp.invisible[condition].indexOf(self.ViewManager.x2m.getParent().datarecord[condition])>-1){
-                            return false
+                        if ('datarecord' in self.ViewManager.x2m.getParent() && column.options_tmp.invisible[condition].indexOf(self.ViewManager.x2m.getParent().datarecord[condition])>-1){
+                            return false;
                         }
                     }
                     return true;

@@ -54,7 +54,9 @@
         # 'demo/demo.xml',
     ],
     'qweb': [
-        'static/src/xml/widget_tree_intern.xml'
+        'static/src/xml/widget_tree_intern.xml',
+        'static/src/xml/grouped_list_view.xml',
+
     ],
 
     'application':  True,

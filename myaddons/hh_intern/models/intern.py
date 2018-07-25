@@ -259,7 +259,7 @@ class InternKS(models.Model):
     total_correct = fields.Integer(store=False,compute='_cal_total_corect')
     total_question = fields.Integer("Tổng số câu", default=133)
     iq_percentage = fields.Char("Trung bình cộng"
-                                ,compute='_cal_total_percentage'
+                                # ,compute='_cal_total_percentage'
                                 )
 
     @api.multi
@@ -272,10 +272,13 @@ class InternKS(models.Model):
             # _logger.info("PEE" + self.total_percentage)
 
     @api.multi
+    @api.onchange('total_question','total_correct')
     def _cal_total_percentage(self):
         for rec in self:
             if rec.total_question is not 0:
                 rec.iq_percentage = "%d" % (percentage(rec.total_correct, rec.total_question))
+
+
 
 
 
@@ -327,8 +330,8 @@ class InternDN(models.Model):
     favourite = fields.Char("Sở thích")
     strong = fields.Char("Điểm mạnh")
     weak = fields.Char("Điểm yếu")
-    teammate = fields.Boolean("Có kinh nghiệm sống tập thể")
-    cooking = fields.Boolean("Biết nấu ăn")
+    teammate = fields.Boolean("Có kinh nghiệm sống tập thể",default=True)
+    cooking = fields.Boolean("Biết nấu ăn",default=True)
     diseases = fields.Boolean("Tiền sử bệnh lý")
 
 
@@ -338,9 +341,9 @@ class InternDN(models.Model):
     favourite_vi = fields.Char("Sở thích")
     strong_vi = fields.Char("Điểm mạnh")
     weak_vi = fields.Char("Điểm yếu")
-    family_income_vi = fields.Integer("Tổng thu nhập gia đình")
+    family_income_vi = fields.Float("Tổng thu nhập gia đình", size=15, digits=(15, 0))
     motivation_vi = fields.Char("Lý do đi Nhật")
-    income_after_three_year_vi = fields.Char("Sau 3 năm bạn muốn kiếm được bao nhiêu ?")
+    income_after_three_year_vi = fields.Float("Sau 3 năm bạn muốn kiếm được bao nhiêu ?", size=15, digits=(15, 0))
     job_after_return_vi = fields.Char("Sau khi về nước bạn muốn làm công việc gì ?")
     prefer_object_vi = fields.Char("Nếu nhận mức lương gấp 3 hiện tại bạn muốn mua gì ?")
     memory_vi = fields.Char("Kỷ niệm đáng nhớ nhất của bạn")
@@ -416,8 +419,8 @@ class Intern(models.Model):
     _description = 'Thực tập sinh'
     _order = 'id desc'
 
-    custom_id = fields.Char('Mã số',required=True)
-    _sql_constraints = [('unique_id', 'UNIQUE(custom_id)', "Đã tồn tại TTS có số TT này"), ]
+    custom_id = fields.Char('Mã số')
+    _sql_constraints = [('unique_id', 'UNIQUE(custom_id)', "Đã tồn tại TTS có mã số này"), ]
 
     educations = fields.One2many("intern.education", "info", string="Học tập")
     employments = fields.One2many("intern.employment", "info", string="Việc làm")
@@ -429,13 +432,13 @@ class Intern(models.Model):
 
 
 
-    interndn_id = fields.Many2one('intern.interndn', required=True, ondelete='restrict', auto_join=True,
+    interndn_id = fields.Many2one('intern.interndn', required=True, ondelete='cascade', auto_join=True,
                                  string='Related Intern', help='Intern-related data of the user')
 
-    internks_id = fields.Many2one('intern.internks', required=True, ondelete='restrict', auto_join=True,
+    internks_id = fields.Many2one('intern.internks', required=True, ondelete='cascade', auto_join=True,
                                   string='Related Intern', help='Intern-related data of the user')
 
-    internhs_id = fields.Many2one('intern.internhs', required=True, ondelete='restrict', auto_join=True,
+    internhs_id = fields.Many2one('intern.internhs', required=True, ondelete='cascade', auto_join=True,
                                   string='Related Intern', help='Intern-related data of the user')
 
     # test = ["aa","bb"]
@@ -599,7 +602,7 @@ class Intern(models.Model):
                         break
             if vals['certification'] == 3:  # Trung cap
                 for education in vals['educations']:
-                    _logger.info("WTF %s"%str(vals))
+                    # _logger.info("WTF %s"%str(vals))
                     if 'certificate' in education[2] and education[2]['certificate'] == 6:
                         contain_check = True
                         if 'specialized' in vals and 'specialization' in education[2]:
@@ -945,6 +948,8 @@ class Intern(models.Model):
             self._cr.execute(
                 "SELECT * FROM intern_internclone WHERE intern_internclone.intern_id = %d AND COALESCE(intern_internclone.cancel_exam, FALSE) = FALSE AND intern_internclone.create_date > now()::date - interval '3 y'" % obj['id'])
             tmpresult = self._cr.dictfetchall()
+            promoteds = []
+            exams = []
             for record in tmpresult:
                 if record['departure'] and not record['comeback']:
                     obj.current_status = 'Đã xuất cảnh'
@@ -953,11 +958,21 @@ class Intern(models.Model):
                     obj.current_status = 'Đã trúng tuyển'
                     break
                 if record['confirm_exam'] and not record['done_exam']:
-                    obj.current_status = 'Đã chốt thi'
-                    break
+                    # obj.current_status = 'Đã chốt thi'
+                    # break
+                    invoice = self.env['intern.invoice'].browse(record['invoice_id'])
+                    if invoice:
+                        exams.append(invoice.name)
                 if record['promoted'] and not record['done_exam']:
-                    obj.current_status = 'Đang tiến cử'
-                    break
+                    # obj.current_status = 'Đang tiến cử'
+                    invoice = self.env['intern.invoice'].browse(record['invoice_id'])
+                    if invoice:
+                        promoteds.append(invoice.name)
+                    # break
+            if len(exams)>0:
+                obj.current_status = u'Đã chốt thi đơn %s'%(', '.join(exams))
+            elif len(promoteds) >0:
+                obj.current_status = u'Đang tiến cử đơn %s' % (', '.join(promoteds))
 
     passport_no = fields.Char('Passport No.')
     passport_type = fields.Selection([('0','Ngoại giao'),('1','Công vụ'),('2','Phổ thông'),('3','Khác')],string='Loại passport')
@@ -966,4 +981,10 @@ class Intern(models.Model):
     passport_issuing_authority = fields.Char('Cơ quan cấp')
     passport_date_expire = fields.Date('Ngày hết hạn')
 
+    # go_abroad = fields.One2many("intern.abroad", "info")
 
+    had_go_abroad = fields.Boolean('Đã từng đi nước ngoài')
+    country_go_abroad = fields.Char('Nước nào')
+    year_go_abroad = fields.Char('Năm nào')
+
+    had_visa_jp = fields.Boolean('Đã từng xin VISA đi Nhật')

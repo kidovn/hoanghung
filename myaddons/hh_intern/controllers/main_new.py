@@ -19,11 +19,11 @@ _logger = logging.getLogger(__name__)
 
 class CreateDocNew(http.Controller):
     @http.route('/web/binary/download_document_new', type='http', auth="public")
-    def download_cv_new(self, model, id, filename=None, **kwargs):
+    def download_cv_new(self, model, id, filename=None,gender=None, **kwargs):
         invoice = request.env[model].browse(int(id))
 
         document = request.env['intern.document'].search([('name', '=', 'CV')], limit=1)
-        finalDoc = invoice.createHeaderDocNew()
+        finalDoc = invoice.createHeaderDocNew(gender)
 
         reponds = BytesIO()
         archive = zipfile.ZipFile(reponds, 'w', zipfile.ZIP_DEFLATED)
@@ -37,11 +37,23 @@ class CreateDocNew(http.Controller):
 
         listtmp = invoice.interns_exam_doc
 
-        for i, intern in enumerate(sorted(listtmp,key=lambda x: x.sequence_exam)):
-            childDoc = invoice.createCVDoc(document[0], intern, i)
-            archive.write(childDoc.name, 'cv_%d_%s.docx' % ((i + 1), intern_utils.name_with_underscore(intern.name)))
+        if gender == None:
+            for i, intern in enumerate(sorted(listtmp,key=lambda x: x.sequence_exam)):
+                childDoc = invoice.createCVDoc(document[0], intern, i)
+                archive.write(childDoc.name, 'cv_%d_%s.docx' % ((i + 1), intern_utils.name_with_underscore(intern.name)))
 
-            os.unlink(childDoc.name)
+                os.unlink(childDoc.name)
+        else:
+            counter=0
+            for i, intern in enumerate(sorted(listtmp, key=lambda x: x.sequence_exam)):
+                if intern.gender==gender:
+                    childDoc = invoice.createCVDoc(document[0], intern, counter)
+                    archive.write(childDoc.name,
+                                  'cv_%d_%s.docx' % ((counter + 1), intern_utils.name_with_underscore(intern.name)))
+
+                    os.unlink(childDoc.name)
+                    counter+=1
+
         archive.close()
         reponds.flush()
         ret_zip = reponds.getvalue()

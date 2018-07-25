@@ -54,22 +54,31 @@ class Employee(models.Model):
 
     room_type = fields.Selection(
         [('0', 'Tuyển dụng'), ('1', 'Phát triển thị trường'), ('2', 'Kiểm soát'), ('3', 'Đối ngoại'),
-         ('4', 'Hồ sơ'), ('5', 'Kế toán')], string="Phòng ban")
+         ('4', 'Hồ sơ'), ('5', 'Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')], string="Phòng ban")
 
-    department_hs = fields.Many2many('department',string='Phụ trách hồ sơ của các phòng')
+    # department_hs = fields.Many2many('department',string='Phụ trách hồ sơ của các phòng')
+    department_id = fields.Many2one('department', string="Phòng")
+
+    @api.multi
+    @api.depends('department_id')
+    @api.onchange('department_id')
+    def onchage_department_id(self):
+        for rec in self:
+            rec.room_type = rec.department_id.room_type
+
 
 class Department(models.Model):
     _name = 'department'
     _description = u'Phòng ban'
     room_type = fields.Selection([('0','Tuyển dụng'),('1','Phát triển thị trường'),('2','Kiểm soát'),('3','Đối ngoại'),
-                                  ('4','Hồ sơ'),('5','Kế toán')],string="Phòng", required=True)
+                                  ('4','Hồ sơ'),('5','Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')],string="Phòng", required=True)
     name = fields.Char("Tên phòng")
     manager = fields.Many2one('hh.employee',string="Trưởng phòng")
-    members = fields.Many2many('hh.employee')
+    members = fields.One2many('hh.employee','department_id', string='Members', readonly=True)
 
-    groups = fields.One2many("department.group", "department_id", string="Nhóm")
-
-    block = fields.Many2one('department.block',string='Khối TD')
+    # groups = fields.One2many("department.group", "department_id", string="Nhóm")
+    #
+    # block = fields.Many2one('department.block',string='Khối TD')
 
     @api.onchange('room_type')
     def domain_for_member(self):
@@ -81,18 +90,18 @@ class Department(models.Model):
         if self.room_type:
             return {'domain': {'manager': [('room_type', '=', self.room_type)]}}
 
-    @api.model
-    def create(self, vals):
-        if vals['room_type'] == '0':
-            if 'members' in vals:
-                vals['members'] = False
-        else:
-            if 'groups' in vals:
-                vals['groups'] = False
-
-            if 'block' in vals:
-                vals['block'] = False
-        return super(Department, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     if vals['room_type'] == '0':
+    #         if 'members' in vals:
+    #             vals['members'] = False
+    #     else:
+    #         if 'groups' in vals:
+    #             vals['groups'] = False
+    #
+    #         if 'block' in vals:
+    #             vals['block'] = False
+    #     return super(Department, self).create(vals)
 
     @api.onchange('room_type')
     def onchange_place(self):
@@ -101,6 +110,12 @@ class Department(models.Model):
             res['domain'] = {'manager': [('room_type', '=', self.room_type)],
                              'members': [('room_type', '=', self.room_type)]}
         return res
+
+
+    parent_id = fields.Many2one('department', string='Bộ phận cha', index=True)
+    child_ids = fields.One2many('department', 'parent_id', string='Bộ phận con')
+
+
 
 
 class Group(models.Model):
@@ -118,3 +133,16 @@ class Block(models.Model):
     _description = u'Khối tuyển dụng'
 
     name = fields.Char('Tên khối')
+
+
+class TargetDeparment(models.Model):
+    _name = 'intern.department'
+    _inherits = {'department': 'intern_id'}
+    department_id = fields.Many2one('department', required=True, ondelete='restrict', auto_join=True,
+                                string='Phòng TD', help='PTTT-related data of the user')
+
+    invoice_id = fields.Many2one("intern.invoice", string='Đơn hàng', ondelete='cascade')
+
+    target_men = fields.Integer('Chỉ tiêu nam', default=0)
+    target_women = fields.Integer('Chỉ tiêu nữ', default=0)
+

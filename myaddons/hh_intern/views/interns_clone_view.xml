@@ -480,6 +480,52 @@
                     <group>
                         <field name="exp_note"/>
                     </group>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="had_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="had_go_abroad" />
+                                </div>
+                            </td>
+                            <td/>
+                        </tr>
+                        <tr  attrs="{'invisible':[('had_go_abroad', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="country_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="country_go_abroad" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr  attrs="{'invisible':[('had_go_abroad', '==', False)]}">
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="year_go_abroad" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="year_go_abroad" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="had_visa_jp" />
+                            </td>
+                            <td colspan="1" width="150px">
+                                <div>
+                                       <field name="had_visa_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <!--<table>-->
                     <!--<thead>-->
                         <!--<tr>-->
@@ -791,7 +837,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                     <field name="height"/>
+                                     <field name="height" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -799,7 +845,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                     <field name="weight" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}"/>
+                                     <field name="weight" widget="mask_regex" data-inputmask-regex="[0-9]{1,3}" />
                                 </div>
                             </td>
 
@@ -816,7 +862,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                       <field name="blood_group"  style="width:70px" placeholder="-Chọn-"/>
+                                       <field name="blood_group"  style="width:70px" placeholder="-Chọn-" />
                                 </div>
                             </td>
                         </tr>
@@ -827,7 +873,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                     <field name="vision_left" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}"/>/10
+                                     <field name="vision_left" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}" />/10
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -835,7 +881,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                      <field name="vision_right" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}"/>/10
+                                      <field name="vision_right" style="width:30%%" widget="mask_regex" data-inputmask-regex="[0-9]{1,2}" />/10
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -843,7 +889,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                      <field name="blindness"/>
+                                      <field name="blindness" />
                                 </div>
                             </td>
 
@@ -852,7 +898,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                   <field name="diseases"/>
+                                   <field name="diseases" />
                                 </div>
                             </td>
 
@@ -869,7 +915,7 @@
                             </td>
                             <td colspan="1" width="100px">
                                 <div>
-                                   <field name="smoking"/>
+                                   <field name="smoking" />
                                 </div>
                             </td>
 
@@ -886,7 +932,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                   <field name="surgery" style="width: 20px; display: inline-block"/>
+                                   <field name="surgery" style="width: 20px; display: inline-block" />
                                     <field name="surgery_content_vi" placeholder="Nội dung:" style="width: 200px;" nolabel="1" attrs="{'invisible':[('surgery', '==', False)]}" readonly="1"/>
                                 </div>
                             </td>
@@ -913,7 +959,7 @@
                         </tr>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="note_health"/>
+                                  <!--<label for="note_health"/>-->
                             </td>
                             <td colspan="1">
                                 <div>
@@ -1047,7 +1093,7 @@
                             </td>
                             <td colspan="1" >
                                 <div>
-                                       <field name="family_income_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                       <field name="family_income_vi" readonly="1"/>
                                 </div>
                             </td>
                         </tr>
@@ -1111,7 +1157,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div>
-                                       <field name="income_after_three_year_vi" widget="mask_regex" data-inputmask-regex="[0-9,]+" readonly="1"/>
+                                       <field name="income_after_three_year_vi"  readonly="1"/>
                                 </div>
                             </td>
                         </tr>
@@ -1329,6 +1375,7 @@
                                 <field name="specialization" style="background-color: #ffff96"/>
                                 <field name="certificate" widget="selection" options="{ 'no_open': True,'no_quick_create':True,'no_create_edit':True}" context="{'jp': True}"/>
                                 <field name="graduated"/>
+                                <field name="sequence" widget="handle"/>
                             </tree>
                         </field>
                     </page>
@@ -1341,6 +1388,7 @@
                                 <field name="year_end" string="Năm kết thúc"/>
                                 <field name="company" style="background-color: #ffff96"/>
                                 <field name="description" style="background-color: #ffff96"/>
+                                <field name="sequence" widget="handle"/>
                             </tree>
                         </field>
                     </page>
@@ -1382,7 +1430,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="name"/>
+                                    <field name="name" readonly="1"/>
                                     <field name="name_without_signal" invisible="1" />
                                     <field name="name_in_japan" invisible="1" />
                                 </div>
@@ -1393,12 +1441,12 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity" data-inputmask-regex="[0-9]+"/>
+                                    <field name="identity" data-inputmask-regex="[0-9]+" />
                                 </div>
                             </td>
 
                             <td colspan="1" rowspan="3" width="150px">
-                                <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar"/>
+                                <field name="avatar" nolabel="0" widget="image" class="oe_left oe_avatar" />
                             </td>
                         </tr>
                         <tr>
@@ -1419,35 +1467,35 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                    <field name="identity_2" data-inputmask-regex="[0-9]+"/>
+                                    <field name="identity_2" data-inputmask-regex="[0-9]+" />
                                 </div>
                             </td>
 
                         </tr>
                         <tr>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="day" string="Giới tính"/>
+                                  <label for="gender" string="Giới tính"/>
                             </td>
                             <td colspan="1" >
                                 <div>
-                                     <field name="gender" style="width:80px"/>
+                                     <field name="gender" style="width:80px" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="day_identity" string="Ngày cấp"/>
+                                  <label for="day_identity" string="Ngày cấp" />
                             </td>
                             <td colspan="1" >
                                 <div>
                                     <field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"/>
                                     <field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
                                     <field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
-                                    <field name="date_identity" class="oe_read_only"/>
+                                    <field name="date_identity" class="oe_read_only" />
                                 </div>
                             </td>
 
 
                         </tr>
-                        <tr>
+                        <!--<tr>-->
                             <!--<td colspan="1" width="150px" class="columnDivider">-->
                                   <!--<label for="long_term" invisible="1"/>-->
                             <!--</td>-->
@@ -1456,15 +1504,8 @@
                                      <!--<field name="long_term" style="width:10%" invisible="1"/>-->
                                 <!--</div>-->
                             <!--</td>-->
-                            <td colspan="1" width="150px" class="columnDivider">
-                                <label for="place_cmnd"/>
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px"/>
-                                </div>
-                            </td>
-                        </tr>
+
+                        <!--</tr>-->
 
                          <tr>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -1476,6 +1517,14 @@
                                     <field name="month_sent_doc" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>
                                     <field name="year_sent_doc" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999"/>
                                     <field name="date_sent_doc"  class="oe_read_only"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                <label for="place_cmnd"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="place_cmnd" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:100px" />
                                 </div>
                             </td>
                         </tr>
@@ -1501,7 +1550,7 @@
                             <td colspan="1" width="200px" >
                                 <div>
                                      <field name="marital_status" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                     context="{'jp': False}" widget="selection" />
+                                     context="{'jp': False}" widget="selection"  />
                                 </div>
                             </td>
                             <td colspan="1" width="150px"/>
@@ -1513,7 +1562,7 @@
                             <td colspan="1"  >
                                 <div class="column">
                                     <field name="province" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                        placeholder="Tỉnh/tp" style="width:150px"/>
+                                        placeholder="Tỉnh/tp" style="width:150px" />
                                 </div>
                             </td>
                             <td colspan="1" width="150px" class="columnDivider">
@@ -1522,7 +1571,7 @@
                             <td colspan="1">
                                 <div>
                                      <field name="certification" widget="selection" placeholder="--Chọn--" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-                                     context="{'jp': False}"/>
+                                     context="{'jp': False}" />
                                 </div>
                             </td>
 
@@ -2073,7 +2122,11 @@
              <form >
                  <header>
                     <button name="create_doc_new" string="Tạo Đơn hàng" type="object" class="oe_highlight"/>
+                    <!--<button name="%(hh_intern.action_dialog_select_interns_wizard)d" string="Tạo Đơn hàng(2)" type="action" class="oe_highlight"/>-->
                     <button name="create_list_exam_excel" string="Tạo danh sách TTS(Excel)" type="object" class="oe_highlight"/>
+
+                    <button name="create_doc_new_man" string="Tạo đơn hàng Nam" type="object" class="oe_highlight"/>
+                    <button name="create_doc_new_women" string="Tạo đơn hàng Nữ" type="object" class="oe_highlight"/>
                      <field name="status" invisible="1"/>
 
                 </header>
@@ -2364,9 +2417,9 @@
                  <notebook>
                     <page string="Danh sách thi tuyển" >
                         <field name="interns_exam_doc" string="Danh sách thực tập sinh"  mode="tree"
-                               context="{'form_view_ref':'hh_intern.view_intern_form_clone'}"  >
+                               context="{'form_view_ref':'hh_intern.view_intern_form_clone'}" limit="5000" >
 
-                             <tree string="Chi tiết thực tập sinh"  create="false" default_order="sequence_exam">
+                             <tree string="Chi tiết thực tập sinh"  create="false" default_order="sequence_exam" delete="false" limit="5000">
                                  <field name="name_without_signal" />
                                  <field name="identity" />
                                  <field name="identity_2"/>
@@ -2394,8 +2447,10 @@
             <form>
                 <header>
                     <button name="finish_invoice" string="Xong hồ sơ" type="object" style="margin-right:150px"  attrs="{'invisible':[('status','!=',False),('status','=',2)]}" class="oe_highlight"/>
-                    <button name="create_extern_doc" string="Tạo hồ sơ" type="object" />
-                    <button name="create_proletter_doc" string="Tạo thư tiến cử" type="object"/>
+                    <!--<button name="create_extern_doc" string="Tạo hồ sơ" type="object" />-->
+                    <button name="%(hh_intern.action_dialog_select_enterprise_wizard)d" string="Tạo hồ sơ" type="action" />
+                    <!--<button name="create_proletter_doc" string="Tạo thư tiến cử" type="object"/>-->
+                    <button name="create_doc_hoso" string="Tạo Form" type="object"/>
                     <button name="add_to_phieutraloi" string="Đưa vào phiếu trả lời" type="object" style="margin-right:150px"/>
                     <field name="status" widget="statusbar" statusbar_visible="2,3"/>
                 </header>
@@ -2427,7 +2482,7 @@
                             </td>
                             <td colspan="1" width="250px">
                                 <div class="column">
-                                    <field name="name" readonly="1"/>
+                                    <field name="name" />
                                 </div>
                             </td>
                              <td colspan="1" width="200px" class="columnDivider">
@@ -2442,11 +2497,21 @@
                          </tr>
                           <tr>
                             <td colspan="1" width="150px" class="columnDivider">
+                                 <!--<label for="developing_employee"/>-->
                                  <label for="developing_employee"/>
                             </td>
                             <td colspan="1" width="250px">
                                 <div class="column">
                                         <field name="developing_employee" readonly="1"/>
+                                </div>
+                            </td>
+                              <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="date_pass" />
+                            </td>
+                            <td colspan="1" width="100px">
+                                <div class="column">
+                                        <field name="order" invisible="1"/>
+                                    <field name="date_pass" />
                                 </div>
                             </td>
                         </tr>
@@ -2939,14 +3004,17 @@
                         <field name="interns" invisible="1"/>
                         <!--domain="[('id', 'in', interns[0][2])]"-->
                         <field name="interns_pass_doc" string="Danh sách thực tập sinh"  mode="tree"
-                               context="{'form_view_ref':'hh_intern.view_internhs_form_clone'}">
-                             <tree string="Chi tiết thực tập sinh" default_order="sequence_pass" create="false">
-                                <field name="name_without_signal"  />
-                                <field name="identity"  />
-                                <field name="identity_2"/>
-                                <field name="date_of_birth" />
-                                <field name="province" />
-                                 <field name="phieutraloi_id"/>
+                               context="{'group_by':'enterprise','form_view_ref':'hh_intern.view_internhs_form_clone'}" options="{'editable':0}"
+                               >
+                             <tree string="Chi tiết thực tập sinh" default_order="sequence_pass"
+                                   create="false" editable="bottom" options="{'editable':0}" delete="false" context="{'group_by':'enterprise'}">
+                                 <field name="name" readonly="1" />
+                                 <field name="cmnd_or_tcc" readonly="1" />
+                                 <field name="date_of_birth" readonly="1"/>
+                                 <field name="province" readonly="1"/>
+                                 <field name="enterprise" ct_editable="1" />
+                                 <field name="dispatchcom2" ct_editable="1"/>
+                                 <field name="phieutraloi_id" ct_editable="1"/>
                                  <field name="sequence_pass" widget="handle"/>
                             </tree>
                         </field>

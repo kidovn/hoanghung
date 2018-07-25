@@ -14,7 +14,7 @@ access_intern_internhs_hsuser,intern_internhs  hs user,model_intern_internhs,gro
 access_intern_internhs_ksuser,intern_internhs  ks user,model_intern_internhs,group_ks_user,1,1,1,1
 access_intern_intern_manager,intern_intern manager,model_intern_intern,group_manager,1,1,1,1
 access_intern_intern_user,intern_intern user,model_intern_intern,group_user,1,1,1,1
-access_intern_intern_user_hs,intern_intern userhs,model_intern_intern,group_hs_user,1,1,1,1
+access_intern_intern_user_hs,intern_intern userhs,model_intern_intern,group_hs_user,1,1,0,1
 access_intern_intern_user_ks,intern_intern userks,model_intern_intern,group_ks_user,1,1,1,1
 access_res_user_manager,res user manager,base.model_res_users,group_manager,1,1,1,1
 access_res_user_user,res user normal,base.model_res_users,group_user,1,0,0,0
@@ -43,9 +43,9 @@ access_intern_guild_manager,intern guild manager,model_intern_guild,,1,1,1,1
 access_intern_externdoc_manager,intern externdoc manager,model_intern_externdoc,,1,1,1,1
 access_relation_manager,intern relation manager,model_relation,,1,1,1,1
 access_intern_document,document manager,model_intern_document,,1,1,1,1
-access_intern_invoice user,invoice user,model_intern_invoice,hh_intern.group_user,1,1,1,1
+access_intern_invoice user,invoice user,model_intern_invoice,hh_intern.group_user,1,1,0,1
 access_intern_invoice user_hs,invoice user hs,model_intern_invoice,hh_intern.group_hs_user,1,1,0,1
-access_intern_invoice manager,invoice manager,model_intern_invoice,hh_intern.group_manager,1,1,1,1
+access_intern_invoice manager,invoice manager,model_intern_invoice,hh_intern.group_manager,1,1,0,1
 access_intern_job,job user,model_intern_job,hh_intern.group_hs_user,1,1,1,1
 access_intern_job_other,job user other,model_intern_job,,1,0,0,0
 access_intern_invoice tc,invoice user tc,model_intern_invoice,hh_intern.group_tc_user,1,1,1,1
@@ -66,3 +66,5 @@ access_resource_resource_tiencu,resource.resource tc,resource.model_resource_res
 access_test hs,internclone hs,model_intern_phieutraloi,group_hs_user,1,1,1,1
 access_educationvi_ks,intern_educationvi ksmanager,model_intern_educationvi,,1,1,1,1
 access_familyvi_ks,intern_familyvi ksmanager,model_intern_familyvi,,1,1,1,1
+access_intern_department_all,all,model_intern_department,,1,1,1,1
+access_intern_abroad_all,all,model_intern_abroad,,1,1,1,1

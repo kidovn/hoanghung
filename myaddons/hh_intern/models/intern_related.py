@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class InternEducation(models.Model):
     _name = 'intern.education'
-    info = fields.Many2one("intern.intern", required=True,ondelete='cascade')
+    info = fields.Many2one("intern.intern", required=True,ondelete='cascade',index=True)
 
     month_start = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
                                         ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
@@ -28,6 +28,8 @@ class InternEducation(models.Model):
     certificate = fields.Many2one("school","Bằng cấp")
     graduated = fields.Boolean("Đã tốt nghiệp", default= True)
     show_specialization = fields.Boolean(store=False)
+
+    sequence = fields.Integer('sequence', help="Sequence for the handle.", default=10)
 
     @api.onchange('school_type')  # if these fields are changed, call method
     def school_type_change(self):
@@ -53,7 +55,7 @@ class InternEducation(models.Model):
 
 class InternEmployment(models.Model):
     _name = 'intern.employment'
-    info = fields.Many2one("intern.intern",required=True,ondelete='cascade')
+    info = fields.Many2one("intern.intern",required=True,ondelete='cascade',index=True)
     month_start = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
                                         ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
                                         ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
@@ -67,11 +69,12 @@ class InternEmployment(models.Model):
 
     company = fields.Char("Tên công ty",required=True)
     description = fields.Char("Lý lịch làm việc")
+    sequence = fields.Integer('sequence', help="Sequence for the handle.", default=10)
 
 
 class InternFamily(models.Model):
     _name = 'intern.family'
-    info = fields.Many2one("intern.intern", required=True,ondelete='cascade')
+    info = fields.Many2one("intern.intern", required=True,ondelete='cascade',index=True)
     name = fields.Char("Tên",required=True)
     relationship = fields.Char("Quan hệ",required=True)
     ages = fields.Integer("Tuổi", store=False)
@@ -103,3 +106,22 @@ class InternFamily(models.Model):
         return result
 
     sequence = fields.Integer('sequence', help="Sequence for the handle.", default=10)
+
+
+
+# class Abroad(models.Model):
+#     _name = 'intern.abroad'
+#
+#     info = fields.Many2one("intern.intern", required=True, ondelete='cascade')
+#     country = fields.Char('Tên nước',required=True)
+#
+#     month_start = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+#                                     ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+#                                     ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
+#
+#     year_start = fields.Char("Năm bắt đầu", size=4)
+#
+#     month_end = fields.Selection([('01', '01'), ('02', '02'), ('03', '03'), ('04', '04'),
+#                                   ('05', '05'), ('06', '06'), ('07', '07'), ('08', '08'),
+#                                   ('09', '09'), ('10', '10'), ('11', '11'), ('12', '12'), ], "Tháng")
+#     year_end = fields.Char("Năm kết thúc", size=4)

@@ -33,6 +33,8 @@ def is_cjk(char):
     return any([range["from"] <= ord(char) <= range["to"] for range in ranges])
 
 def check_han_language(s):
+    if not s:
+        return False
     i = 0
     while i < len(s):
         if is_cjk(s[i]):

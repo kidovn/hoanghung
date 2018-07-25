@@ -53,7 +53,7 @@
 
 
     <menuitem id="menu_common_data"
-              name="Dữ liệu chung"/>
+              name="Dữ liệu chung" groups="hh_intern.group_manager,hh_intern.group_ks_user,hh_intern.group_user,hh_intern.group_hs_user,hh_intern.group_tc_user"/>
 
     <menuitem id="menu_school"
               parent="menu_common_data"

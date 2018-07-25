@@ -13,12 +13,13 @@
                  <table class="o_group">
                      <tbody>
                          <tr>
+
                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="name" />
+                                 <label for="custom_id_2" />
                             </td>
                             <td colspan="1" width="250px">
                                 <div class="column">
-                                        <field name="name"/>
+                                        <field name="custom_id_2"/>
                                 </div>
                             </td>
                              <td colspan="1" width="200px" class="columnDivider">
@@ -30,25 +31,44 @@
                                 </div>
                             </td>
                          </tr>
-
-                         <!--<tr>-->
-                            <!--<td colspan="1" width="150px" class="columnDivider">-->
-                                 <!--<label for="enterprise" required="True"/>-->
-                            <!--</td>-->
-                            <!--<td colspan="1" width="250px">-->
-                                <!--<div class="column">-->
-                                        <!--<field name="enterprise" required="True" style="background-color: #ffff96"/>-->
-                                <!--</div>-->
-                            <!--</td>-->
-                             <!--<td colspan="1" width="200px" class="columnDivider">-->
-                                 <!--<label for="place_to_work" />-->
-                            <!--</td>-->
-                            <!--<td colspan="1" width="250px">-->
-                                <!--<div class="column">-->
-                                   <!--<field name="place_to_work"/>-->
-                                <!--</div>-->
-                            <!--</td>-->
-                         <!--</tr>-->
+                         <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="name"/>
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <!--<label for="developing_employee"/>-->
+                                 <label for="employee_pttt"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <!--<field name="developing_employee"/>-->
+                                        <field name="employee_pttt"/>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="room_td_care" string="Phòng TD hỗ trợ"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                        <field name="room_td_care" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                 <label for="place_to_work" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                   <field name="place_to_work"/>
+                                </div>
+                            </td>
+                         </tr>
 
                          <!--<tr>-->
                             <!--<td colspan="1" width="150px" class="columnDivider">-->
@@ -85,7 +105,7 @@
 
                                 </div>
                             </td>
-                             <td colspan="1" width="150px" class="columnDivider">
+                             <td colspan="1" width="200px" class="columnDivider">
                                 <label for="date_exam"/>
                             </td>
                             <td colspan="1" width="250px">
@@ -105,6 +125,7 @@
                                      <field name="job_en" placeholder="Tiếng Anh" />
                                 </div>
                             </td>
+
                          </tr>
                          <tr invisible="1">
                              <td colspan="1" width="250px" class="columnDivider">
@@ -124,6 +145,29 @@
                                     <field name="job_vi" placeholder="Tiếng Việt"/>
                                 </div>
                             </td>
+                             <td colspan="1" width="200px" class="columnDivider">
+                                    <label for="date_confirm_form"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                <div class="column">
+                                    <field name="date_confirm_form"/>
+                                </div>
+                            </td>
+                         </tr>
+                         <tr>
+                             <td/>
+                             <td/>
+                              <td colspan="1" width="200px" class="columnDivider">
+                                <label for="date_departure"/>
+                            </td>
+                            <td colspan="1" width="250px">
+                                 <div>
+                                    <!--<field name="day_departure" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'" class="oe_edit_only"/>-->
+                                    <!--<field name="month_departure" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only"/>-->
+                                    <!--<field name="year_departure" style="width:50px" placeholder="Năm" class="oe_edit_only"/>-->
+                                    <field name="date_departure" />
+                                </div>
+                            </td>
                          </tr>
 
                      </tbody>
@@ -138,6 +182,22 @@
                             <td colspan="1" width="200px">
                                 <div class="column">
                                         <field name="year_expire"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="salary_base" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="salary_base" style="width:100px"/>
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="salary_real" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                        <field name="salary_real" style="width:100px"/>
                                 </div>
                             </td>
                          </tr>
@@ -223,7 +283,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                        <field name="certificate" style="width:100px"/>
+                                        <field name="certificate" style="width:200px" widget="selection"/>
                                 </div>
                             </td>
 
@@ -232,7 +292,7 @@
                             </td>
                             <td colspan="1" width="200px">
                                 <div class="column">
-                                        <field name="marital" style="width:100px"/>
+                                        <field name="marital" style="width:100px" widget="selection"/>
                                 </div>
                             </td>
 
@@ -319,33 +379,47 @@
                      </tbody>
                  </table>
                  <group>
-                     <field name="job_description" style="width:300px"/>
-                     <field name="other_requirement" style="width:300px"/>
-                     <field name="note" style="width:300px"/>
-                 </group>
-                <group>
-                     <field name="fee_policy" style="width:300px"/>
+                     <group>
+                         <field name="job_description" style="width:300px"/>
+                         <field name="other_requirement" style="width:300px"/>
+                         <field name="note" style="width:300px"/>
+                         <field name="type_recruitment" style="width:300px"/>
+                     </group>
+                     <group>
+                          <field name="fee_departure" style="width:300px"/>
+                     <field name="fee_departure_women" style="width:300px"/>
+                     <field name="fee_study" style="width:300px"/>
+                     <field name="fee_eating" style="width:300px"/>
                      <field name="bonus_target" style="width:300px"/>
+                     </group>
                  </group>
+                <!--<group>-->
+                     <!--&lt;!&ndash;<field name="fee_policy" style="width:300px"/>&ndash;&gt;-->
+                    <!---->
+                    <!---->
+                 <!--</group>-->
                  <notebook>
                     <page string="Dự kiến tiến cử" >
-                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'promotion'}">
+                        <field name="interns_clone"  widget="one2many_intern" context="{'page':'promotion'}" limit="5000">
 
-                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc">
+                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc" limit="5000">
                                  <field name="name" readonly="1"/>
+                                 <field name="custom_id" readonly="1"/>
                                  <field name="cmnd_or_tcc" readonly="1"/>
                                  <!--<field name="identity_2" readonly="1"/>-->
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
-                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
-                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
-                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
                                  <field name="have_form" />
                                  <field name="avatar" widget="image"/>
-                                 <field name="have_health"/>
+                                 <field name="have_health" string="GKSK"/>
                                  <field name="have_deposit"/>
                                  <field name="condition_count" invisible="1"/>
                                  <field name="intern_id" invisible="1"/>
+
+                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+
                                  <field name="promoted" widget="bool_button" options='{"terminology":
                                     {"string_true": "Đã tiến cử", "action_true": "", "string_false": "Chưa tiến cử", "action_false": "Tiến cử"} }'
                                 />
@@ -359,31 +433,37 @@
                         </field>
                     </page>
                     <page string="Danh sách Tiến cử">
-                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'promotion'}">
-                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc" create="false">
+                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'promotion'}" limit="5000">
+                            <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc" create="false" limit="5000">
                                  <field name="name" readonly="1"/>
+                                 <field name="custom_id" readonly="1"/>
                                  <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
-                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
-                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
-                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
                                  <field name="have_form" />
                                  <field name="avatar" widget="image"/>
                                  <field name="have_health"/>
                                  <field name="have_deposit"/>
                                  <field name="condition_count" invisible="1"/>
-                                <field name="promoted" invisible="1"/>
+                                 <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+                                 <field name="recruitment_r_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
+
+                                <!--<field name="promoted" invisible="1"/>-->
+                                <field name="promoted" widget="bool_delete" string=" "
+                                        options='{"invisible":{"status":[2,3,6,7]},
+                                                    }' sortable='0' context="{'related':['confirm_exam']}"
+                                    />
                             </tree>
                         </field>
                     </page>
                     <page string="Chốt thi tuyển">
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
-                        <field name="interns_confirm_exam" widget="one2many_intern" context="{'page':'promotion'}" readonly="1">
-                            <tree create="false">
+                        <field name="interns_confirm_exam" widget="one2many_intern" context="{'page':'promotion'}" readonly="1" limit="5000">
+                            <tree create="false" limit="5000">
                                 <field name="name" readonly="1"/>
                                 <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
                             </tree>
                         </field>
@@ -392,7 +472,7 @@
                             <tree create="false">
                                 <field name="name" readonly="1"/>
                                 <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
                             </tree>
                         </field>
@@ -403,7 +483,7 @@
                             <tree create="false">
                                 <field name="name" readonly="1"/>
                                 <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
                             </tree>
                         </field>
@@ -412,7 +492,7 @@
                             <tree create="false">
                                 <field name="name" readonly="1"/>
                                 <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
                             </tree>
                         </field>
@@ -421,7 +501,7 @@
                             <tree create="false">
                                 <field name="name" readonly="1"/>
                                 <field name="cmnd_or_tcc" readonly="1"/>
-                                 <field name="date_of_birth" context=""/>
+                                 <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
                                  <field name="reason_cancel_pass" readonly="1"/>
                             </tree>

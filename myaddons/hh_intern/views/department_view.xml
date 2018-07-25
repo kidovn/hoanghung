@@ -39,22 +39,22 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr attrs="{'invisible':[('room_type', '!=', '0')]}">
-                            <td colspan="1" width="150px" class="columnDivider">
-                                  <label for="block"/>
-                            </td>
-                            <td colspan="1" >
-                                <div>
-                                    <field name="block"  style="width:200px" options="{ 'no_open': True,'no_quick_create':True}"/>
-                                </div>
-                            </td>
-                        </tr>
+                        <!--<tr attrs="{'invisible':[('room_type', '!=', '0')]}">-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                  <!--<label for="block"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                    <!--<field name="block"  style="width:200px" options="{ 'no_open': True,'no_quick_create':True}"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                        <!--</tr>-->
 
                     </tbody>
                 </table>
 
                 <notebook>
-                        <page string="Thành viên" attrs="{'invisible':[('room_type', '=', '0')]}">
+                        <page string="Thành viên" >
                             <field name="members" mode="tree">
                                 <tree >
                                     <field name="name"/>
@@ -63,14 +63,14 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string = "Nhóm" attrs="{'invisible':[('room_type', '!=', '0')]}">
-                            <field name="groups" mode="tree">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="members"/>
-                                </tree>
-                            </field>
-                        </page>
+                        <!--<page string = "Nhóm" attrs="{'invisible':[('room_type', '!=', '0')]}">-->
+                            <!--<field name="groups" mode="tree">-->
+                                <!--<tree>-->
+                                    <!--<field name="name"/>-->
+                                    <!--<field name="members"/>-->
+                                <!--</tree>-->
+                            <!--</field>-->
+                        <!--</page>-->
                 </notebook>
             </form>
         </field>
@@ -147,11 +147,11 @@
                              </tbody>
                             </table>
                         </page>
-                        <page string="Quản lý hồ sơ" groups="hh_intern.group_hs_manager">
-                            <group>
-                                <field name="department_hs" widget="many2many_tags" domain="[('room_type', '=', '1')]"/>
-                            </group>
-                        </page>
+                        <!--<page string="Quản lý hồ sơ" groups="hh_intern.group_hs_manager">-->
+                            <!--<group>-->
+                                <!--<field name="department_hs" widget="many2many_tags" domain="[('room_type', '=', '1')]"/>-->
+                            <!--</group>-->
+                        <!--</page>-->
                         <page name="hr_settings" string="HR Settings" groups="base.group_erp_manager">
                             <group>
                                 <group string='Status' name="active_group">
@@ -178,7 +178,7 @@
         </field>
     </record>
 
-      <record id="view_filter_department" model="ir.ui.view">
+      <record id="view_filter_employee" model="ir.ui.view">
         <field name="name">Lọc nhân viên</field>
         <field name="model">hh.employee</field>
         <field name="arch" type="xml">

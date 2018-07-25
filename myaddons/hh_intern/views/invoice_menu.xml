@@ -29,7 +29,7 @@
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('view_manage_invoice_doingoai')})]"/>
-        <field name="context">{'search_default_promoted_filter':1,'search_default_not_done_filter':1}</field>
+        <field name="context">{'search_default_promoted_filter':1,'search_default_not_done_filter':1,'search_default_brand_new_filter':1,'default_status':5}</field>
     </record>
 
     <!--<record model="ir.actions.act_window" id="action_document_generator">-->
@@ -51,7 +51,7 @@
         <!--name="Danh sách đơn hàng(cũ)" action="action_invoice_history" groups="base.group_user"/>-->
 
     <menuitem id="menu_invoice_manage_doingoai" parent="menu_doi_ngoai_root"
-        name="Đơn hàng đã tiến cử" action="action_invoice_manage_doingoai" groups="base.group_user"/>
+        name="Đơn hàng" action="action_invoice_manage_doingoai" groups="base.group_user"/>
 
    <!--<menuitem id="menu_document_generator" parent="menu_doi_ngoai_root"-->
         <!--name="Tạo đơn hàng" action="action_document_generator" />-->

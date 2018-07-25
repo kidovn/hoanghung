@@ -12,7 +12,7 @@ td{
 }
 
 .o_form_view .o_form_field {
-    display: inline-block;
+    #display: inline-block;
     margin-bottom: 0px;
 }
 
@@ -35,6 +35,7 @@ div.column{
 .class_education [data-id="certificate"]{width: 3cm;}
 .class_education [data-id="graduated"]{width: 2.8cm;}
 .class_education [data-id="school_type"]{width: 3cm;}
+.class_education [data-field="company"]{width: 5cm;}
 
 
 .table_divider {border-collapse: collapse;}
@@ -62,3 +63,10 @@ td.noDivider {
     background-color: #b71c14;
     border-color: #b71c14;
 }
+
+.targets {width: 400px;}
+
+
+.class_education [data-id="company"]{width: 2cm;}
+
+.o_list_view [data-id="color_notice"]{width: 1cm;}

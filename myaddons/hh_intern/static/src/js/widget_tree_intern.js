@@ -217,7 +217,6 @@ var X2ManyListNew = ListView.List.extend({
                     return "";
                 }
             }
-
         }
         var value;
         if(column.type === 'reference') {
@@ -370,7 +369,7 @@ var X2ManyListNew = ListView.List.extend({
                     show_column:function(column){
                         if(column.options_tmp  && column.options_tmp.invisible){
                             for(var condition in column.options_tmp.invisible){
-                                if (column.options_tmp.invisible[condition].indexOf(self.view.x2m.getParent().datarecord[condition])>-1){
+                                if ('datarecord' in self.view.x2m.getParent() && column.options_tmp.invisible[condition].indexOf(self.view.x2m.getParent().datarecord[condition])>-1){
                                     return false;
                                 }
                             }
@@ -481,6 +480,13 @@ var X2ManyListNew = ListView.List.extend({
             if(context.__contexts && context.__contexts.length>0 && context.__contexts[0].length>0 && context.__contexts[0].includes("'page':'promotion'")){
                 var parentTmp = this.group.view.ViewManager.x2m.getParent();
                 if (parentTmp.datarecord.status ==4){
+                    return false;
+                }
+            }
+            //KIDO xoa khi remove quyen cua doingoai
+            else if(context.__contexts && context.__contexts.length>0 && context.__contexts[0].length>0 && context.__contexts[0].includes("'page':'doingoai'")){
+                var parentTmp = this.group.view.ViewManager.x2m.getParent();
+                if (parentTmp.datarecord.status ==5){
                     return true;
                 }
             }
@@ -722,12 +728,26 @@ var Many2ManyListViewNew = X2ManyListViewNew.extend({
                 if(self.model == 'intern.internclone'){
                     var datas = [];
                     for(var i = 0; i<element_ids.length;i++){
-                        datas.push({intern_id:[element_ids[i],'TESTTHU']});
+                        //KIDO should remove when remove dn right
+                        if(self.ViewManager.x2m.name == 'interns_promoted'){
+                            datas.push({intern_id:[element_ids[i],'TESTTHU'],promoted:true});
+                        }
+                        else{
+                            datas.push({intern_id:[element_ids[i],'TESTTHU']});
+                        }
                     }
-                    return self.x2m.data_create_multi(datas,{}).then(function(){
+                    if(self.ViewManager.x2m.name == 'interns_promoted'){
+                        return self.getParent().getParent().getParent().fields.interns_clone.viewmanager.x2m.data_create_multi(datas,{}).then(function(){
 
-                        self.x2m.reload_current_view();
-                    });
+                            self.getParent().getParent().getParent().fields.interns_clone.update_to_other();
+                        });
+                    }
+                    else{
+                        return self.x2m.data_create_multi(datas,{}).then(function(){
+
+                            self.x2m.reload_current_view();
+                        });
+                    }
                 }
                 return self.x2m.data_link_multi(element_ids).then(function() {
                     self.x2m.reload_current_view();
@@ -1147,12 +1167,26 @@ var One2ManyListViewNew = X2ManyListViewNew.extend({
                     if(self.model == 'intern.internclone'){
                         var datas = [];
                         for(var i = 0; i<element_ids.length;i++){
-                            datas.push({intern_id:[element_ids[i],'TESTTHU']});
+                            //KIDO should remove when remove dn right
+                            if(self.ViewManager.x2m.name == 'interns_promoted'){
+                                datas.push({intern_id:[element_ids[i],'TESTTHU'],promoted:true});
+                            }
+                            else{
+                                datas.push({intern_id:[element_ids[i],'TESTTHU']});
+                            }
                         }
-                        return self.x2m.data_create_multi(datas,{}).then(function(){
+                        if(self.ViewManager.x2m.name == 'interns_promoted'){
+                            return self.getParent().getParent().getParent().fields.interns_clone.viewmanager.x2m.data_create_multi(datas,{}).then(function(){
 
-                            self.x2m.reload_current_view();
-                        });
+                                self.getParent().getParent().getParent().fields.interns_clone.update_to_other();
+                            });
+                        }
+                        else{
+                            return self.x2m.data_create_multi(datas,{}).then(function(){
+
+                                self.x2m.reload_current_view();
+                            });
+                        }
                     }
                     return self.x2m.data_link_multi(element_ids).then(function() {
                         self.x2m.reload_current_view();
@@ -1488,7 +1522,8 @@ var FieldOne2ManyIntern = FieldOne2Many.extend({
                 values[options_tmp.related[t]] = false;
         }
         this.dataset.write(id,values,{});
-
+        if(this.getParent().fields.interns_clone)
+            this.getParent().fields.interns_clone.reload_current_view();
         if(this.getParent().fields.interns_promoted)
             this.getParent().fields.interns_promoted.reload_current_view();
         if(this.getParent().fields.interns_confirm_exam)

@@ -133,4 +133,8 @@
             </td>
         </t>
     </t>
+
+    <t t-name="ColorWidget">
+        <div  t-attf-style="height:20px;width:100%; background:#{widget.get_value()}"></div>
+    </t>
 </templates>

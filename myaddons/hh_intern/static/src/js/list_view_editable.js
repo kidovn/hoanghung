@@ -950,6 +950,45 @@ ListViewNew.include(/** @lends instance.web.ListView# */{
 //    },
 //});
 
+
+ListView.List.include({
+    row_clicked: function (event) {
+        if(this.view.editable() && this.view.is_action_enabled('edit') && "editable" in this.view.x2m.options && this.view.x2m.options['editable'] ==0){
+            var focus_field = $(event.target).not(".o_readonly").data('field');
+            if(focus_field!=undefined && this.view.fields_view.fields[focus_field].__attrs['ct_editable'] == "1"){
+                if (this.__is_starting_edition) {
+                    return;
+                }
+                this.__is_starting_edition = true;
+
+                var self = this;
+                var args = arguments;
+                var _super = self._super;
+
+                var record_id = $(event.currentTarget).data('id');
+                return this.view.start_edition(
+                    ((record_id)? this.records.get(record_id) : null), {
+                    focus_field: $(event.target).not(".o_readonly").data('field'),
+                }).fail(function() {
+                    return _super.apply(self, args);
+                }).always(function () {
+                    self.__is_starting_edition = false;
+                });
+            }
+            else{
+                return $(this).trigger(
+                    'row_link',
+                    [this.dataset.ids[this.dataset.index],
+                     this.dataset, undefined]);
+            }
+        }
+        return this._super.apply(this, arguments);
+
+    },
+
+});
+
+
 return Editor;
 
 });

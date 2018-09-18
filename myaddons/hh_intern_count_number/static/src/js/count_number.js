@@ -93,6 +93,34 @@ odoo.define('hh_intern.ListViewNew', function (require) {
             this.pad_table_to(4);
         },
 
+        pad_table_to_tmp: function (count) {
+            if (this.records.length >= count ||
+                    _(this.columns).any(function(column) { return column.meta; })) {
+                return;
+            }
+            var cells = [];
+            cells.push('<td class="stt"></td>');
+            if (this.options.selectable) {
+                cells.push('<td class="o_list_record_selector"></td>');
+            }
+            _(this.columns).each(function(column) {
+                if (column.invisible === '1') {
+                    return;
+                }
+                cells.push('<td title="' + column.string + '">&nbsp;</td>');
+            });
+            if (this.options.deletable) {
+                cells.push('<td class="o_list_record_delete"></td>');
+            }
+            cells.unshift('<tr>');
+            cells.push('</tr>');
+
+            var row = cells.join('');
+            this.$current
+                .children('tr:not([data-id])').remove().end()
+                .append(new Array(count - this.records.length + 1).join(row));
+        },
+
         pad_table_to: function (count) {
             if (!this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
                 if (this.records.length >= count ||
@@ -123,7 +151,7 @@ odoo.define('hh_intern.ListViewNew', function (require) {
                 return;
             }
 
-            this._super(count > 0 ? count - 1 : 0);
+            this.pad_table_to_tmp(count > 0 ? count - 1 : 0);
 
             var self = this;
             var columns = _(this.columns).filter(function (column) {
@@ -131,6 +159,8 @@ odoo.define('hh_intern.ListViewNew', function (require) {
             }).length;
             if (this.options.selectable) { columns++; }
             if (this.options.deletable) { columns++; }
+
+            columns++;//stt
 
             var $cell = $('<td>', {
                 colspan: columns,
@@ -197,8 +227,38 @@ odoo.define('hh_intern.ListViewNew', function (require) {
                 alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
                 no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
                 on_selected: function(element_ids) {
-
                     return self.x2m.data_link_multi(element_ids).then(function() {
+                        if ('sequence_pass' in self.fields_view.fields){
+                            var smallest = 1;
+                            _.each(self.x2m.dataset.ids, function(id){
+                                self.x2m.dataset.read_ids([id],['sequence_pass'],{}).then(function (records) {
+                                    if(records[0].sequence_pass>smallest){
+                                        smallest = records[0].sequence_pass;
+                                    }
+                                });
+                            });
+                            _.each(element_ids, function (id) {
+                                    smallest = smallest+1;
+                                    self.x2m.dataset._update_cache(id,{'changes':{'sequence_pass':smallest}});
+                                }
+                            );
+                        }
+                        else if ('sequence' in self.fields_view.fields){
+                            var smallest = 1;
+                            _.each(self.x2m.dataset.ids, function(id){
+                                self.x2m.dataset.read_ids([id],['sequence'],{}).then(function (records) {
+                                    if(records[0].sequence_pass>smallest){
+                                        smallest = records[0].sequence_pass;
+                                    }
+                                });
+                            });
+                            _.each(element_ids, function (id) {
+                                    smallest = smallest+1;
+                                    self.x2m.dataset._update_cache(id,{'changes':{'sequence':smallest}});
+                                }
+                            );
+                        }
+
                         self.x2m.reload_current_view();
                     });
                 }
@@ -256,6 +316,8 @@ odoo.define('hh_intern.ListViewNew', function (require) {
                 kanban: core.view_registry.get('many2many_kanban'),
             };
         },
+
+
     });
 
     var One2ManyListViewNew  = One2ManyListView.extend({
@@ -277,6 +339,60 @@ odoo.define('hh_intern.ListViewNew', function (require) {
                 list: One2ManyListViewNew,
             };
         },
+
+//        send_commands: function (command_list, options) {
+//            var self = this;
+//            var def = $.Deferred();
+//            var dataset = this.dataset;
+//            var res = true;
+//            options = options || {};
+//            var internal_options = _.extend({}, options, {'internal_dataset_changed': true});
+//
+//            _.each(command_list, function(command) {
+//                self.mutex.exec(function() {
+//                    var id = command[1];
+//                    switch (command[0]) {
+//                        case COMMANDS.CREATE:
+//                            var data = _.clone(command[2]);
+//                            delete data.id;
+//                            return dataset.create(data, internal_options).then(function (id) {
+//                                dataset.ids.push(id);
+//                                res = id;
+//                            });
+//                        case COMMANDS.UPDATE:
+//                            return dataset.write(id, command[2], internal_options).then(function () {
+//                                if (dataset.ids.indexOf(id) === -1) {
+//                                    dataset.ids.push(id);
+//                                    res = id;
+//                                }
+//                            });
+//                        case COMMANDS.FORGET:
+//                            return dataset.unlink([id]);
+//                        case COMMANDS.DELETE:
+//                            return dataset.unlink([id]);
+//                        case COMMANDS.LINK_TO:
+//                            if (dataset.ids.indexOf(id) === -1) {
+//                                return dataset.add_ids([id], internal_options);
+//                            }
+//                            return;
+//                        case COMMANDS.DELETE_ALL:
+//                            return dataset.reset_ids([], {keep_read_data: true});
+//                        case COMMANDS.REPLACE_WITH:
+//                            dataset.ids = [];
+//                            return dataset.alter_ids(command[2], internal_options);
+//                        default:
+//                            throw new Error("send_commands to '"+self.name+"' receive a non command value." +
+//                                "\n" + JSON.stringify(command_list));
+//                    }
+//                });
+//            });
+//
+//            this.mutex.def.then(function () {
+//                self.trigger("change:commands", options);
+//                def.resolve(res);
+//            });
+//            return def;
+//        },
     })
 
     core.form_widget_registry.add('many2many', FieldMany2Many).add('one2many',FieldOne2Many);

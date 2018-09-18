@@ -6,7 +6,7 @@
         Tạo bao cao""",
 
     'description': """
-        Tạo maps
+        Tạo bao cao
     """,
 
     'author': "KIDO",

@@ -73,6 +73,51 @@ var FormViewCustom = FormView.extend({
         });
     },
 
+    load_record: function(record) {
+        var self = this, set_values = [];
+        if (!record) {
+            this.set({ 'title' : undefined });
+            this.do_warn(_t("Form"), _t("The record could not be found in the database."), true);
+            return $.Deferred().reject();
+        }
+        this.datarecord = record;
+
+        this.record_loaded = $.Deferred();
+        _(this.fields).each(function (field, f) {
+            field._dirty_flag = false;
+            field._inhibit_on_change_flag = true;
+            var result = field.set_value_from_record(self.datarecord);
+            field._inhibit_on_change_flag = false;
+            set_values.push(result);
+        });
+        this._actualize_mode(); // call after updating the fields as it may trigger a re-rendering
+        this.set({ 'title' : record.id ? record.display_name : _t("New") });
+        this.update_pager(); // the mode must be actualized before updating the pager
+        return $.when.apply(null, set_values).then(function() {
+            if (!record.id) {
+                // trigger onchange for new record after x2many with non-embedded views are loaded
+                var fields_loaded = _.pluck(self.fields, 'is_loaded');
+                $.when.apply(null, fields_loaded).done(function() {
+                    self.do_onchange(null);
+                });
+            }
+            self.on_form_changed();
+            self.rendering_engine.init_fields().then(function() {
+                self.is_initialized.resolve();
+                self.record_loaded.resolve();
+                if (self.sidebar) {
+                    self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+                }
+                if (record.id) {
+                    self.do_push_state({id:record.id});
+                } else {
+                    self.do_push_state({});
+                }
+                self.$el.removeClass('oe_form_dirty');
+            });
+         });
+    },
+
 });
 
 var SelectCreateDialogCustom = common.SelectCreateDialog.extend({

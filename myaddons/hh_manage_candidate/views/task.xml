@@ -1,0 +1,147 @@
+<odoo>
+    <record id="task_form" model="ir.ui.view">
+        <field name="name">Facebook page</field>
+        <field name="model">employee.recruitment.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="job_show_receivable_employee_to_google_sheet" type="object" string="test do du lieu"/>
+                </header>
+                <group>
+                    <field name="job_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="target"/>
+                    <field name="achieve"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="task_tree" model="ir.ui.view">
+        <field name="name">Task</field>
+        <field name="model">employee.recruitment.task</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="job_id"/>
+                <field name="employee_id" options="{'no_open':True,'no_create':True}"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="target"/>
+                <field name="achieve"/>
+            </tree>
+        </field>
+    </record>
+    <record id="task_search" model="ir.ui.view">
+        <field name="name">Facebook page</field>
+        <field name="model">employee.recruitment.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="job_id"/>
+                <field name="employee_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <filter name="task_current_week" string="Task trong tuần" domain="['|',('date_start','&gt;=',
+                    (context_today() - relativedelta(days=context_today().weekday())).strftime('%%Y-%%m-%%d')),
+                    ('date_end','&lt;=', (context_today() - relativedelta(days=context_today().weekday())+relativedelta(days=6)).strftime('%%Y-%%m-%%d'))]"/>
+                 <filter name="task_current_month" string="Task trong tháng" domain="['|',('date_start','&gt;=',
+                    context_today().strftime('%%Y-%%m-01')),
+                    ('date_end','&lt;', (context_today() +relativedelta(months=1)).strftime('%%Y-%%m-01'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="employee_task_form" model="ir.ui.view">
+        <field name="name">Employee</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" readonly="1"/>
+                </group>
+                <notebook>
+                    <page string="Task trong tuần">
+                        <field name="tasks">
+                            <tree>
+                                <field name="job_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="target"/>
+                                <field name="achieve"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record id="employee_task_tree" model="ir.ui.view">
+        <field name="name">Employee</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="employee_task_kanban" model="ir.ui.view">
+      <field name="name">employee.recruitment.task.kanban</field>
+      <field name="model">employee.recruitment.task</field>
+      <field name="arch" type="xml">
+        <kanban default_group_by="employee_id" >
+          <field name="job_id"/>
+          <field name="date_start"/>
+          <field name="date_end"/>
+          <field name="target"/>
+          <field name="achieve"/>
+          <templates>
+            <t t-name="kanban-box">
+
+              <div t-attf-class="oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+
+                <field name="job_id"/>
+
+                <div class="o_dropdown_kanban dropdown">
+                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                        <span class="fa fa-bars fa-lg"/>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a type="delete">Delete</a></li>
+                        <!--<li><ul class="oe_kanban_colorpicker" data-field="color"/></li>-->
+                    </ul>
+                </div>
+                <div>
+                    Từ <field name="date_start"/>
+                    đến
+                    <field name="date_end"/>
+                </div>
+                <div>
+                    Chỉ tiêu:
+                    <field name="target"/>
+                </div>
+                  <!--<span>-->
+                    <!--<a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>-->
+                    <!--<a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>-->
+                  <!--</span>-->
+                <!-- kanban note -->
+                <!--<span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">-->
+                  <!--&lt;!&ndash; title &ndash;&gt;-->
+                  <!--<field name="name"/>-->
+                <!--</span>-->
+                <!--<t t-if="record.message_partner_ids.raw_value.length &gt; 1">-->
+                    <!--<div class="clearfix"></div>-->
+                      <!--<t t-foreach="record.message_partner_ids.raw_value" t-as="follower">-->
+                        <!--<img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar pull-right" t-att-data-member_id="follower"/>-->
+                      <!--</t>-->
+                    <!--<div class="clearfix"></div>-->
+                <!--</t>-->
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+</odoo>

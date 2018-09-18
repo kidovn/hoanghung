@@ -13,6 +13,7 @@ import os
 from odoo.exceptions import UserError, ValidationError
 from StringIO import StringIO
 import logging
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -40,11 +41,11 @@ class Invoice(models.Model):
 
     document = fields.Selection([('Doc1-3', '1-3'), ('Doc1-10', '1-10'), ('Doc1-13', '1-13'),('Doc1-20', '1-20'),
                                  ('Doc1-21', '1-21'),('Doc1-28', '1-28'),('Doc1-29', '1-29'),('DocCCDT','Chứng chỉ kết thúc Đào tạo'),
-                                 ('HDPC', 'Hợp đồng PC'),('PROLETTER', 'Thư tiến cử'),('DSLD','Danh sách lao động')], string='Hồ sơ in',store=True
+                                 ('HDPC', 'Hợp đồng PC'),('PROLETTER', 'Thư tiến cử'),('DSLD','Danh sách lao động'),('Doc4-8','4-8')], string='Hồ sơ in',store=True
                                     )
-    interns = fields.Many2many('intern.intern',string=u'Danh sách thi tuyển')
-    interns_pass = fields.Many2many(relation='invoice_intern_pass_rel', comodel_name='intern.intern',
-                                    string=u'DS Trúng tuyển')
+    # interns = fields.Many2many('intern.intern',string=u'Danh sách thi tuyển')
+    # interns_pass = fields.Many2many(relation='invoice_intern_pass_rel', comodel_name='intern.intern',
+    #                                 string=u'DS Trúng tuyển')
 
     interns_clone = fields.One2many('intern.internclone','invoice_id',string='Thực tập sinh')
 
@@ -135,7 +136,13 @@ class Invoice(models.Model):
     @api.multi
     def create_proletter_doc(self,enterprise):
 
-        if self.interns_pass_doc is None or len(self.interns_pass_doc) is 0:
+        list_interns = self.interns_pass_doc
+        if self.hoso_created:
+            list_interns = self.interns_pass_doc_hs
+
+        interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
+
+        if interns_pass is None or len(interns_pass) == 0:
             raise ValidationError("Không có thực tập sinh nào trong danh sách trúng tuyển")
 
         error2 = ""
@@ -185,18 +192,22 @@ class Invoice(models.Model):
         if document and document == 'PROLETTER':
             return self.create_proletter_doc(enterprise_id)
 
-        if self.interns_pass_doc is None or len(self.interns_pass_doc) is 0:
+        # if self.interns_pass_doc is None and  or len(self.interns_pass_doc) is 0:
+        list_interns = self.interns_pass_doc
+        if self.hoso_created:
+            list_interns = self.interns_pass_doc_hs
+        if list_interns is None or len(list_interns) == 0:
             raise ValidationError("Không có thực tập sinh nào trong danh sách trúng tuyển")
 
         # Validate for doc 1-3
         count_intern_by_enterprise = 0
-        for itern in self.interns_pass_doc:
+        for itern in list_interns:
             if itern.enterprise.id != enterprise_id:
                 continue
             count_intern_by_enterprise += 1
 
         if document and document == 'Doc1-3':
-            for itern in self.interns_pass_doc:
+            for itern in list_interns:
                 if itern.enterprise.id != enterprise_id:
                     continue
                 error = ""
@@ -261,14 +272,25 @@ class Invoice(models.Model):
             if error2:
                 raise ValidationError(u"Thiếu thông tin: \n%s"%error2)
             error = ""
-            for itern in self.interns_pass_doc:
+            for itern in list_interns:
                 if not itern.hktt:
                     error = error + u'- Địa chỉ HKTT\n'
                 if error:
                     raise ValidationError(u"Thiếu thông tin của %s:\n%s" % (itern.name,error))
         elif document and document == 'CheckList':
-            _logger.info()
-
+            _logger.info('AAAAA')
+        elif document and document == 'Doc4-8':
+            error2 = ""
+            if not self.day_start_training or not self.month_start_training or not self.year_start_training:
+                error2 = error2 + u"- ngày bắt đầu khoá học\n"
+            if not self.day_end_training or not self.month_end_training or not self.year_end_training:
+                error2 = error2 + u"- ngày kết thúc khoá học\n"
+            if not self.training_center:
+                error2 = error2 + u"- trung tâm đào tạo\n"
+            if not self.date_departure_doc:
+                error2 = error2 + u"- ngày xuất cảnh dự kiến\n"
+            if error2:
+                raise ValidationError(u"Thiếu thông tin: \n%s" % error2)
         else:
             error2 = ""
             if not self.person_sign_proletter \
@@ -312,7 +334,7 @@ class Invoice(models.Model):
             if error2:
                 raise ValidationError(u"Thiếu thông tin bổ sung cho hồ sơ: \n%s" % error2)
 
-            for itern in self.interns_pass_doc:
+            for itern in list_interns:
                 if itern.enterprise.id != enterprise_id:
                     continue
                 error = ""
@@ -367,6 +389,9 @@ class Invoice(models.Model):
                     or not self.training_center.date_create or not self.training_center.phone_number \
                 or not self.training_center.responsive_person or not self.training_center.mission:
                 raise ValidationError(u"Thiếu thông tin của trung tâm đào tạo")
+            if not self.guild.name_in_en or not self.guild.address_in_romaji or \
+                not self.guild.position_of_responsive_vi or not self.guild.name_of_responsive_romaji:
+                raise ValidationError(u"Thiếu thông tin của nghiệp đoàn")
 
 
             # if (len(self.interns_pass_doc)-1)/10>=len(self.dispatchcom2):
@@ -665,8 +690,8 @@ class Invoice(models.Model):
 
             context['dc'] = (intern_utils.no_accent_vietnamese(tmpaddress) + " - " + intern_utils.no_accent_vietnamese(intern.province.name)).upper()
             context['kc'] = intern.province.getDistanceString()
-        if intern.phone_number:
-            context['sdt'] = intern.phone_number
+        # if intern.phone_number:
+        #     context['sdt'] = intern.phone_number
         if intern.height:
             context['cc'] = str(intern.height)
         if intern.weight:
@@ -1327,6 +1352,7 @@ class Invoice(models.Model):
             if rec.day_create_plan_training and rec.month_create_plan_training and rec.year_create_plan_training:
                 rec.date_create_plan_training = u"Ngày %s tháng %s năm %s" % (
                     rec.day_create_plan_training, rec.month_create_plan_training, rec.year_create_plan_training)
+
             elif rec.month_create_plan_training and rec.year_create_plan_training:
                 rec.date_create_plan_training = u"Tháng %s năm %s" % (
                     rec.month_create_plan_training, rec.year_create_plan_training)
@@ -1352,6 +1378,53 @@ class Invoice(models.Model):
             if rec.day_start_training and rec.month_start_training and rec.year_start_training:
                 rec.date_start_training = u"Ngày %s tháng %s năm %s" % (
                     rec.day_start_training, rec.month_start_training, rec.year_start_training)
+
+                tmp_date = datetime.strptime('%s/%s/%s' % (
+                rec.day_start_training, rec.month_start_training, rec.year_start_training),
+                                             '%d/%m/%Y')
+
+                tmp_date_create_plan = tmp_date - relativedelta(days=3)
+                # if tmp_date_create_plan.day<10:
+                #     rec.day_create_plan_training = '0%d'%tmp_date_create_plan.day
+                # else:
+                if not rec.day_create_plan_training or not rec.month_create_plan_training or not rec.year_create_plan_training:
+                    rec.day_create_plan_training = '%02d'%tmp_date_create_plan.day
+                    rec.month_create_plan_training = '%02d'%tmp_date_create_plan.month
+                    rec.year_create_plan_training = '%d'%tmp_date_create_plan.year
+
+                tmp_date_end_plan = tmp_date + relativedelta(months=1)
+
+                # if tmp_date_end_plan.day<10:
+                #     rec.day_end_training = '0%d'%tmp_date_end_plan.day
+                # else:
+                if not rec.day_end_training or not rec.month_end_training or not rec.year_end_training:
+                    rec.day_end_training = '%02d'%tmp_date_end_plan.day
+
+                    # if tmp_date_end_plan.month < 10:
+                    #     rec.month_end_training = '0%d'%tmp_date_end_plan.month
+                    # else:
+                    rec.month_end_training = '%02d'%tmp_date_end_plan.month
+                    rec.year_end_training = '%d'%tmp_date_end_plan.year
+
+                tmp_date_report_customer = tmp_date_end_plan + relativedelta(days=1)
+
+                if not rec.day_create_plan_training_report_customer or not rec.month_create_plan_training_report_customer or not rec.year_create_plan_training_report_customer:
+                    rec.day_create_plan_training_report_customer = '%02d'%tmp_date_report_customer.day
+                    # else:
+                    #     rec.day_create_plan_training_report_customer = '%d'%tmp_date_report_customer.day
+
+                    # if tmp_date_report_customer.month < 10:
+                    rec.month_create_plan_training_report_customer = '%02d'%tmp_date_report_customer.month
+                    # else:
+                    #     rec.month_create_plan_training_report_customer = '%d'%tmp_date_report_customer.month
+                    rec.year_create_plan_training_report_customer = '%d'%tmp_date_report_customer.year
+
+                # day_create_plan_training_report_customer
+                if not rec.day_pay_finance1 or not rec.month_pay_finance1 or not rec.year_pay_finance1:
+                    rec.day_pay_finance1 = rec.day_create_plan_training
+                    rec.month_pay_finance1 = rec.month_create_plan_training
+                    rec.year_pay_finance1 = rec.year_create_plan_training
+
             elif rec.month_start_training and rec.year_start_training:
                 rec.date_start_training = u"Tháng %s năm %s" % (
                     rec.month_start_training, rec.year_start_training)
@@ -1503,6 +1576,11 @@ class Invoice(models.Model):
                 else:
                     intern.dispatchcom2 = False
             for intern in rec.interns_pass_doc:
+                if rec.dispatchcom2:
+                    intern.dispatchcom2 = rec.dispatchcom2[0]
+                else:
+                    intern.dispatchcom2 = False
+            for intern in rec.interns_pass_doc_hs:
                 if rec.dispatchcom2:
                     intern.dispatchcom2 = rec.dispatchcom2[0]
                 else:
@@ -1907,14 +1985,15 @@ class Invoice(models.Model):
             context['a5'] = intern.name_in_japan.replace(u'・', '  ')
             context['a84'] = intern_utils.convert_to_docx_string(self.job_jp)
             context['a82'] = intern_utils.convert_to_docx_string(self.name_working_department)
-            tmp = index/10
-            context['a92'] = intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name)
-            context['a95'] = self.dispatchcom2[tmp].director.upper()
+            # tmp = index/10
+            context['a92'] = intern_utils.convert_to_docx_string(intern.dispatchcom2.name)
+            context['a94'] = intern.dispatchcom2.position_person_sign
+            context['a95'] = intern.dispatchcom2.director.upper()
             context['a40'] = intern_utils.date_time_in_jp(self.day_create_letter_promotion,self.month_create_letter_promotion,
                                                           self.year_create_letter_promotion)
 
             if self.back_to_pc2:
-                context['a92'] = intern_utils.convert_to_docx_string(self.dispatchcom2[tmp].name)
+                context['a92'] = intern_utils.convert_to_docx_string(intern.dispatchcom2.name)
 
             tpl.render(context)
 
@@ -2056,7 +2135,10 @@ class Invoice(models.Model):
             context = {}
 
             table_interns = []
-            interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+            if not self.hoso_created:
+                interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+            else:
+                interns_pass = sorted(self.interns_pass_doc_hs, key=lambda x: x.sequence_pass)
             counter = 0
             for i, intern in enumerate(interns_pass):
                 if intern.enterprise.id != enterprise_id:
@@ -2093,7 +2175,12 @@ class Invoice(models.Model):
 
     def create_master(self, enterprise_id):
         docs = self.env['intern.document'].search([('name', '=', "DocMaster")], limit=1)
-        interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+
+        list_interns = self.interns_pass_doc
+        if self.hoso_created:
+            list_interns = self.interns_pass_doc_hs
+
+        interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
         if docs:
             stream = BytesIO(docs[0].attachment.decode("base64"))
             tpl = DocxTemplate(stream)
@@ -2331,11 +2418,11 @@ class Invoice(models.Model):
                         # tmp = iterate_intern/10
                         info['a142'] = intern_utils.date_time_in_jp(itern.dispatchcom2.day_create,itern.dispatchcom2.month_create,itern.dispatchcom2.year_create)
                         info['a143'] = itern.time_start_at_pc
-                        info['a144'] = "%s (%s)" % (intern_utils.convert_to_docx_string(itern.dispatchcom2.name), intern_utils.convert_to_docx_string(self.job_jp))
-                        info['a145'] = "%s (%s)" % (intern_utils.convert_to_docx_string(itern.dispatchcom2.name_vn), intern_utils.convert_to_docx_string(self.job_vi))
+                        info['a144'] = u'%s (%s)' % (intern_utils.convert_to_docx_string(itern.dispatchcom2.name), intern_utils.convert_to_docx_string(self.job_jp))
+                        info['a145'] = u'%s (%s)' % (intern_utils.convert_to_docx_string(itern.dispatchcom2.name_vn), intern_utils.convert_to_docx_string(self.job_vi))
                         info['a146'] = u'%d年%dヶ月' % (itern.time_at_pc_year, itern.time_at_pc_month)
                         info['a147'] = u'%d năm %d tháng' % (itern.time_at_pc_year, itern.time_at_pc_month)
-                        _logger.info(u"itern.contact_person %s %s" %(itern.contact_person,itern.name))
+                        # _logger.info(u"itern.contact_person %s %s" %(itern.contact_person,itern.name))
                         info['a148'] = intern_utils.no_accent_vietnamese(itern.contact_person).upper()
                         info['a149'] = intern_utils.no_accent_vietnamese(itern.contact_address).upper()
                         info['a150'] = itern.contact_relative.relation_jp
@@ -2383,7 +2470,12 @@ class Invoice(models.Model):
             context['a86'] = self.year_expire
 
             table_interns = []
-            interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+
+            list_interns = self.interns_pass_doc
+            if self.hoso_created:
+                list_interns = self.interns_pass_doc_hs
+
+            interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
             counter=0
             for i, intern in enumerate(interns_pass):
                 if intern.enterprise.id != int(enterprise_id):
@@ -2452,7 +2544,11 @@ class Invoice(models.Model):
             context['a86'] = self.year_expire
 
             table_interns = []
-            interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+            list_interns = self.interns_pass_doc
+            if self.hoso_created:
+                list_interns = self.interns_pass_doc_hs
+
+            interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
             counter = 0
             for i, intern in enumerate(interns_pass):
                 if intern.enterprise.id != int(enterprise_id):
@@ -2602,8 +2698,10 @@ class Invoice(models.Model):
 
     @api.one
     def finish_invoice(self):
-        if self.status < 3:
-            self.status = 3
+        # if self.status < 3:
+        #     self.status = 3
+        # self.write({'interns_pass_doc_hs': [(1,1552,{'sequence_pass':2})]})
+        self.interns_pass_doc_hs =  [(1,1552,{'sequence_pass':2})]
 
 
 
@@ -2616,7 +2714,11 @@ class Invoice(models.Model):
             context = {}
 
             table_interns = []
-            interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+            list_interns = self.interns_pass_doc
+            if self.hoso_created:
+                list_interns = self.interns_pass_doc_hs
+
+            interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
             for i, intern in enumerate(interns_pass):
                 if intern.enterprise.id != int(enterprise_id):
                     continue
@@ -2657,14 +2759,20 @@ class Invoice(models.Model):
         result = super(Invoice, self).create(vals)
 
 
-        if 'dispatchcom2' in vals :
-            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%result.id)
-            if len(vals['dispatchcom2'])>0 and len(vals['dispatchcom2'][0][2]) > 0:
-                query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(result.id,str(vals['dispatchcom2'][0][2]))
-                self._cr.execute(query_insert)
+        # if 'dispatchcom2' in vals :
+        #     self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%result.id)
+        #     if len(vals['dispatchcom2'])>0 and len(vals['dispatchcom2'][0][2]) > 0:
+        #         query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(result.id,str(vals['dispatchcom2'][0][2]))
+        #         self._cr.execute(query_insert)
 
         result['custom_id'] = 'ERP-%d' %result.id
 
+        # user = self.env['res.users'].browse(self._uid)
+        # if user.has_group('hh_intern.group_hs_user') and not user.has_group('hh_intern.group_tc_user'):
+        #     result['hoso_created'] = True
+        #     result['status'] = 2
+        if 'hoso_created' in vals and vals['hoso_created']:
+            result['status'] = 2
         return result
 
 
@@ -2709,13 +2817,13 @@ class Invoice(models.Model):
         #         self._cr.execute(query_insert)
         #     del vals['intern_pass_order']
 
-        if 'dispatchcom2' in vals:
-            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%self.id)
-
-            if len(vals['dispatchcom2']) > 0 and len(vals['dispatchcom2'][0][2]) > 0:
-                query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(
-                    self.id,str(vals['dispatchcom2'][0][2]))
-                self._cr.execute(query_insert)
+        # if 'dispatchcom2' in vals:
+        #     self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %d'%self.id)
+        #
+        #     if len(vals['dispatchcom2']) > 0 and len(vals['dispatchcom2'][0][2]) > 0:
+        #         query_insert = 'INSERT INTO dispatch_order (invoice_id, dispatch_id) VALUES (%d,ARRAY%s)'%(
+        #             self.id,str(vals['dispatchcom2'][0][2]))
+        #         self._cr.execute(query_insert)
                 # _logger.info("AAAA %s" % query_insert)
             # self._cr.execute('DELETE FROM dispatchcom2_intern_invoice_rel WHERE '
             #                  'dispatchcom2_intern_invoice_rel.intern_invoice_id = %d' % self.id)
@@ -2753,8 +2861,8 @@ class Invoice(models.Model):
     def read(self, fields=None, load='_classic_read'):
         # _logger.info("CONTEXT %s"%self._context)
         result = super(Invoice,self).read(fields,load)
-        if len(result) == 1:
-            for record in result:
+        # if len(result) == 1:
+        #     for record in result:
                 # if 'interns_pass' in record:
                 #     try:
                 #         self._cr.execute('SELECT intern_id FROM internpass_order WHERE internpass_order.invoice_id = %d'%record['id'])
@@ -2778,23 +2886,23 @@ class Invoice(models.Model):
                 #     except:
                 #         _logger.info("Loi gi do")
 
-                if 'dispatchcom2' in record:
-                    try:
-                        self._cr.execute(
-                            'SELECT dispatch_id FROM dispatch_order WHERE dispatch_order.invoice_id = %d' % record['id'])
-                        tmpresult2 = self._cr.dictfetchall()
-                        if len(tmpresult2) == 1:
-                            ids2 = tmpresult2[0]['dispatch_id']
-                            if len(ids2) == len(record['dispatchcom2']):
-                                record['dispatchcom2'] = ids2
-                    except:
-                        _logger.info("LOI GI")
+                # if 'dispatchcom2' in record:
+                #     try:
+                #         self._cr.execute(
+                #             'SELECT dispatch_id FROM dispatch_order WHERE dispatch_order.invoice_id = %d' % record['id'])
+                #         tmpresult2 = self._cr.dictfetchall()
+                #         if len(tmpresult2) == 1:
+                #             ids2 = tmpresult2[0]['dispatch_id']
+                #             if len(ids2) == len(record['dispatchcom2']):
+                #                 record['dispatchcom2'] = ids2
+                #     except:
+                #         _logger.info("LOI GI")
         return result
 
     @api.multi
     def unlink(self):
-        if not self:
-            return True
+        # if not self:
+        #     return True
 
         # if self.env.user.id == SUPERUSER_ID:
         #     for id in self.ids:
@@ -2810,10 +2918,10 @@ class Invoice(models.Model):
         #     if tmpresult[0] != self.env.uid:
         #         raise ValidationError(u"Bạn không có quyền xoá đơn hàng %s"%tmpresult[1])
 
-        for id in self.ids:
+        # for id in self.ids:
             # self._cr.execute('DELETE FROM internpass_order WHERE internpass_order.invoice_id = %s'%id)
             # self._cr.execute('DELETE FROM intern_order WHERE intern_order.invoice_id = %s'%id)
-            self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %s'%id)
+            # self._cr.execute('DELETE FROM dispatch_order WHERE dispatch_order.invoice_id= %s'%id)
 
         return super(Invoice,self).unlink()
 
@@ -2856,14 +2964,31 @@ class Invoice(models.Model):
     @api.one
     def confirm_pass(self):
         ensure_one = False
+        if not self.date_join_school:
+            raise ValidationError(u"Chưa có thông tin ngày nhập học trúng tuyển")
+        if not self.date_pass:
+            raise ValidationError(u"Chưa có thông tin ngày trúng tuyển")
+        if not self.date_departure:
+            raise ValidationError(u"Chưa có thông tin ngày dự kiến xuất cảnh")
+
+        if not self.dispatchcom1:
+            raise ValidationError(u"Chưa có thông tin pháp nhân")
+
+        if not self.job_vi or not self.job_jp:
+            raise ValidationError(u"Chưa có thông tin ngành nghề")
+
         for intern in self.interns_clone:
             if intern.pass_exam and not intern.issues_raise:
                 ensure_one = True
+
                 break
         if ensure_one:
             for intern in self.interns_clone:
-                if intern.pass_exam and not intern.enterprise:
-                    raise ValidationError(u"Chưa có thông tin xí nghiệp của TTS %s"%intern.name)
+                if intern.pass_exam and not intern.issues_raise:
+                    if not intern.enterprise:
+                        raise ValidationError(u"Chưa có thông tin xí nghiệp của TTS %s"%intern.name)
+                    elif not intern.place_to_work:
+                        raise ValidationError(u"Chưa có thông tin địa điểm làm việc của TTS %s" % intern.name)
 
             self.write({
                 'status': 2,
@@ -2871,18 +2996,21 @@ class Invoice(models.Model):
             for intern in self.interns_clone:
                 intern.write({
                     'done_exam': True,
+                    'sequence_pass': intern.sequence_exam
                 })
         else:
             raise ValidationError(u"Chưa có TTS nào trong danh sách trúng tuyển")
 
 
     reason_pause_cancel = fields.Char('Lý do hoãn/huỷ đơn')
+    date_pause_cancel_exam = fields.Datetime('Ngày hoãn/huỷ đơn')
 
     # @api.one
     def pause_invoice(self,reason):
         self.write({
             'status': 6,
             'reason_pause_cancel':reason,
+            'date_pause_cancel_exam':fields.datetime.today()
         })
         for intern in self.interns_clone:
             intern.write({
@@ -2894,6 +3022,7 @@ class Invoice(models.Model):
         self.write({
             'status': 7,
             'reason_pause_cancel': reason,
+            'date_pause_cancel_exam': fields.datetime.today()
         })
         for intern in self.interns_clone:
             intern.write({
@@ -2929,8 +3058,10 @@ class Invoice(models.Model):
     fee_departure_women = fields.Float('Phí xuất cảnh nữ(USD)')
     fee_study = fields.Float('Tiền học(USD)')
     fee_eating = fields.Float('Tiền ăn(VND)')
-    bonus_target = fields.Char('Thưởng+chỉ tiêu')
-
+    bonus_target = fields.Float('Thưởng nam')
+    count_target = fields.Boolean('Tính chỉ tiêu mới nam')
+    bonus_target_women = fields.Float('Thưởng nữ')
+    count_target_women = fields.Boolean('Tính chỉ tiêu mới nữ')
 
 
     date_arrival_jp = fields.Date('Ngày tới Nhật')
@@ -3034,7 +3165,12 @@ class Invoice(models.Model):
             context = {}
 
             table_interns = []
-            interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
+            list_interns = self.interns_pass_doc
+            if self.hoso_created:
+                list_interns = self.interns_pass_doc_hs
+
+            interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
+            # interns_pass = sorted(self.interns_pass_doc, key=lambda x: x.sequence_pass)
             counter = 0
             for i, intern in enumerate(interns_pass):
                 if intern.enterprise.id != int(enterprise_id):
@@ -3077,7 +3213,14 @@ class Invoice(models.Model):
             context['xn'] = enterprise.name_jp
             context['nd'] = self.guild.name_in_jp
             counter = 0
-            for intern in self.interns_pass_doc:
+
+            list_interns = self.interns_pass_doc
+            if self.hoso_created:
+                list_interns = self.interns_pass_doc_hs
+
+            # interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
+
+            for intern in list_interns:
                 if intern.enterprise and intern.enterprise.id == int(enterprise_id):
                     counter+=1
             context['sltts'] = counter
@@ -3097,20 +3240,26 @@ class Invoice(models.Model):
             count_women+= rec.total_intern_women - rec.len_interns_women
         count_current_invoice_man = 0
         count_current_invoice_women = 0
-        for intern in self.interns_pass_doc:
+
+        list_interns = self.interns_pass_doc
+        if self.hoso_created:
+            list_interns = self.interns_pass_doc_hs
+
+
+        for intern in list_interns:
             if not intern.phieutraloi_id:
                 if intern.gender and intern.gender=='nam':
                     count_current_invoice_man+=1
                 else:
                     count_current_invoice_women+=1
         if count_current_invoice_man>count_man and count_current_invoice_women>count_women:
-            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam và % nữ'%((count_current_invoice_man-count_man),(count_current_invoice_women-count_women)))
+            raise ValidationError(u'Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam và %d nữ'%((count_current_invoice_man-count_man),(count_current_invoice_women-count_women)))
         elif count_current_invoice_man>count_man:
-            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam' % (count_current_invoice_man - count_man))
+            raise ValidationError(u'Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nam' % (count_current_invoice_man - count_man))
         elif count_current_invoice_women>count_women:
-            raise ValidationError('Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nữ' % (count_current_invoice_women - count_women))
+            raise ValidationError(u'Cần tạo phiếu trả lời mới, thiếu vị trí cho %d nữ' % (count_current_invoice_women - count_women))
         else:
-            for intern in self.interns_pass_doc:
+            for intern in list_interns:
                 for rec in phieutraloi:
                     if intern.gender and intern.gender == 'nam' and rec.total_intern_men>rec.len_interns_man:
                         rec.interns = [(4, intern.id)]
@@ -3140,4 +3289,67 @@ class Invoice(models.Model):
 
     date_pass = fields.Date('Ngày trúng tuyển')
 
+    hoso_created = fields.Boolean('Đơn hàng của HS')
+    # , default = lambda self: self._get_default_hoso_created()
+    # @api.model
+    # def _get_default_name(self):
+    #     user = self.env['res.users'].browse(self._uid)
+    #     if user.has_group('hh_intern.group_hs_user') and not user.has_group('hh_intern.group_tc_user'):
+    #         return True
+    #     return False
 
+    def create_48(self,enterprise_id):
+        doc_certification = self.env['intern.document'].search([('name', '=', "Doc4-8")], limit=1)
+        if doc_certification:
+            stream = BytesIO(doc_certification[0].attachment.decode("base64"))
+            tpl = DocxTemplate(stream)
+            tempFile = StringIO()
+            context = {}
+            table_dd = []
+            date_start = datetime.strptime('%s/%s/%s'%(self.day_start_training,self.month_start_training,self.year_start_training),'%d/%m/%Y')
+            for i in range(0,21):
+                table_dd.append(date_start.strftime('%d/%m/%Y'))
+                date_start = date_start+relativedelta(days=1)
+            context['tbd'] = table_dd
+            context['a44'] = intern_utils.date_time_in_jp(self.day_start_training, self.month_start_training,
+                                                          self.year_start_training)
+            context['a45'] = intern_utils.date_time_in_jp(self.day_end_training, self.month_end_training,
+                                                          self.year_end_training)
+
+            table_dd2 = []
+            for i in range(0, 11):
+                table_dd2.append(date_start.strftime('%d/%m/%Y'))
+                date_start = date_start + relativedelta(days=1)
+            context['tbd2'] = table_dd2
+            context['a59'] = intern_utils.convert_to_docx_string(self.guild.name_in_jp)
+            context['a68'] = self.guild.name_of_responsive_jp
+            date_tmp = datetime.strptime('%s/%s/%s'%(self.day_end_training, self.month_end_training,
+                                                          self.year_end_training),'%d/%m/%Y')
+
+            date_tmp = date_tmp + relativedelta(days=1)
+            day_tmp = '%02d'%date_tmp.day
+            month_tmp = '%02d'%date_tmp.month
+            context['a451'] = intern_utils.date_time_in_jp(day_tmp, month_tmp,'%d'%date_tmp.year)
+
+
+            table_interns = []
+            list_interns = None
+            if self.interns_pass_doc and len(self.interns_pass_doc)>0:
+                list_interns = sorted(self.interns_pass_doc, key=lambda x:x.sequence_pass)
+            else:
+                list_interns = sorted(self.interns_pass_doc_hs, key=lambda x: x.sequence_pass)
+
+            date_departure_tmp = datetime.strptime('%s-%s-%s'%(self.year_departure_doc,self.month_departure_doc,self.day_departure_doc),'%Y-%m-%d')
+            for i, intern in enumerate(list_interns):
+                row = {}
+                row['stt'] = '%d'%(i+1)
+                row['name'] = u'%s'%intern_utils.no_accent_vietnamese(intern.name).upper()
+                row['date_entry'] = u'%s'%intern_utils.date_time_in_jp('%02d'%date_departure_tmp.day,'%02d'%date_departure_tmp.month,'%d'%date_departure_tmp.year)
+                table_interns.append(row)
+            context['tb_interns'] = table_interns
+
+
+            tpl.render(context)
+            tpl.save(tempFile)
+            tempFile.seek(0)
+            return tempFile

@@ -11,9 +11,10 @@ import ast
 import logging
 _logger = logging.getLogger(__name__)
 
-list_field_report = ['name','create_date','year_expire_char','date_exam_short','room_pttt','status','reason_pause_cancel',
+list_field_report = ['custom_id','custom_id_2','name','create_date','year_expire_char','date_exam_short','room_pttt','employee_pttt','status','reason_pause_cancel',
                      'total_pass','date_confirm_form','date_exam','number_man','number_women','source_total','current_status',
-                     'interns_clone'
+                     'interns_clone','count_form','date_confirm_form','fee_policy','bonus_target','bonus_target_women','salary_base','salary_real',
+                     'age_from','age_to','certificate','other_requirement','year_expire','place_to_work','count_form_exam','note_report','room_td_care'
                      ]
 
 remove_fields_searchable = ['day_exam','month_exam','year_exam',
@@ -31,7 +32,8 @@ remove_fields_searchable = ['day_exam','month_exam','year_exam',
                             'year_departure_doc','day_sign_proletter','month_sign_proletter','year_sign_proletter','interns_clone',
                             'interns_promoted','interns_confirm_exam','interns_escape_exam','interns_pass_new','interns_preparatory',
                             'interns_cancel_pass','interns_departure','write_date','create_uid','write_uid','interns_exam_doc',
-                            'interns_pass_doc','order','legal_name','year_expire_char','interns','interns_pass','document']
+                            'interns_pass_doc','order','legal_name','year_expire_char','interns','interns_pass','document',
+                            'developing_employee','note','note_hs','job']
 
 class InvoiceReport(models.Model):
     _inherit = 'intern.invoice'
@@ -302,9 +304,20 @@ class InvoiceReport(models.Model):
 
 
         for f in many2one_fields:
-            select_terms.append(u"array_to_string(ARRAY_AGG(DISTINCT (SELECT name from %s WHERE %s.id = %s)),', ') AS %s" % (
-                self._fields[f].comodel_name.replace(".", "_"), self._fields[f].comodel_name.replace(".", "_"),
-                self._inherits_join_calc(self._table, f, query), f))
+            if self._fields[f].comodel_name == 'intern.certificate':
+                select_terms.append(
+                    u"array_to_string(ARRAY_AGG(DISTINCT (SELECT name_in_vn from %s WHERE %s.id = %s)),', ') AS %s" % (
+                        self._fields[f].comodel_name.replace(".", "_"), self._fields[f].comodel_name.replace(".", "_"),
+                        self._inherits_join_calc(self._table, f, query), f))
+            elif self._fields[f].comodel_name== 'hh.employee':
+                select_terms.append(
+                    u"array_to_string(ARRAY_AGG(DISTINCT (SELECT name_related from %s WHERE %s.id = %s)),', ') AS %s" % (
+                        self._fields[f].comodel_name.replace(".", "_"), self._fields[f].comodel_name.replace(".", "_"),
+                        self._inherits_join_calc(self._table, f, query), f))
+            else:
+                select_terms.append(u"array_to_string(ARRAY_AGG(DISTINCT (SELECT name from %s WHERE %s.id = %s)),', ') AS %s" % (
+                    self._fields[f].comodel_name.replace(".", "_"), self._fields[f].comodel_name.replace(".", "_"),
+                    self._inherits_join_calc(self._table, f, query), f))
 
         for f in selection_fields:
             if f == 'status':
@@ -388,38 +401,38 @@ class InvoiceReport(models.Model):
 
     current_status = fields.Char('Tình trạng mới nhất về đơn hàng',store=True,compute='_compute_current_status')
 
+    # @api.one
+    # @api.depends('interns_clone')
+    # def _compute_total_pass(self):
+    #     temp_total_pass = 0
+    #     for intern in self.interns_clone:
+    #         if intern.pass_exam and not intern.cancel_pass:
+    #             temp_total_pass+=1
+    #     self.total_pass = temp_total_pass
+    #
     @api.one
-    @api.depends('interns_clone')
-    def _compute_total_pass(self):
-        temp_total_pass = 0
-        for intern in self.interns_clone:
-            if intern.pass_exam and not intern.cancel_pass:
-                temp_total_pass+=1
-        self.total_pass = temp_total_pass
-
-    @api.one
-    @api.depends('interns_clone','status')
+    @api.depends('status')
     def _compute_current_status(self):
         if self.status == 4:
             temp_total = 0
             if self.interns_clone:
                 temp_total = len(self.interns_clone)
-            self.current_status = u'Có %d form trong danh sách dự kiến tiến cử'%temp_total
+            self.current_status = u'Có %d form trong danh sách dự kiến tiến cử.'%temp_total
         elif self.status == 5:
             temp_total = 0
             for intern in self.interns_clone:
                 if intern.promoted:
                     temp_total +=1
-            self.current_status = u'Có %d form được tiến cử' % temp_total
+            self.current_status = u'Có %d form được tiến cử.' % temp_total
         elif self.status == 1:
             temp_total = 0
             temp_total_cancel_exam = 0
             for intern in self.interns_clone:
                 if intern.confirm_exam:
                     temp_total += 1
-                if intern.escape_exam:
+                if intern.issues_raise:
                     temp_total_cancel_exam +=1
-            self.current_status = u'Có %d form chốt thi tuyển' % temp_total
+            self.current_status = u'Có %d form chốt thi tuyển.' % temp_total
             if temp_total_cancel_exam>0:
                 self.current_status = self.current_status + u". Có %d tts rút bỏ chốt thi"%temp_total_cancel_exam
         # elif self.status == '2':
@@ -439,3 +452,42 @@ class InvoiceReport(models.Model):
                 self.current_status += u', %d tts dự bị'%temp_total_preparatory
             if temp_total_cancel_pass>0:
                 self.current_status += u', %d tts huỷ trúng tuyển'%temp_total_cancel_pass
+
+    @api.multi
+    # @api.onchange('interns_clone')
+    # @api.depends('interns_clone')
+    def compute_count_form(self):
+        for rec in self:
+            if rec.interns_clone:
+                counter = 0
+                counter_exam = 0
+                for intern in rec.interns_clone:
+                    if intern.promoted:
+                        counter+=1
+                        if intern.confirm_exam:
+                            counter_exam+=1
+                rec.count_form = counter
+                rec.count_form_exam = counter_exam
+            else:
+                rec.count_form = 0
+                rec.count_form_exam = 0
+
+    @api.multi
+    def write(self, vals):
+        tmp = super(InvoiceReport, self).write(vals)
+        if 'interns_clone' in vals:
+            self._compute_current_status()
+            self.compute_count_form()
+        return tmp
+
+    @api.model
+    def create(self, vals):
+        result = super(InvoiceReport, self).create(vals)
+        if 'interns_clone' in vals:
+            result._compute_current_status()
+            result.compute_count_form()
+        return result
+
+    count_form = fields.Integer('Form TC',store=True,compute='compute_count_form')
+
+    count_form_exam = fields.Integer('Chốt thi',store=True,compute='compute_count_form')

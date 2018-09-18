@@ -1,0 +1,88 @@
+<odoo>
+    <record id="view_intern_form_accounting" model="ir.ui.view">
+        <field name="name">Thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form >
+                <group>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="custom_id" readonly="1"/>
+                        <field name="enter_source" readonly="1"/>
+                        <field name="have_deposit"/>
+                    </group>
+                    <group>
+                        <field name="date_of_birth_short" readonly="1"/>
+                        <field name="cmnd_or_tcc" readonly="1"/>
+                        <field name="province" readonly="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_intern_tree_accounting" model="ir.ui.view">
+        <field name="name">Thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <tree >
+                <field name="custom_id" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="date_of_birth_short" readonly="1"/>
+                <field name="cmnd_or_tcc" readonly="1"/>
+                <field name="province" readonly="1"/>
+                <field name="enter_source" readonly="1"/>
+                <field name="money_deposit" readonly="1"/>
+                <field name="employee_deposit" readonly="1"/>
+                <field name="employee_withdraw" readonly="1"/>
+                <field name="have_deposit" invisible="1"/>
+                <field name="pass_issued_accounting" invisible="1"/>
+                <!--<field name="pass_issued_accounting"/>-->
+                <!--<field name="have_deposit" widget="bool_button" options='{"terminology":-->
+                                    <!--{"string_true": "Đã cọc", "action_true": "Rút cọc", "string_false": "Chưa có cọc", "action_false": "Đặt cọc"}}'/>-->
+                <!--<button name="toggle_deposit" field_name="have_deposit" type="object"-->
+                        <!--widget="toggle_button" options='{"active": "Đặt cọc", "inactive": "Chưa cọc"}'  />-->
+                <button name="%(hh_accounting.action_dialog_intern_accounting_deposit)d" type="action"
+                                class="btn btn-primary btn-sm " attrs="{'invisible':['|',('have_deposit','=',True),('pass_issued_accounting','!=','')]}" string="Đặt cọc">
+
+                </button>
+                <button name="%(hh_accounting.action_dialog_intern_accounting_withdraw)d" type="action"
+                                class="btn btn_toggle btn-sm " attrs="{'invisible':['|',('have_deposit','!=',True),('pass_issued_accounting','!=','')]}" string="Rút cọc">
+
+                </button>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_intern_form_accounting_deposit" model="ir.ui.view">
+        <field name="name">Thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="employee_deposit"/>
+                        <field name="money_deposit"/>
+                    </group>
+                    <group/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_intern_form_accounting_withdraw" model="ir.ui.view">
+        <field name="name">Thực tập sinh</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="employee_withdraw"/>
+                        <!--<field name="money_deposit"/>-->
+                    </group>
+                    <group/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

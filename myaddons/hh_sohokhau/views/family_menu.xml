@@ -1,0 +1,11 @@
+<odoo>
+     <record model="ir.actions.act_window" id="action_family_list">
+        <field name="name">Family</field>
+        <field name="res_model">intern.intern</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_family_list"
+              name="Family"
+              action="action_family_list"/>
+</odoo>

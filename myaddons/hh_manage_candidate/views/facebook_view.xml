@@ -1,0 +1,58 @@
+<odoo>
+    <record id="facebook_form" model="ir.ui.view">
+        <field name="name">Facebook page</field>
+        <field name="model">candidate.facebook</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="address" required="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Kết bạn">
+                        <field name="friends" context="{'form_view_ref':'hh_manage_candidate.facebook_candidate_create'}">
+                            <tree>
+                                <field name="name"/>
+                                <field name="facebook"/>
+                                <field name="care"/>
+                                <field name="people_care"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <!---->
+    <!--<record id="hh_candidate_fb_search" model="ir.ui.view">-->
+        <!--<field name="name">Candidate search</field>-->
+        <!--<field name="model">hh.candidate</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<search>-->
+                <!--<field name="name"/>-->
+                <!--<field name="position_apply"/>-->
+                <!--<field name="foreign_language"/>-->
+                <!--<field name="province"/>-->
+                <!--<field name="phone_number"/>-->
+                <!--<field name="birth_year"/>-->
+                <!--<filter name="create_today" string="Được tạo hôm nay" domain="[('create_date','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),('create_date','&lt;=',time.strftime('%Y-%m-%d 23:59:59'))]"/>-->
+                <!--<filter name="prepare_start_working" string="Sắp đi làm" domain="[('result','=','1'),('date_notice_user','=',time.strftime('%Y-%m-%d'))]"/>-->
+                <!--<filter name="start_working_today" string="Đi làm hôm nay" domain="[('date_start_working','=',time.strftime('%Y-%m-%d'))]"/>-->
+                <!--<filter name="need_contact" string="Cần liên lạc lại hôm nay" domain="[('schedule_call_back','!=',False),('schedule_call_back','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),('schedule_call_back','&lt;=',time.strftime('%Y-%m-%d 23:59:59'))]"/>-->
+            <!--</search>-->
+        <!--</field>-->
+    <!--</record>-->
+    <record id="facebook_search" model="ir.ui.view">
+        <field name="name">Facebook page</field>
+        <field name="model">candidate.facebook</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="address"/>
+            </search>
+        </field>
+    </record>
+</odoo>

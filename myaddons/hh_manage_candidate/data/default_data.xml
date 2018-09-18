@@ -1,0 +1,8 @@
+<odoo>
+    <record id="first_job_item" model="hh.candidate.job">
+        <field name="name">Quản lý TTS</field>
+    </record>
+    <record id="second_job_item" model="hh.candidate.job">
+        <field name="name">Quản lý TTS</field>
+    </record>
+</odoo>

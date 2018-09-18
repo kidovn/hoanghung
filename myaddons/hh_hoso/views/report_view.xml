@@ -62,6 +62,7 @@
                  <field name="enter_source_long" type="measure"/>
                  <field name="enter_source_bcd" type="measure"/>
                  <field name="escape_source" type="measure"/>
+                 <!--<field name="escape_exam" type="measure"/>-->
                  <field name="date_create_info" type="measure"/>
                  <field name="date_enter_source" type="measure"/>
                  <field name="date_escape_source" type="measure"/>
@@ -84,7 +85,7 @@
                  <field name="promoted" type="measure"/>
                  <field name="invoice_id" string="Đơn hàng" type="measure"/>
                  <field name="confirm_exam" type="measure"/>
-                 <field name="escape_exam" type="measure"/>
+                 <field name="issues_raise" type="measure"/>
                  <field name="pass_exam" type="measure"/>
                  <field name="preparatory_exam" type="measure"/>
                  <field name="cancel_pass" type="measure"/>
@@ -171,21 +172,40 @@
     <record id="view_invoice_pivot" model="ir.ui.view">
         <field name="name">invoice.pivot</field>
         <field name="model">intern.invoice</field>
+        <field name="domain">[('hoso_created','=',False)]</field>
         <field name="arch" type="xml">
              <pivot_extend string="Đơn hàng" disable_linking="True">
                  <field name="create_date" interval="month" type="row" string="Ngày tạo"/>
                  <field name="year_expire_char" type="row"/>
                  <field name="name" type="measure"/>
+                 <field name="custom_id" type="measure"/>
+                 <field name="custom_id_2" type="measure"/>
                  <field name="room_pttt" type="measure"/>
+                 <field name="employee_pttt" type="measure"/>
+                 <field name="room_td_care" type="measure"/>
                  <field name="status" type="measure"/>
                  <field name="current_status" type="measure"/>
                  <field name="date_confirm_form" type="measure"/>
-                 <field name="date_exam" type="measure"/>
+                 <field name="date_exam_short" type="measure"/>
                  <field name="number_man" type="measure"/>
                  <field name="number_women" type="measure"/>
                  <field name="source_total" type="measure"/>
                  <field name="total_pass" type="measure"/>
                  <field name="interns_clone" type="measure"/>
+                 <field name="count_form" type="measure"/>
+                 <field name="count_form_exam" type="measure"/>
+                 <field name="fee_policy" type="measure"/>
+                 <field name="bonus_target" type="measure"/>
+                 <field name="bonus_target_women" type="measure"/>
+                 <field name="salary_base" type="measure"/>
+                 <field name="salary_real" type="measure"/>
+                 <field name="age_from" type="measure"/>
+                 <field name="age_to" type="measure"/>
+                 <field name="certificate" type="measure"/>
+                 <field name="other_requirement" type="measure"/>
+                 <field name="year_expire" type="measure"/>
+                 <field name="place_to_work" type="measure"/>
+                 <field name="note_report" type="measure"/>
              </pivot_extend>
         </field>
     </record>
@@ -197,8 +217,8 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <search>
-                <filter string="Trong tháng" name="month" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]" />
-                <filter string="Trong năm" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]" />
+                <filter string="Trong tháng" name="month" domain="[('date_exam_short','&gt;=',time.strftime('%%Y-%%m-01')),('date_exam_short','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),('hoso_created','=',False)]" />
+                <filter string="Trong năm" name="year" domain="[('date_exam_short','&lt;=', time.strftime('%%Y-12-31')),('date_exam_short','&gt;=',time.strftime('%%Y-01-01')),('hoso_created','=',False)]" />
             </search>
         </field>
     </record>

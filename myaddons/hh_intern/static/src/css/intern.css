@@ -28,6 +28,9 @@ tr.rowDivider{
 div.column{
 }
 
+
+.invoices [data-id="name"]{width: 1000px;}
+
 .class_education [data-id="month_start"]{width: 1cm;}
 .class_education [data-id="year_start"]{width: 2.8cm;}
 .class_education [data-id="month_end"]{width: 1cm;}

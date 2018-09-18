@@ -45,6 +45,9 @@ class InternReport(models.Model):
 
     date_create_info = fields.Datetime('Ngày tạo thông tin', readonly=True)
 
+    # escape_exam = fields.Integer('Rút bỏ ĐH', readonly=True)
+
+
 
     def _select(self):
         select_str = """
@@ -68,6 +71,16 @@ class InternReport(models.Model):
                 internks.date_enter_source AS date_enter_source,
                 internks.date_escape_source AS date_escape_source
             """
+
+        # ,
+        # (SELECT COUNT( *)
+        # FROM?
+        # intern_internclone
+        # WHERE
+        # intern_internclone.intern_id = intern.id
+        # AND
+        # intern_internclone.issues_raise = TRUE) AS
+        # escape_exam
         return select_str
 
     def _from(self):

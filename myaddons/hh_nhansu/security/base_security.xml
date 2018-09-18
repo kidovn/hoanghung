@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+         <record id="group_nhansu_user" model="res.groups">
+         <field name="name">Nhân sự</field>
+         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+         <field name="category_id" ref="hh_intern.intern_management"/>
+        </record>
+
+    </data>
+
+    <data>
+
+         <record id="group_nhansu_user_viewer" model="res.groups">
+         <field name="name">Nhân sự viewer</field>
+         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+         <field name="category_id" ref="hh_intern.intern_management"/>
+        </record>
+
+    </data>
+
+
+    <!--<data>-->
+        <!--<record id="create_invoice_access_internhs" model="ir.rule">-->
+          <!--<field name="name">Intern for corresponding managers only</field>-->
+          <!--<field name="model_id" ref="model_intern_internhs"/>-->
+          <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
+            <!--</field>-->
+          <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+        <!--</record>-->
+  <!--</data>-->
+
+    <!--<data>-->
+        <!--<record id="create_invoice_access_internks" model="ir.rule">-->
+          <!--<field name="name">Intern for corresponding managers only</field>-->
+          <!--<field name="model_id" ref="model_intern_internks"/>-->
+          <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
+            <!--</field>-->
+          <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+        <!--</record>-->
+  <!--</data>-->
+
+     <!--<data>-->
+        <!--<record id="create_invoice_access_interndn" model="ir.rule">-->
+          <!--<field name="name">Intern for corresponding managers only</field>-->
+          <!--<field name="model_id" ref="model_intern_interndn"/>-->
+          <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
+            <!--</field>-->
+          <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+        <!--</record>-->
+  <!--</data>-->
+
+
+
+
+  <!--<data>-->
+    <!--<record id="create_invoice_access_intern" model="ir.rule">-->
+      <!--<field name="name">Intern for corresponding managers only</field>-->
+      <!--<field name="model_id" ref="model_intern_intern"/>-->
+      <!--<field name="domain_force">['|',('user_access','=',user.id),(user.has_group('hh_intern.group_manager'),'=',True)]-->
+        <!--</field>-->
+      <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+    <!--</record>-->
+  <!--</data>-->
+
+
+  <!--<data>-->
+    <!--<record id="access_invoice" model="ir.rule">-->
+      <!--<field name="name">Invoice for sepecific user</field>-->
+      <!--<field name="model_id" ref="model_intern_invoice"/>-->
+      <!--<field name="domain_force">['|','|','|','|',(user.has_group('hh_intern.group_ks_user'),'=',True)-->
+          <!--,(user.has_group('hh_intern.group_user'),'=',True),(user.has_group('hh_intern.group_manager'),'=',True)-->
+          <!--,(user.has_group('hh_intern.group_hs_manager'),'=',True),]-->
+        <!--</field>-->
+      <!--&lt;!&ndash;<field name="groups" eval="[(4,ref('base.group_user'))]"/>&ndash;&gt;-->
+    <!--</record>-->
+  <!--</data>-->
+
+    <!--<data>-->
+        <!--<record id="access_department" model="ir.rule">-->
+          <!--<field name="name">Intern for corresponding managers only</field>-->
+          <!--<field name="model_id" ref="model_department"/>-->
+          <!--<field name="domain_force">[('1','=','1')]-->
+            <!--</field>-->
+          <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+        <!--</record>-->
+  <!--</data>-->
+
+
+</odoo>
+

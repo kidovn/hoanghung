@@ -39,7 +39,7 @@
         <field name="name">Thống kê số liệu nguồn</field>
         <field name="model_id">intern.report</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create_info:month'],
+        <field name="context">{'group_by': ['date_enter_source:month'],
                                 'measures': ['enter_source_short','enter_source_long','enter_source_bcd',
                                                 'escape_source']}</field>
     </record>
@@ -77,7 +77,7 @@
         <field name="view_id"></field>
          <field name="context">{'search_default_month':1,
              'pivot_measures': ['gender','date_of_birth_short','province',
-            'promoted','confirm_exam','escape_exam','pass_exam','preparatory_exam','cancel_pass','year_expire','job_vi'
+            'promoted','confirm_exam','issues_raise','pass_exam','preparatory_exam','cancel_pass','year_expire','job_vi'
              ,'dispatchcom','departure','date_departure','recruitment_employee','room_recruitment']}</field>
     </record>
 
@@ -118,7 +118,7 @@
         <field name="name">Danh sách rút bỏ thi tuyển</field>
         <field name="model_id">intern.internclone</field>
         <field name="user_id" eval="False"/>
-        <field name="domain">[('escape_exam','=',True)]</field>
+        <field name="domain">[('issues_raise','=',True)]</field>
         <field name="context">{'group_by': ['intern_id'],
                                 'measures': ['date_of_birth_short','province',
                                                 'recruitment_employee','invoice_id']}</field>
@@ -146,7 +146,7 @@
     </record>
 
     <menuitem id="menu_report_root"
-        name="Báo cáo" />
+        name="Báo cáo" groups="hh_intern.group_manager,hh_intern.group_ks_user,hh_intern.group_user,hh_intern.group_hs_user,hh_intern.group_tc_user"/>
 
     <!--<menuitem id="menu_report_list" name="Danh sách mẫu báo cáo" parent="menu_report_root"-->
         <!--action="action_report_list"/>-->
@@ -165,6 +165,7 @@
     <record id="action_invoice_report" model="ir.actions.act_window">
         <field name="name">Đơn hàng</field>
         <field name="res_model">intern.invoice</field>
+        <field name="domain">[('hoso_created','!=',True)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">pivot_extend</field>
         <field name="view_ids" eval="[(5, 0, 0),
@@ -176,4 +177,15 @@
 
     <menuitem id="report_invoice" name="Thống kê đơn hàng" parent="menu_report_root"
               action="action_invoice_report"/>
+
+    <record id="filter_invoice_progress" model="ir.filters">
+        <field name="name">Tiến độ đơn hàng</field>
+        <field name="model_id">intern.invoice</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('hoso_created','!=',True),('status','!=',2),('status','!=',3),('status','!=',6),('status','!=',7)]</field>
+        <field name="context">{'group_by': ['custom_id'],
+                                'measures': ['custom_id_2','name','room_pttt',
+                                                'room_td_care','date_confirm_form','date_exam_short','number_man',
+                                            'number_women','source_total','count_form','count_form_exam','note_report']}</field>
+    </record>
 </odoo>

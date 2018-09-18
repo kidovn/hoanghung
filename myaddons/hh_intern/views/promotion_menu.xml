@@ -2,6 +2,7 @@
     <record model="ir.actions.act_window" id="action_promotion_invoice_history">
         <field name="name">Đơn hàng</field>
         <field name="res_model">intern.invoice</field>
+        <field name="domain">[('hoso_created','!=',True)]</field>
         <field name="view_mode">tree,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),

@@ -33,6 +33,7 @@
             </thead>
             <tfoot>
                 <tr>
+                    <!--<td ><button class="o_list_download_excel">Tải</button></td>-->
                     <td/>
                     <td t-if="options.selectable"/>
                     <td t-foreach="aggregate_columns" t-as="column" t-att-data-field="column.id" t-att-title="column.label">
@@ -41,6 +42,7 @@
                 </tr>
             </tfoot>
         </table>
+
     </div>
 
     <t t-name="ListViewNew.rowsnew">
@@ -72,10 +74,11 @@
 
 
 
+
     <tr t-name="ListViewNew.row"
             t-att-data-id="record.get('id')"
             t-attf-style="#{(view.fonts || view.colors) ? view.style_for(record) : ''}"
-            t-attf-bgcolor="#{record.get('condition_count') == 20 ? '#3fe28b' : '#FFFFFF'}"
+            t-attf-bgcolor="#{record.get('condition_count') == 20 ? '#88c66f' : '#FFFFFF'}"
             t-attf-class="#{view.compute_decoration_classnames(record)}">
         <t t-set="asData" t-value="record.toForm().data"/>
         <td><t t-esc="counter"/></td>

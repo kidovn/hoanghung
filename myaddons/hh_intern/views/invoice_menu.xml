@@ -7,10 +7,11 @@
     <record model="ir.actions.act_window" id="action_invoice_history">
         <field name="name">Đơn hàng</field>
         <field name="res_model">intern.invoice</field>
+        <field name="domain">[('hoso_created','!=',True)]</field>
         <field name="view_mode">tree,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_generate')})]"/>
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_doc_generate_clone')})]"/>
         <field name="context">{'default_status': 1,'search_default_not_done_filter':1}</field>
     </record>
 
@@ -25,6 +26,7 @@
     <record model="ir.actions.act_window" id="action_invoice_manage_doingoai">
         <field name="name">Đơn hàng</field>
         <field name="res_model">intern.invoice</field>
+        <field name="domain">[('hoso_created','!=',True)]</field>
         <field name="view_mode">tree,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('view_invoice_history_tree')}),

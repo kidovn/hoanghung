@@ -26,3 +26,7 @@ class Province(models.Model):
             return recs.name_get()
         else:
             return super(Province, self).name_search(name, args, operator, limit)
+
+class JapanProvince(models.Model):
+    _name = 'japan.province'
+    name = fields.Char('Tên tỉnh')

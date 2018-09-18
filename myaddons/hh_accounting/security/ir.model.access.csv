@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_intern_accounting,intern_accounting,hh_intern.model_intern_intern,group_accounting_user,1,1,0,0
+access_internks_accounting,intern_accounting ks,hh_intern.model_intern_internks,group_accounting_user,1,1,0,0
+access_internhs_accounting,intern_accounting hs,hh_intern.model_intern_internhs,group_accounting_user,1,1,0,0
+access_interndn_accounting,intern_accounting dn ,hh_intern.model_intern_interndn,group_accounting_user,1,1,0,0
+access_invoice_accounting,intern_invoice ,hh_intern.model_intern_invoice,group_accounting_user,1,1,0,0
+access_employee_accounting,hh_employee ,hh_intern.model_hh_employee,group_accounting_user,1,1,0,0
+access_intern_deposit_history,intern_accounting ,model_intern_deposit_history,,1,1,1,0

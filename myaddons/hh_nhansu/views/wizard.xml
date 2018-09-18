@@ -1,0 +1,36 @@
+<odoo>
+    <record id="dialog_employee_resign" model="ir.ui.view">
+        <field name="name">hh.employee.wizard</field>
+        <field name="model">hh.employee.wizard</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <group>
+                        <field name="date_resign" style="width:300px" />
+                        <field name="date_confirm_resign" style="width:300px" />
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="confirm_request"
+                        string="OK" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel"
+                        class="btn-default"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialog_employee_resign" model="ir.actions.act_window">
+        <field name="name">Confirm action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hh.employee.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dialog_employee_resign"/>
+        <!--<field name="context">{'action': context.get('action', False)}</field>-->
+        <field name="target">new</field>
+    </record>
+</odoo>

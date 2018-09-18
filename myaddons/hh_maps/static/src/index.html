@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+   <head>
+      <title>Image map</title>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+      <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+      <script src="script.js"></script>
+      <link rel="stylesheet" type="text/css" href="/hh_maps/static/src/style.css"/>
+     <style>
+      @page { size: auto;  margin: 0mm;}
+      </style>
+   </head>
+   <body style="-webkit-print-color-adjust: exact;">
+      <button class="print_btn" style="padding-left:15px;padding-right:15px;margin-left:100px;background:lightskyblue" onclick="PrintDoc()">In</button>
+      <div class="content">
+         <div class="header" style="display: table;width: 100%;">
+            <div style="display: table-cell;width:20%">
+               <img src="/hh_maps/static/src/hoanghung.png" alt="Logo" style="padding-left: 50px;">
+            </div>
+            <div style="display: table-cell;width:auto;vertical-align:top">
+            <h1 style="text-align:center"></h1>
+            </div>
+            <div style="display: table-cell;width:20%;vertical-align:top">
+            <p style="">実習生出身地参考地図</p>
+            </div>
+         </div>
+         <br/>
+         <div class="page_content">
+            <div class="cell">
+               <div id="element"></div>
+            </div>
+         </div>
+      </div>
+      <script>
+         $(function() {
+
+           var img_src = 'vnm.jpg';
+
+           var imageMarker = $("#element").imageMarker({src: img_src, drag_disabled: false});
+
+           var id = 'id';
+           if(id=(new RegExp('[?&]'+encodeURIComponent(id)+'=([^&]*)')).exec(location.search))
+               id= id[1];
+           $.get('/odoo/maps?invoice='+id, function(data) {
+
+
+              var jsondata = JSON.parse(data);
+              $("h1").html(jsondata.title);
+              jsondata.data.forEach(function(m) {
+
+                   $(imageMarker).trigger('add_marker', m);
+
+              })
+
+           });
+
+           // var data = '[{"tts": "13,40", "tieng_viet": "Thái Bình", "tieng_nhat": "タイ・ビン", "className":"green","pos":{"x":330,"y":170}, "col":2, "avatars": {"13": "http://117.4.241.17:8069/odoo/get_avatar?intern=223", "40": "http://117.4.241.17:8069/odoo/get_avatar?intern=405"}}, {"tts": "8,12,20,24,37", "tieng_viet": "Phú Thọ", "tieng_nhat": "フー・ト", "className":"green","pos":{"x":252,"y":122}, "className":"green","pos":{"x":252,"y":122}, "col":1, "avatars": {"24": "http://117.4.241.17:8069/odoo/get_avatar?intern=307", "8": "http://117.4.241.17:8069/odoo/get_avatar?intern=323", "12": "http://117.4.241.17:8069/odoo/get_avatar?intern=357", "20": "http://117.4.241.17:8069/odoo/get_avatar?intern=302", "37": "http://117.4.241.17:8069/odoo/get_avatar?intern=401"}}, {"tts": "5,7,9,11,18,27,33,34,42", "tieng_viet": "Nghệ An", "tieng_nhat": "ゲ・アン", "className":"green","pos":{"x":264,"y":252}, "col":1,"avatars": {"11": "http://117.4.241.17:8069/odoo/get_avatar?intern=358", "27": "http://117.4.241.17:8069/odoo/get_avatar?intern=349", "33": "http://117.4.241.17:8069/odoo/get_avatar?intern=371", "18": "http://117.4.241.17:8069/odoo/get_avatar?intern=295", "42": "http://117.4.241.17:8069/odoo/get_avatar?intern=324", "34": "http://117.4.241.17:8069/odoo/get_avatar?intern=370", "5": "http://117.4.241.17:8069/odoo/get_avatar?intern=313", "7": "http://117.4.241.17:8069/odoo/get_avatar?intern=320", "9": "http://117.4.241.17:8069/odoo/get_avatar?intern=328"}}, {"tts": "30", "tieng_viet": "Hải Phòng", "tieng_nhat": "ハイ・フォン", "className":"green","pos":{"x":420,"y":532}, "col":2, "avatars": {"30": "http://117.4.241.17:8069/odoo/get_avatar?intern=362"}}, {"tts": "2,15,32,39", "tieng_viet": "Bắc Giang", "tieng_nhat": "バク・ザン", "className":"green","pos":{"x":420,"y":532}, "col":2,"avatars": {"32": "http://117.4.241.17:8069/odoo/get_avatar?intern=373", "39": "http://117.4.241.17:8069/odoo/get_avatar?intern=406", "2": "http://117.4.241.17:8069/odoo/get_avatar?intern=301", "15": "http://117.4.241.17:8069/odoo/get_avatar?intern=368"}}, {"tts": "16", "tieng_viet": "Nam Định", "tieng_nhat": "ナム・ディン", "className":"green","pos":{"x":323,"y":186}, "col":2, "avatars": {"16": "http://117.4.241.17:8069/odoo/get_avatar?intern=309"}}, {"tts": "21", "tieng_viet": "Ninh Bình", "tieng_nhat": "ニン・ビン", "className":"green","pos":{"x":296,"y":186}, "col":2, "avatars": {"21": "http://117.4.241.17:8069/odoo/get_avatar?intern=354"}}, {"tts": "4,23,26", "tieng_viet": "Hải Dương", "tieng_nhat": "ハイ・ズオン", "className":"green","pos":{"x":329,"y":146}, "col":2,"avatars": {"26": "http://117.4.241.17:8069/odoo/get_avatar?intern=317", "4": "http://117.4.241.17:8069/odoo/get_avatar?intern=305", "23": "http://117.4.241.17:8069/odoo/get_avatar?intern=352"}}, {"tts": "19,22,25", "tieng_viet": "Hà Nội", "tieng_nhat": "ハノイ", "className":"green","pos":{"x":290,"y":142}, "col":2, "avatars": {"19": "http://117.4.241.17:8069/odoo/get_avatar?intern=355", "25": "http://117.4.241.17:8069/odoo/get_avatar?intern=350", "22": "http://117.4.241.17:8069/odoo/get_avatar?intern=314"}}, {"tts": "41", "tieng_viet": "Quảng Trị", "tieng_nhat": "クアン・チ","className":"green","pos":{"x":369,"y":397}, "col":1, "avatars": {"41": "http://117.4.241.17:8069/odoo/get_avatar?intern=398"}}, {"tts": "1,14,36", "tieng_viet": "Hà Tĩnh", "tieng_nhat": "ハー・ティン", "className":"green","pos":{"x":293,"y":302}, "col":2, "avatars": {"1": "http://117.4.241.17:8069/odoo/get_avatar?intern=298", "14": "http://117.4.241.17:8069/odoo/get_avatar?intern=366", "36": "http://117.4.241.17:8069/odoo/get_avatar?intern=400"}}, {"tts": "3,6", "tieng_viet": "Quảng Bình", "tieng_nhat": "クアン・ビン", "className":"green","pos":{"x":335,"y":360}, "avatars": {"3": "http://117.4.241.17:8069/odoo/get_avatar?intern=304", "6": "http://117.4.241.17:8069/odoo/get_avatar?intern=237"}}, {"tts": "17", "tieng_viet": "Quảng Ngãi", "tieng_nhat": "クアン・ガイ", "className":"green","pos":{"x":470,"y":507}, "col":2, "avatars": {"17": "http://117.4.241.17:8069/odoo/get_avatar?intern=308"}}, {"tts": "10", "tieng_viet": "Lào Cai", "tieng_nhat": "ラオ・カイ", "className":"green","pos":{"x":192,"y":62}, "col":1, "avatars": {"10": "http://117.4.241.17:8069/odoo/get_avatar?intern=330"}}, {"tts": "28,29,35", "tieng_viet": "Thanh Hóa", "tieng_nhat": "タイン・ホア", "className":"green","pos":{"x":280,"y":200}, "col":2, "avatars": {"28": "http://117.4.241.17:8069/odoo/get_avatar?intern=351", "29": "http://117.4.241.17:8069/odoo/get_avatar?intern=36", "35": "http://117.4.241.17:8069/odoo/get_avatar?intern=375"}}, {"tts": "31", "tieng_viet": "Bắc Cạn", "tieng_nhat": "バク・カン", "className":"green","pos":{"x":420,"y":532}, "col":1, "avatars": {"31": "http://117.4.241.17:8069/odoo/get_avatar?intern=322"}}, {"tts": "38", "tieng_viet": "Kon Tum", "tieng_nhat": "コン・トゥム", "className":"green","pos":{"x":420,"y":532}, "col":1,"avatars": {"38": "http://117.4.241.17:8069/odoo/get_avatar?intern=403"}}]';
+
+              //$.getJSON('http://117.4.241.17:8069/odoo/maps?invoice=63', function(data) {
+
+              //var jsdata = data;
+
+             //});
+
+
+
+         });
+      </script>
+      <script>
+         function PrintDoc()
+         {
+             var printButton = document.getElementsByClassName("print_btn")[0];
+             //Set the print button visibility to 'hidden'
+             printButton.style.visibility = 'hidden';
+             window.print();
+             printButton.style.visibility = 'visible';
+
+         }
+      </script>
+   </body>
+</html>

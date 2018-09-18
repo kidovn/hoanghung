@@ -1,0 +1,341 @@
+<odoo>
+    <record id="hh_candidate_form" model="ir.ui.view">
+        <field name="name">Candidate form</field>
+        <field name="model">hh.candidate</field>
+         <field name="arch" type="xml">
+             <form>
+                 <field name="care" invisible="1"/>
+                 <table class="o_group">
+                     <tbody>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="250px">
+                                <field name="name"/>
+                                <field name="name_without_signal" invisible="1"/>
+                            </td>
+                         </tr>
+                     </tbody>
+                 </table>
+                 <!--<notebook>-->
+                    <!--<page string="Thông tin cơ bản">-->
+                         <table class="o_group">
+                             <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin cơ bản của ứng viên:</caption>
+                             <tbody>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="birth_day" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <div class="column">
+                                             <field name="birth_day" style="width: 50px; display: inline-block" placeholder="Ngày" data-inputmask="'mask': '99'"/>
+                                             <field name="birth_month" style="width: 70px; display: inline-block" placeholder="Tháng"/>
+                                             <field name="birth_year" style="width:50px" placeholder="Năm"/>
+                                         </div>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="gender" />
+                                     </td>
+                                     <td colspan="1" width="200px">
+                                        <div class="column">
+                                            <field name="gender" style="width: 150px;"/>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="school_name" />
+                                     </td>
+                                     <td colspan="1" width="200px">
+                                        <div class="column">
+                                            <field name="school_name"/>
+                                        </div>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="foreign_language" />
+                                     </td>
+                                     <td colspan="1" width="200px">
+                                        <div class="column">
+                                            <field name="foreign_language" style="width: 200px;"/>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="province" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                        <div class="column">
+                                            <field name="province"/>
+                                        </div>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="current_job" />
+                                     </td>
+                                     <td colspan="1" width="550px">
+                                        <div class="column">
+                                            <field name="current_job" style="width: 200px;inline-block"/>
+                                            <label for="current_job_other" string="Chi tiết:" style=" display: inline-block"/>
+                                            <field name="current_job_other" style="width: 220px; display: inline-block" attrs="{'invisible':[('current_job','!=','5')]}"/>
+                                        </div>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                    <!--</page>-->
+                     <!--<page string="Thông tin ứng tuyển">-->
+                        <table class="o_group">
+                            <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin ứng tuyển:</caption>
+                             <tbody>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="cooperate_type" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="cooperate_type"/>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="aspiration" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="aspiration"/>
+                                     </td>
+
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="position_apply" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="position_apply"/>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="date_apply" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="date_apply"/>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="employee_care" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="employee_care" options="{'no_quick_create': True,'no_create': True, 'no_create_edit':True}"/>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="date_interview" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="date_interview"/>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="interviewers" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="interviewers"/>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="result" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="result"/>
+                                     </td>
+                                 </tr>
+                                 <tr >
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="schedule_call_back" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="schedule_call_back"/>
+                                     </td>
+                                     <td colspan="1" width="150px" class="columnDivider" attrs="{'invisible':[('result','!=','1')]}">
+                                         <label for="date_start_working" />
+                                     </td>
+                                     <td colspan="1" width="250px" attrs="{'invisible':[('result','!=','1')]}">
+                                         <field name="date_start_working"/>
+                                     </td>
+                                 </tr>
+                                 <!--<tr>-->
+                                     <!---->
+                                 <!--</tr>-->
+                             </tbody>
+                        </table>
+                     <!--</page>-->
+                     <!--<page string="Thông tin liên lạc">-->
+                         <table class="o_group">
+                             <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin liên lạc:</caption>
+                             <tbody>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="phone_number" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="phone_number"/>
+                                     </td>
+
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="email" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="email" widget="email"/>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="facebook" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                         <field name="facebook"/>
+                                     </td>
+                                 </tr>
+
+                                 <tr>
+                                     <td colspan="1" width="150px" class="columnDivider">
+                                         <label for="address" />
+                                     </td>
+                                     <td colspan="1" width="250px">
+                                        <div class="column">
+                                            <field name="address"/>
+                                        </div>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     <!--</page>-->
+                 <!--</notebook>-->
+                 <notebook>
+                     <page string="Ghi chú">
+                         <field name="notes">
+                             <tree editable="bottom" delete="false">
+                                 <field name="name"/>
+                             </tree>
+                         </field>
+                     </page>
+                 </notebook>
+             </form>
+         </field>
+    </record>
+
+    <record id ="hh_candidate_tree" model="ir.ui.view">
+         <field name="name">Candidate Tree</field>
+         <field name="model">hh.candidate</field>
+         <field name="arch" type="xml">
+             <tree>
+                  <field name="name"/>
+                  <field name="birth_year" style="width:50px" placeholder="Năm"/>
+                  <field name="position_apply" />
+                  <field name="date_apply" />
+                  <field name="date_interview" />
+                  <field name="result" />
+                  <field name="date_start_working" />
+             </tree>
+         </field>
+    </record>
+
+    <record id="hh_candidate_search" model="ir.ui.view">
+        <field name="name">Candidate search</field>
+        <field name="model">hh.candidate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="position_apply"/>
+                <field name="foreign_language"/>
+                <field name="province"/>
+                <field name="phone_number"/>
+                <field name="birth_year"/>
+                <filter name="create_today" string="Được tạo hôm nay" domain="[('create_date','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),('create_date','&lt;=',time.strftime('%Y-%m-%d 23:59:59'))]"/>
+                <filter name="prepare_start_working" string="Sắp đi làm" domain="[('result','=','1'),('date_notice_user','=',time.strftime('%Y-%m-%d'))]"/>
+                <filter name="start_working_today" string="Đi làm hôm nay" domain="[('date_start_working','=',time.strftime('%Y-%m-%d'))]"/>
+                <filter name="need_contact" string="Cần liên lạc lại hôm nay" domain="[('schedule_call_back','!=',False),('schedule_call_back','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),('schedule_call_back','&lt;=',time.strftime('%Y-%m-%d 23:59:59'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--<record id="event_form_schedule" model="ir.ui.view">-->
+        <!--<field name="name">hh.event.form</field>-->
+        <!--<field name="model">hh.event</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<form string="Meetings">-->
+                <!--<sheet>-->
+                    <!--<field name="state" invisible="1"/>-->
+                    <!--<div class="oe_title">-->
+                        <!--&lt;!&ndash;<div class="oe_edit_only">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<label for="name"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<h1>&ndash;&gt;-->
+                        <!--<field name="name" />-->
+                        <!--&lt;!&ndash;</h1>&ndash;&gt;-->
+                        <!--<label for="partner_ids" string="Attendees" class="oe_edit_only"/>-->
+                        <!--<h2>-->
+                            <!--<field name="partner_ids"-->
+                                <!--placeholder="Select attendees..."-->
+                                <!--class="oe_inline" widget="many2many_tags"/>-->
+                        <!--</h2>-->
+                    <!--</div>-->
+                    <!--<notebook>-->
+                        <!--<page string="Meeting Details">-->
+                            <!--<group>-->
+                                <!--<group>-->
+                                    <!--<field name="start" attrs="{'invisible': True}"/>-->
+                                    <!--<field name="stop" attrs="{'invisible': True}"/>-->
+                                    <!--<field name="id" attrs="{'invisible': True}"/>-->
+
+                                    <!--<field name="start_datetime" string="Starting at"/>-->
+                                    <!--<field name="stop_datetime" invisible="1"/>-->
+                                <!--</group>-->
+                                <!--<group>-->
+                                    <!--<field name="alarm_ids" widget="many2many_tags" />-->
+                                    <!--<field name="description"/>-->
+                                    <!--<field name="action"/>-->
+                                    <!--<field name="action_id"/>-->
+                                <!--</group>-->
+
+                            <!--</group>-->
+                        <!--</page>-->
+                    <!--</notebook>-->
+                <!--</sheet>-->
+            <!--</form>-->
+        <!--</field>-->
+    <!--</record>-->
+    <record id="facebook_candidate_create" model="ir.ui.view">
+        <field name="name">Candidate form</field>
+        <field name="model">hh.candidate</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="facebook"/>
+                        <field name="care"/>
+                        <field name="cooperate_type"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Giới thiệu người quan tâm">
+                        <field name="people_care" class="people_care">
+                            <tree class="people_care">
+                                <field name="name"/>
+                                <field name="cooperate_type"/>
+                                <field name="current_job"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <notebook>
+                    <page string="Ghi chú">
+                        <field name="notes">
+                            <tree editable="bottom" delete="false">
+                                 <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+
+    </record>
+</odoo>

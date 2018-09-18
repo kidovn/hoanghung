@@ -1,0 +1,82 @@
+<!-- Description -->
+<section class="oe_container">
+ <div class="oe_row oe_spaced">
+  <div class="oe_span12">
+   <h2 class="oe_slogan" style="color:#428bca">
+    Popup Notifications
+   </h2>
+   <h3 class="oe_slogan" style="color:#428bca">
+    Use popup notification to develop your modules
+   </h3>
+  </div>
+  <div class="oe_span12">
+   <p class="oe_mt32">
+    The app is a tool of generating popups similar to calendar events alarims in your own modules:
+   </p>
+   <p class="oe_mt32">
+    <ul>
+     <li class="oe_mt16">
+      Popup is generated Odoo for users
+     </li>
+     <li class="oe_mt16">
+      Popup is invoked each 3 minutes by standard Odoo javascript cron jobs
+     </li>
+     <li class="oe_mt16">
+      You may close the popup just by clicking "Ok"
+     </li>
+     <li class="oe_mt16">
+      Notifications do not depend on a definite object. You may create in any place disregarding Odoo models
+     </li>
+    </ul>
+   </p>
+  </div>
+ </div>
+</section>
+<section class="oe_container oe_dark">
+ <div class="oe_row oe_spaced">
+  <div class="oe_span12">
+   <h3 class="oe_slogan" style="color:#428bca">
+    Example of use
+   </h3>
+  </div>
+  <div class="oe_span12">
+   <p class="oe_mt32">
+    <code>
+     values = {'status': 'draft','title': u'Be notified about','message': "Do not forget to send notification in  21.04.17",'partner_ids': [(6, 0, [1, 2, 3])]}
+    </code>
+    <code>
+     self.env['popup.notification'].create(values)
+    </code>
+   </p>
+  </div>
+ </div>
+</section>
+<!-- Recomendations -->
+<!-- About us -->
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Support Info</h2>
+        </div>
+        <div class="oe_span12 oe_mt16 oe_centeralign">
+            <ul style='list-style:None'>
+                <li class="oe_mt16">
+                    <big><big>
+                        <a href="https://odootools.com/page/website.contactus"><i class="fa fa-bell-o"></i> Contact us for bug fixing</a>
+                    </big></big>
+                </li>
+                <li class="oe_mt16">
+                    <big><big>
+                        <a href="https://odootools.com/odoo-wishlist"><i class="fa fa-heart"></i> Request new app features (wishlist)</a>
+                    </big></big>
+                </li>
+                <li class="oe_mt16">
+                    <big><big>
+                        <a href="https://odootools.com/"><i class="fa fa-wrench"></i> About developers</a>
+                    </big></big>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

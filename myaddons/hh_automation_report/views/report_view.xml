@@ -1,0 +1,170 @@
+<odoo>
+
+     <record id="view_target_hunt_report" model="ir.ui.view">
+        <field name="name">Target Report</field>
+        <field name="model">hoanghung.report</field>
+        <field name="arch" type="xml">
+            <form string="Choose your details">
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
+                                 <label for="start_date" style="font-weight: bold;margin-right: 0px;" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="start_date" style="width: 50px;"/>
+                                </div>
+                            </td>
+                            <td/>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
+                                 <label for="end_date" style="font-weight: bold;margin-right: 0px;"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="end_date" style="width: 50px;"/>
+                                </div>
+                            </td>
+                            <td/>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
+                                 <label for="month" style="font-weight: bold;margin-right: 0px;" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="month" style="width: 50px; display:inline-block"/>
+                                    <field name="year" style="width: 50px;"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <footer>
+                    <button name="print_xls_report" string="Print Report" type="object"  class="oe_highlight"  />
+
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_dialog_config_report" model="ir.actions.act_window">
+        <field name="name">Confirm action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hoanghung.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_target_hunt_report"/>
+        <!--<field name="context">{'action': context.get('action', False)}</field>-->
+        <field name="target">new</field>
+    </record>
+
+    <record id="hh_actionreport_view" model="ir.ui.view">
+        <field name="model">hh.actionreport</field>
+        <field name="arch" type="xml">
+            <form string="Config">
+                <header>
+                    <button name="%(hh_automation_report.action_dialog_config_report)d" string="In Bao cao" type="action" class="oe_highlight"/>
+                    <button name="method_direct_trigger" type="object" string="Gửi ngay bây giờ" class="oe_highlight"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="custom_id"/>
+                        <field name="name" string='Tên báo cáo'/>
+                        <field name="nextcall"/>
+                    </group>
+                    <group>
+                        <field name="active"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Thiết lập">
+                        <group>
+                            <field name="emails"/>
+                            <field name="emails_cc"/>
+                            <field name="subject"/>
+                            <field name="report_type" options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                        </group>
+                        <table class="o_group o_inner_group">
+                            <tbody>
+                                <tr>
+                                    <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
+                                         <label for="interval_number" style="font-weight: bold;margin-right: 0px;" string="Lặp lại mỗi"/>
+                                    </td>
+                                    <td colspan="1" width="200px">
+                                        <div class="column">
+                                            <field name="interval_number" style="width: 50px; display: inline-block"/>
+                                            <field name="interval_type" style="width: 130px; display: inline-block"/>
+                                        </div>
+                                    </td>
+                                    <td/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </page>
+                    <page string="Nội dung">
+                        <field name="body_content" widget="html" options="{'style-inline': true}"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="hh_actionreport_tree" model="ir.ui.view">
+        <field name="model">hh.actionreport</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="subject"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="hh_invoice_report_view" model="ir.ui.view">
+        <field name="model">hh.invoice.report</field>
+        <field name="arch" type="xml">
+            <form string="Config">
+                <!--<header>-->
+                    <!--<button name="%(hh_automation_report.action_dialog_config_report)d" string="In Bao cao" type="action" class="oe_highlight"/>-->
+                <!--</header>-->
+                 <group>
+                    <group>
+                        <field name="custom_id" groups='base.group_erp_manager'/>
+                        <field name="name" string='Tên báo cáo'/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Thiết lập">
+                        <group>
+                            <field name="emails"/>
+                            <field name="emails_cc"/>
+                            <field name="subject"/>
+                            <field name="report_type" options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                        </group>
+                    </page>
+                    <page string="Nội dung">
+                        <field name="body_content" widget="html" options="{'style-inline': true}"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="hh_invoice_report_tree" model="ir.ui.view">
+        <field name="model">hh.invoice.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="subject"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

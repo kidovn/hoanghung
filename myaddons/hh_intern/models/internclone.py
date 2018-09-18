@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import intern_utils
 import logging
 _logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ class InternInvoice(models.Model):
     _name = 'intern.internclone'
     _inherits = {'intern.intern': 'intern_id'}
 
-    _description = 'Thực tập sinh'
+    _description = 'TTS theo đơn hàng'
 
     _order = 'id desc'
 
@@ -82,6 +83,10 @@ class InternInvoice(models.Model):
     cancel_pass = fields.Boolean('Huỷ trúng tuyển')
 
     reason_cancel_pass = fields.Char('Lý do huỷ TT')
+
+    reason_cancel_bool = fields.Selection([('1','Do TTS'),('2','Không phải do TTS')],string='Lý do huỷ TT')
+
+    date_cancel_pass = fields.Date('Ngày huỷ trúng tuyển')
 
 
     # #phat sinh trc thi tuyen
@@ -150,7 +155,7 @@ class InternInvoice(models.Model):
     #             obj.current_status=""
     exam = fields.Boolean('Đã chốt thi')
     done_exam = fields.Boolean('Đã thi')
-    cancel_exam = fields.Boolean('Đã huỷ')
+    cancel_exam = fields.Boolean('Đã huỷ') #DON HANG BI HUY
 
     sequence_exam = fields.Integer('sequence', help="Sequence for the handle.",default=100)
     sequence_pass = fields.Integer('sequence', help="Sequence for the handle.",default=100)
@@ -162,6 +167,11 @@ class InternInvoice(models.Model):
                 vals['date_escape_exam'] = fields.date.today()
             else:
                 vals['date_escape_exam'] = False
+        if 'cancel_pass' in vals:
+            if vals['cancel_pass']:
+                vals['date_cancel_pass'] = fields.date.today()
+            else:
+                vals['date_cancel_pass'] = False
         if 'comeback' in vals:
             if vals['comeback']:
                 vals['date_comback'] = fields.date.today()
@@ -172,6 +182,12 @@ class InternInvoice(models.Model):
                 vals['date_liquidated'] = fields.date.today()
             else:
                 vals['date_liquidated'] = False
+        if 'promoted' in vals:
+            if vals['promoted']:
+                vals['datetime_promoted'] = datetime.now() + relativedelta(hours=7)
+            else:
+                vals['datetime_promoted'] = False
+
         record = super(InternInvoice, self).create(vals)
         return record
 
@@ -182,6 +198,11 @@ class InternInvoice(models.Model):
                 vals['date_escape_exam'] = fields.date.today()
             else:
                 vals['date_escape_exam'] = False
+        if 'cancel_pass' in vals:
+            if vals['cancel_pass']:
+                vals['date_cancel_pass'] = fields.date.today()
+            else:
+                vals['date_cancel_pass'] = False
         if 'departure' in vals:
             if vals['departure']:
                 vals['date_departure'] = fields.date.today()
@@ -192,6 +213,12 @@ class InternInvoice(models.Model):
                 vals['date_join_school'] = fields.date.today()
             else:
                 vals['date_join_school'] = False
+        if 'promoted' in vals:
+            if vals['promoted']:
+                vals['datetime_promoted'] = datetime.now() + relativedelta(hours=7)
+            else:
+                vals['datetime_promoted'] = False
+
         super(InternInvoice, self).write(vals)
 
     #danh sach xin tclt
@@ -232,9 +259,25 @@ class InternInvoice(models.Model):
     @api.onchange('time_start_at_pc_from_month', 'time_start_at_pc_from_year')
     def compute_time_at_pc(self):
         for rec in self:
-            if rec.invoice_id:
+            if rec.invoice_id_hs:
+                if rec.invoice_id_hs.month_create_letter_promotion and rec.invoice_id_hs.year_create_letter_promotion \
+                        and rec.time_start_at_pc_from_month and rec.time_start_at_pc_from_year:
+                    try:
+                        total_month = (int(rec.invoice_id_hs.year_create_letter_promotion) - int(
+                            rec.time_start_at_pc_from_year)) * 12 + int(
+                            rec.invoice_id_hs.month_create_letter_promotion) - int(rec.time_start_at_pc_from_month)
+                        rec.time_at_pc_month = '%d' % (total_month % 12)
+                        rec.time_at_pc_year = '%d' % (total_month / 12)
+                    except Exception:
+                        rec.time_at_pc_month = False
+                        rec.time_at_pc_year = False
+
+                else:
+                    rec.time_at_pc_month = False
+                    rec.time_at_pc_year = False
+            elif rec.invoice_id:
                 if rec.invoice_id.month_create_letter_promotion and rec.invoice_id.year_create_letter_promotion \
-                    and rec.time_start_at_pc_from_month and rec.time_start_at_pc_from_year:
+                            and rec.time_start_at_pc_from_month and rec.time_start_at_pc_from_year:
                     try:
                         total_month = (int(rec.invoice_id.year_create_letter_promotion) - int(rec.time_start_at_pc_from_year))*12 + int(rec.invoice_id.month_create_letter_promotion) - int(rec.time_start_at_pc_from_month)
                         rec.time_at_pc_month = total_month%12
@@ -246,6 +289,7 @@ class InternInvoice(models.Model):
                 else:
                     rec.time_at_pc_month = False
                     rec.time_at_pc_year = False
+
 
     # @api.multi
     # @api.onchange('time_start_at_pc_from_month','time_start_at_pc_from_year','month_create_letter_promotion','year_create_letter_promotion')
@@ -359,3 +403,10 @@ class InternInvoice(models.Model):
             else:
                 rec.show_specialized = False
 
+
+    #use for split invoice
+    invoice_id_hs = fields.Many2one("intern.invoice", string='Đơn hàng', ondelete='restrict', index=True)
+
+    place_to_work = fields.Many2one('japan.province',string='Địa điểm làm việc')
+
+    datetime_promoted = fields.Datetime('Ngày tiến cử')

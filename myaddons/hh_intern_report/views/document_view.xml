@@ -1,10 +1,10 @@
 <odoo>
 
-    <template id="invoice_assets" name="module_name assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/hh_intern_report/static/src/js/mylistview.js"/>
-        </xpath>
-    </template>
+    <!--<template id="invoice_assets" name="module_name assets" inherit_id="web.assets_backend">-->
+        <!--<xpath expr="." position="inside">-->
+            <!--<script type="text/javascript" src="/hh_intern_report/static/src/js/mylistview.js"/>-->
+        <!--</xpath>-->
+    <!--</template>-->
 
 
     <record id="view_tree_document" model="ir.ui.view">

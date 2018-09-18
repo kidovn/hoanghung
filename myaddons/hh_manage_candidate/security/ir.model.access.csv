@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hh_candidate_manager,hh_candidate manager,model_hh_candidate,group_candidate_manager,1,1,1,1
+access_hh_candidate_hunter,hh_candidate hunter,model_hh_candidate,group_candidate_hunter,1,1,1,1
+access_hh_candidate_note,hh_candidate_note manager,model_hh_candidate_note,,1,1,1,1
+access_hh_event,hh_event manager,hh_schedule_notification.model_hh_event,,1,1,1,1
+access_hh_employee_manager,hh_employee manager,hh_intern.model_hh_employee,group_candidate_manager,1,0,0,0
+access_hh_employee_hunter,hh_employee hunter,hh_intern.model_hh_employee,group_candidate_hunter,1,0,0,0

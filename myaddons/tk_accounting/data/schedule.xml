@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="ir_cron_scheduler_tk_transaction_process_action" model="ir.cron">
+            <field name="name">Teko Rise Balance Transaction</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(3,)'" name="args" />
+            <field eval="'tk.accounting.transaction'" name="model"/>
+            <field eval="'map2account'" name="function"/>
+            <field name="active">False</field>
+            <field name="update">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_receivable_process_action" model="ir.cron">
+            <field name="name">Teko Receivable Map Process</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(3,)'" name="args" />
+            <field eval="'tk.accounting.transaction'" name="model"/>
+            <field eval="'map2receivable'" name="function"/>
+            <field name="active">False</field>
+            <field name="update">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_receivable_recalculate_balance_action" model="ir.cron">
+            <field name="name">Teko Receivable Recalculate Receivable Balance</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_recalculate_balance'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_receivable_recalculate_money_action" model="ir.cron">
+            <field name="name">Teko Recalculate Money Receivable</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_recalculate_money_receivable'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_receivable_job_mapping_credit_receivable" model="ir.cron">
+            <field name="name">Teko Receivable map credit</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_mapping_credit_receivable'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_transfer_money_process_submitted" model="ir.cron">
+            <field name="name">Teko Transfer Money Process Submitted Item</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(100, )'" name="args" />
+            <field eval="'tk.accounting.transfer.money'" name="model"/>
+            <field eval="'process_submitted_money'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_transfer_money_process_approved" model="ir.cron">
+            <field name="name">Teko Transfer Money Process Approved Item</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(100, )'" name="args" />
+            <field eval="'tk.accounting.transfer.money'" name="model"/>
+            <field eval="'process_approved_transfer'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_transfer_money_process_rejecting" model="ir.cron">
+            <field name="name">Teko Transfer Money Process Rejecting Item</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(100, )'" name="args" />
+            <field eval="'tk.accounting.transfer.money'" name="model"/>
+            <field eval="'process_reject_transfer'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_transfer_money_process_got_money" model="ir.cron">
+            <field name="name">Teko Transfer Money Process Got Money Item</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'(100, )'" name="args" />
+            <field eval="'tk.accounting.transfer.money'" name="model"/>
+            <field eval="'process_got_money_transfer'" name="function"/>
+            <field name="active">False</field>
+        </record>
+
+        <record id="ir_cron_scheduler_tk_receivable_balance_upsert_on_period_time_action" model="ir.cron">
+            <field name="name">Teko Upsert Receivable Balance On Period Time</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'tk.accounting.receivable.balance'" name="model"/>
+            <field eval="'job_upsert_receivable_balance'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_logistic_google_employee_receivable_action" model="ir.cron">
+            <field name="name">Google Sheet Employee Receivable</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'()'" name="args" />
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_show_receivable_employee_to_google_sheet'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_logistic_google_three_pl_receivable_action" model="ir.cron">
+            <field name="name">Google Sheet 3PL Receivable</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'()'" name="args" />
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_show_receivable_three_pl_to_google_sheet'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_account_update_province_action" model="ir.cron">
+            <field name="name">Update KTV and hub province</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'()'" name="args" />
+            <field eval="'tk.accounting.account'" name="model"/>
+            <field eval="'job_update_account_province'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_tk_logistic_google_account_balance_action" model="ir.cron">
+            <field name="name">Google Sheet Account Balance</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'()'" name="args" />
+            <field eval="'tk.accounting.account'" name="model"/>
+            <field eval="'job_show_balance_to_google'" name="function"/>
+            <field name="active">False</field>
+        </record>
+        <record id="ir_cron_scheduler_google_sheet_mapped_receivable_action" model="ir.cron">
+            <field name="name">Google Sheet Mapped Receivable</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'()'" name="args" />
+            <field eval="'tk.accounting.receivable'" name="model"/>
+            <field eval="'job_show_mapped_receivable_to_google_sheet'" name="function"/>
+            <field name="active">False</field>
+        </record>
+    </data>
+</openerp>

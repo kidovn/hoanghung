@@ -1,0 +1,24 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="tk_kien_demo_tree_view">
+            <field name="name">kien.demo.tree</field>
+            <field name="model">kien.demo</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="u_name"/>
+                    <field name="u_password"/>
+                    <field name="display_name"/>
+                    <field name="full_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="tk_app_ktv_v2_employee_view_action_window">
+            <field name="name">Thông tin demo</field>
+            <field name="res_model">kien.demo</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tk_kien_demo_tree_view"/>
+        </record>
+    </data>
+</openerp>

@@ -22,6 +22,8 @@ ranges = [
 
 def no_accent_vietnamese(s):
     # text = s.decode('utf-8')
+    if not s:
+        return ''
     if check_han_language(s):
         return s
     text = re.sub(u'Đ', 'D', s)

@@ -1,0 +1,5 @@
+.family_member [data-id="name"]{width: 4cm;}
+.family_member [data-id="age"]{width: 2cm;}
+.family_member [data-id="birth_year"]{width: 2cm;}
+.family_member [data-id="relationship"]{width: 2cm;}
+.family_member [data-id="phone"]{width: 3cm;}

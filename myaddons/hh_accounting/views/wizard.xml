@@ -1,0 +1,71 @@
+<odoo>
+    <record id="dialog_intern_accounting_deposit_wizard" model="ir.ui.view">
+        <field name="name">intern.accounting.deposit.wizard</field>
+        <field name="model">intern.accounting.deposit.wizard</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <group>
+                        <field name="employee_deposit" style="width:300px" options="{'no_create':True}" domain="[('room_type', '=', '0')]" required="1"/>
+                        <field name="money_deposit" style="width:300px" required="1"/>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="confirm_request"
+                        string="OK" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel"
+                        class="btn-default"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="dialog_intern_accounting_withdraw_wizard" model="ir.ui.view">
+        <field name="name">intern.accounting.withdraw.wizard</field>
+        <field name="model">intern.accounting.withdraw.wizard</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <group>
+                        <field name="employee_withdraw" style="width:300px" options="{'no_create':True}" domain="[('room_type', '=', '0')]" required="1"/>
+                        <!--<field name="money_deposit" style="width:300px" />-->
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="confirm_request"
+                        string="OK" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel"
+                        class="btn-default"
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialog_intern_accounting_deposit" model="ir.actions.act_window">
+        <field name="name">Confirm action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">intern.accounting.deposit.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dialog_intern_accounting_deposit_wizard"/>
+        <!--<field name="context">{'action': context.get('action', False)}</field>-->
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dialog_intern_accounting_withdraw" model="ir.actions.act_window">
+        <field name="name">Confirm action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">intern.accounting.withdraw.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="dialog_intern_accounting_withdraw_wizard"/>
+        <!--<field name="context">{'action': context.get('action', False)}</field>-->
+        <field name="target">new</field>
+    </record>
+</odoo>

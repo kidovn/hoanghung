@@ -384,13 +384,16 @@
                          <field name="other_requirement" style="width:300px"/>
                          <field name="note" style="width:300px"/>
                          <field name="type_recruitment" style="width:300px"/>
+                         <field name="count_target"/>
+                         <field name="count_target_women"/>
                      </group>
                      <group>
                           <field name="fee_departure" style="width:300px"/>
-                     <field name="fee_departure_women" style="width:300px"/>
-                     <field name="fee_study" style="width:300px"/>
-                     <field name="fee_eating" style="width:300px"/>
-                     <field name="bonus_target" style="width:300px"/>
+                         <field name="fee_departure_women" style="width:300px"/>
+                         <field name="fee_study" style="width:300px"/>
+                         <field name="fee_eating" style="width:300px"/>
+                         <field name="bonus_target" style="width:300px"/>
+                         <field name="bonus_target_women" style="width:300px"/>
                      </group>
                  </group>
                 <!--<group>-->
@@ -409,10 +412,11 @@
                                  <!--<field name="identity_2" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
-                                 <field name="have_form" />
+                                 <field name="have_form" invisible="1"/>
+                                 <field name="have_iq" />
                                  <field name="avatar" widget="image"/>
                                  <field name="have_health" string="GKSK"/>
-                                 <field name="have_deposit"/>
+                                 <field name="have_deposit" readonly="1"/>
                                  <field name="condition_count" invisible="1"/>
                                  <field name="intern_id" invisible="1"/>
 
@@ -427,7 +431,6 @@
                                  <field name="issues_raise" invisible="1"/>
                                  <field name="pass_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>
-                                 <field name="preparatory_exam" invisible="1"/>
                                  <field name="cancel_pass" invisible="1"/>
                             </tree>
                         </field>
@@ -440,10 +443,11 @@
                                  <field name="cmnd_or_tcc" readonly="1"/>
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
-                                 <field name="have_form" />
+                                 <!--<field name="have_form" />-->
+                                 <field name="have_iq" />
                                  <field name="avatar" widget="image"/>
                                  <field name="have_health"/>
-                                 <field name="have_deposit"/>
+                                 <field name="have_deposit" readonly="1"/>
                                  <field name="condition_count" invisible="1"/>
                                  <field name="room_recruitment" widget="selection" domain="[('room_type', '=', '0')]"/>
                                  <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]"/>
@@ -462,18 +466,22 @@
                         <field name="interns_confirm_exam" widget="one2many_intern" context="{'page':'promotion'}" readonly="1" limit="5000">
                             <tree create="false" limit="5000">
                                 <field name="name" readonly="1"/>
-                                <field name="cmnd_or_tcc" readonly="1"/>
+                                <field name="custom_id" readonly="1"/>
+                                <!--<field name="cmnd_or_tcc" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
+                                <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]" readonly="1"/>
                             </tree>
                         </field>
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
                         <field name="interns_escape_exam" widget="one2many_intern" readonly="1">
                             <tree create="false">
                                 <field name="name" readonly="1"/>
-                                <field name="cmnd_or_tcc" readonly="1"/>
+                                <field name="custom_id" readonly="1"/>
+                                <!--<field name="cmnd_or_tcc" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
+                                <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]" readonly="1"/>
                             </tree>
                         </field>
                     </page>
@@ -482,27 +490,33 @@
                         <field name="interns_pass_new" widget="one2many_intern" readonly="1">
                             <tree create="false">
                                 <field name="name" readonly="1"/>
-                                <field name="cmnd_or_tcc" readonly="1"/>
+                                <field name="custom_id" readonly="1"/>
+                                <!--<field name="cmnd_or_tcc" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
+                                <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]" readonly="1"/>
                             </tree>
                         </field>
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN DỰ BỊ</p>
                          <field name="interns_preparatory" widget="one2many_intern" readonly="1">
                             <tree create="false">
                                 <field name="name" readonly="1"/>
-                                <field name="cmnd_or_tcc" readonly="1"/>
+                                <field name="custom_id" readonly="1"/>
+                                <!--<field name="cmnd_or_tcc" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]" readonly="1"/>
                             </tree>
                         </field>
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH HỦY SAU TRÚNG TUYỂN</p>
                           <field name="interns_cancel_pass" widget="one2many_intern" readonly="1">
                             <tree create="false">
                                 <field name="name" readonly="1"/>
-                                <field name="cmnd_or_tcc" readonly="1"/>
+                                <field name="custom_id" readonly="1"/>
+                                <!--<field name="cmnd_or_tcc" readonly="1"/>-->
                                  <field name="date_of_birth_short" context=""/>
                                  <field name="province" readonly="1"/>
+                                 <field name="recruitment_employee" widget="selection" domain="[('room_type', '=', '0')]" readonly="1"/>
                                  <field name="reason_cancel_pass" readonly="1"/>
                             </tree>
                         </field>

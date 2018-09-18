@@ -1,0 +1,281 @@
+<odoo>
+    <record id="view_employee_form_new" model="ir.ui.view">
+        <field name="name">Nhân viên</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <form string="Nhân viên">
+                <field name="active_custom" invisible="1"/>
+                <header>
+                    <button name="toggle_active" type="object" string="Huỷ lưu trữ" attrs="{'invisible':[('active','=',True)]}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible':[('active','=',False)]}">
+                        <!--<button name="toggle_active" type="object"-->
+                                <!--class="oe_stat_button" icon="fa-archive">-->
+                            <!--<field name="active" widget="boolean_button"-->
+                                <!--options='{"terminology": "Nghỉ việc"}'/>-->
+                        <!--</button> -->
+                        <button name="%(hh_nhansu.action_dialog_employee_resign)d" type="action"
+                                class="oe_stat_button" icon="fa-archive" >
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": {"string_true":"Đang làm việc","hover_true":"Nghỉ việc","string_false":"Đã nghỉ việc","hover_false":"Huỷ nghỉ việc"}}'/>
+                        </button>
+                    </div>
+                    <!--<div class="oe_button_box" name="button_box" attrs="{'invisible':[('active_custom','=',True)]}">-->
+                        <!--<button name="toggle_active" type="object"-->
+                                <!--class="oe_stat_button" icon="fa-archive">-->
+                            <!--<field name="active" widget="boolean_button"-->
+                                <!--options='{"terminology": "archive"}'/>-->
+                        <!--</button>-->
+                    <!--</div>-->
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h2>
+                            <field name="name" placeholder="Họ tên"/>
+                        </h2>
+
+                    </div>
+                    <group>
+                        <field name="note" placeholder="Ghi chú" nolabel="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Thông tin liên hệ">
+                            <group>
+                                <group>
+                                    <field name="work_email" string="Email"/>
+                                    <field name="phone"/>
+                                </group>
+                                <group>
+                                    <field name="department_id" style="width:200px" placeholder="--Chọn phòng--"/>
+                                    <field name="job_id"/>
+                                    <field name="room_type" invisible="1"/>
+                                </group>
+                            </group>
+
+                            <group attrs="{'invisible':[('active','=',True)]}">
+                                <group>
+                                    <field name="date_resign"/>
+                                    <field name="date_confirm_resign"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="public" string="Thông tin cá nhân">
+                            <group>
+                                <group>
+                                    <field name="date_of_birth" widget="datecustom"/>
+                                    <!--<field name="date_of_birth_txt"/>-->
+                                    <field name="gender"/>
+                                    <field name="identity"/>
+                                    <field name="date_identity" widget="datecustom"/>
+                                    <field name="place_cmnd"/>
+                                    <field name="certification"/>
+                                    <field name="specialized"/>
+                                    <field name="school"/>
+                                </group>
+                                <group>
+                                    <field name="ssnid"/>
+                                    <field name="sinid"/>
+                                    <field name="place_born"/>
+                                    <field name="home_town"/>
+                                    <field name="address"/>
+                                    <field name="folk"/>
+                                    <field name="religion"/>
+                                    <field name="bank_account_id"/>
+                                </group>
+                            </group>
+                            <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Người thân:</caption>
+                            <field name="members" mode="tree" class="family_member">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="birth_year"/>
+                                    <field name="relationship"/>
+                                    <field name="phone"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Thông tin công việc">
+                            <group>
+                                <group>
+                                    <field name="date_temp_work"/>
+                                    <field name="date_sign_offical_contract"/>
+
+                                </group>
+                                <group>
+                                     <field name="date_start_offical"/>
+                                     <field name="date_end_offical"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="hr_settings" string="HR Settings" groups="base.group_erp_manager">
+                            <group>
+                                <group string='Status' name="active_group">
+                                    <field name="user_id" string="Related User"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hh_kanban_view_employees" model="ir.ui.view">
+        <field name="name">hh.employee.kanban</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <kanban default_order="name" class="o_hr_employee_kanban">
+                <!--<field name="is_current_month" invisible="1"/>-->
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img t-att-src="kanban_image('hh.employee', 'image_medium', record.id.value)"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <strong>
+                                <field name="name"/>
+                                <field name="active" invisible="1"/>
+                                <field name="department_id" invisible="1"/>
+                                <field name="work_email" invisible="1"/>
+                                <field name="phone" invisible="1"/>
+                                <field name="note" invisible="1"/>
+                            </strong>
+                            <ul>
+                                <li id="last_login"/>
+                                <li t-if="record.department_id.raw_value"><field name="department_id"/></li>
+                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                <li t-if="record.work_email.raw_value"><i class="fa fa-email"> <field name="work_email"/></i></li>
+                                <li t-if="record.phone.raw_value"><i class="fa fa-phone"><field name="phone"/></i> </li>
+                                <li t-if="record.note.raw_value"><i class="fa fa-note"> <field name="note"/></i></li>
+                                <li t-if="!record.active.value"><i class="fa fa-active" style="color:red">Đã nghỉ việc</i> </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!--<record id="hh_department_view_kanban" model="ir.ui.view" >-->
+            <!--<field name="name">hh.department.kanban</field>-->
+            <!--<field name="model">hh.department</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban">-->
+                    <!--<field name="name"/>-->
+                    <!--<field name="company_id"/>-->
+                    <!--<field name="manager_id"/>-->
+                    <!--<field name="color"/>-->
+                    <!--<templates>-->
+                        <!--<t t-name="kanban-box">-->
+                            <!--<div t-attf-class="#{kanban_color(record.color.raw_value)}">-->
+                                <!--<div class="o_kanban_card_header">-->
+                                    <!--<div class="o_kanban_card_header_title">-->
+                                        <!--<div class="o_primary"><field name="name"/></div>-->
+                                        <!--<div class="o_secondary"><field name="company_id"/></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="o_kanban_manage_button_section">-->
+                                        <!--<a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="container o_kanban_card_content o_visible">-->
+                                    <!--<div class="row">-->
+                                        <!--<div class="col-xs-6 o_kanban_primary_left">-->
+                                            <!--<button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-xs-6 o_kanban_primary_right">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div><div class="container o_kanban_card_manage_pane o_invisible">-->
+                                    <!--<div class="row">-->
+                                        <!--<div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">-->
+                                            <!--<div class="o_kanban_card_manage_title">-->
+                                                <!--<span>To Do</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_approve">-->
+                                            <!--<div class="o_kanban_card_manage_title">-->
+                                                <!--<span>To Approve</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">-->
+                                            <!--<div class="o_kanban_card_manage_title">-->
+                                                <!--<span>Reports</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div t-if="widget.editable" class="o_kanban_card_manage_settings row">-->
+                                        <!--<div class="col-xs-8">-->
+                                            <!--<ul class="oe_kanban_colorpicker" data-field="color"/>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-xs-4 text-right">-->
+                                            <!--<a type="edit">Settings</a>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+                        <!--</t>-->
+                    <!--</templates>-->
+                <!--</kanban>-->
+            <!--</field>-->
+        <!--</record>-->
+
+    <record id="hh_department_view_form" model="ir.ui.view" >
+        <field name="name">department.form</field>
+        <field name="model">department</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="room_type"/>
+                        <field name="name"/>
+                        <field name="manager"/>
+                         <field name="parent_id"/>
+                        <!--<field name="child_ids"/>-->
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_new_search" model="ir.ui.view">
+        <field name="name">hh.employee.search</field>
+        <field name="model">hh.employee</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search>
+                <!--<filter name='birth_month' string="Sinh nhật trong tháng" domain="[('is_current_month','=', True)]"/>-->
+                <filter name="has_note" string="Có ghi chú" domain="[('note','!=',False)]" />
+                <filter name='birth_month_2' string="Sinh nhật trong tháng" domain="[('birth_month','=', datetime.date.today().month)]"/>
+                <filter name="new_employee_in_month" string="Nhân viên mới tháng này" domain="[('date_temp_work','&lt;', (context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),('date_temp_work','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                <filter name="new_employee_in_pre_month" string="Nhân viên mới tháng trước" domain="[('date_temp_work','&lt;', time.strftime('%%Y-%%m-01')),('date_temp_work','&gt;=',(context_today()+relativedelta(months=-1)).strftime('%%Y-%%m-01'))]"/>
+                <filter name="resign_employee_in_month" string="Nhân viên nghỉ việc tháng này" domain="[('active','=',False),('date_resign','&lt;', (context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),('date_resign','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+                <filter name="resign_employee_in_pre_month" string="Nhân viên nghỉ việc tháng trước" domain="[('active','=',False),('date_resign','&lt;', time.strftime('%%Y-%%m-01')),('date_resign','&gt;=',(context_today()+relativedelta(months=-1)).strftime('%%Y-%%m-01'))]"/>
+                <field name="name" string="Tên nhân viên"/>
+            </search>
+        </field>
+    </record>
+
+     <record id="view_employee_tree_new" model="ir.ui.view">
+        <field name="name">Danh sách nhân viên</field>
+        <field name="model">hh.employee</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="date_of_birth"/>
+                <field name="room_type"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

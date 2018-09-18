@@ -1,0 +1,33 @@
+<odoo>
+    <record model="ir.actions.act_window" id="action_intern_list_accounting">
+        <field name="name">Danh sách TTS</field>
+        <field name="res_model">intern.intern</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_intern_tree_accounting')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_intern_form_accounting')})]"/>
+
+    </record>
+
+    <menuitem id="menu_hh_accounting"
+              name="Kế toán"/>
+
+    <menuitem id="menu_intern_list_accounting"
+              parent="menu_hh_accounting"
+              name="Danh sách TTS"
+              action="action_intern_list_accounting" groups="group_accounting_user"/>
+
+    <record model="ir.actions.act_window" id="action_audit_log_accounting">
+        <field name="name">Danh sách Log</field>
+        <field name="res_model">auditlog.log.line</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('field_name','=','have_deposit')]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_audit_log_accounting_tree')})]"/>
+    </record>
+
+    <menuitem id="menu_accounting_log"
+              parent="menu_hh_accounting"
+              name="Danh sách Log"
+              action="action_audit_log_accounting" />
+</odoo>

@@ -125,7 +125,10 @@ class Report(http.Controller):
             raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
 
         workbook = xlwt.Workbook()
+
         worksheet = workbook.add_sheet('Sheet 1')
+
+
 
         for i, fieldname in enumerate(fields):
             worksheet.write(0, i, fieldname)

@@ -22,9 +22,10 @@
                  <field name="interns_clone" widget="one2many_intern"  context="{'page':'doingoai'}" invisible="1">
                      <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll" editable="bottom" default_order="condition_count desc" limit="5000">
                          <field name="intern_id"/>
+                         <field name="place_to_work"/>
                      </tree>
                  </field>
-                 <field name="status" invisible="1"/>
+                 <!--<field name="status" invisible="1"/>-->
                  <table class="o_group">
                      <tbody>
                          <tr>
@@ -346,7 +347,7 @@
 
                  <notebook>
                     <page string="Danh sách Tiến cử">
-                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="one2many_intern" context="{'page':'promoted','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
+                        <field name="interns_promoted" string="Danh sách Tiến cử" widget="many2many_intern" context="{'page':'promoted','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
                             <tree string="Chi tiết thực tập sinh" class="o_list_view_scroll"  default_order="condition_count desc" limit="5000">
                                 <field name="intern_id" invisible="1"/>
                                  <field name="name" readonly="1"  sortable='0' style="width:200px"/>
@@ -373,12 +374,13 @@
                                  <field name="cancel_pass" invisible="1" sortable='0'/>
                                  <field name="issues_raise" invisible="1"/>
                                 <field name="sequence_exam" widget="handle" invisible="1"/>
+                                <field name="place_to_work" invisible="1"/>
                             </tree>
                         </field>
                     </page>
                     <page string="Chốt thi tuyển">
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH THI TUYỂN</p>
-                        <field name="interns_confirm_exam" class="o_list_view_scroll"  widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
+                        <field name="interns_confirm_exam" class="o_list_view_scroll"  widget="many2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
                             <tree create="false" limit="5000" >
                                 <field name="name" readonly="1" options='{"merge_field":"1"}' sortable='0'/>
                                  <field name="current_status" readonly="1" invisible="1" style="color: red;" sortable='0'/>
@@ -394,7 +396,8 @@
                                 <!--<field name="issues_raise" widget="bool_button_toggle_extend" options='{"terminology":-->
                                     <!--{"string_true": "Có phát sinh", "action_true": "Có phát sinh", "string_false": " ", "action_false": "Huỷ phát sinh"},-->
                                     <!--}' sortable='0' context="{'form_view_ref':'hh_intern.view_intern_form_issues_raise'}" />-->
-
+                                 <field name="avatar" widget="image" readonly="1" sortable='0'/>
+                                 <field name="have_health" readonly="1" sortable='0' string="SK"/>
 
 
                                  <field name="pass_exam" widget="bool_button" string=" "
@@ -413,7 +416,7 @@
                             </tree>
                         </field>
                         <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH RÚT BỎ CHỐT THI TUYỂN</p>
-                        <field name="interns_escape_exam" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
+                        <field name="interns_escape_exam" class="o_list_view_scroll" widget="many2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
                             <tree create="false">
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
@@ -431,45 +434,46 @@
                     </page>
                      <page string="Trúng tuyển/Dự bị">
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN</p>
-                        <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
-                            <tree create="false" editable="bottom">
+                        <field name="interns_pass_new" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
+                            <tree create="false" editable="bottom" limit="5000">
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth_short" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
                                  <field name="enterprise" sortable='0'/>
+                                 <field name="place_to_work" sortable='0' widget="selection"/>
                                 <field name="preparatory_exam" widget="bool_button" options='{ "terminology":{"string_true": "Đã dự bị", "action_true": "", "string_false": " ","action_false": "Dự bị"},
-                                                    "invisible":{"status":[1,3,4,6]}}' string=" " context="{'related':['pass_exam']}" sortable='0'/>
+                                                    "invisible":{"status":[3,4,5,6,7]}}' string=" " context="{'related':['pass_exam']}" sortable='0'/>
 
                                 <field name="cancel_pass" widget="bool_button_toggle_extend" options='{ "terminology":{"string_true": "Đã huỷ", "action_true": "Huỷ sau TT", "string_false": " ","action_false": "Huỷ sau TT"},
-                                                    "invisible":{"status":[1,3,4,5,6]}}' string=" " context="{'related':['preparatory_exam','pass_exam'],'form_view_ref':'hh_intern.view_intern_form_reason_cancel_pass'}" sortable='0'/>
+                                                    "invisible":{"status":[3,4,5,6,7]}}' string=" " context="{'related':['preparatory_exam','pass_exam'],'form_view_ref':'hh_intern.view_intern_form_reason_cancel_pass'}" sortable='0'/>
 
                                 <field name="pass_exam" widget="bool_delete" string=" "
-                                       options='{"invisible":{"status":[2,3,4,5,6]}}' sortable='0'
+                                       options='{"invisible":{"status":[3,4,5,6,7]}}' sortable='0'
                                     />
                             </tree>
                         </field>
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH TRÚNG TUYỂN DỰ BỊ</p>
-                         <field name="interns_preparatory" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
-                            <tree create="false">
+                         <field name="interns_preparatory" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
+                            <tree create="false" limit="5000">
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth_short" context="" sortable='0'/>
                                  <field name="province" readonly="1" sortable='0'/>
                                  <field name="pass_exam" widget="bool_button" string=" "
                                         options='{"terminology":{"string_true": "Đã trúng tuyển", "action_true": "", "string_false": " ","action_false": "Trúng tuyển"},
-                                                    "invisible":{"status":[1,3,4,6]}}' context="{'related':['preparatory_exam']}" sortable='0'/>
-                                 <field name="cancel_pass" widget="bool_button" options='{ "terminology":{"string_true": "Đã huỷ", "action_true": "", "string_false": " ","action_false": "Huỷ sau TT"},
-                                                    "invisible":{"status":[1,3,4,5,6]}}' string=" " context="{'related':['preparatory_exam','pass_exam']}" sortable='0'/>
+                                                    "invisible":{"status":[3,4,5,6,7]}}' context="{'related':['preparatory_exam']}" sortable='0'/>
+                                 <field name="cancel_pass" widget="bool_button_toggle_extend" options='{ "terminology":{"string_true": "Đã huỷ", "action_true": "", "string_false": " ","action_false": "Huỷ sau TT"},
+                                                    "invisible":{"status":[3,4,5,6,7]}}' string=" " context="{'related':['preparatory_exam','pass_exam'],'form_view_ref':'hh_intern.view_intern_form_reason_cancel_pass'}" sortable='0'/>
 
                                 <field name="preparatory_exam" widget="bool_delete" string=" "
-                                       options='{"invisible":{"status":[2,3,4,5,6]}}' sortable='0'
+                                       options='{"invisible":{"status":[3,4,5,6,7]}}' sortable='0'
                                     />
                             </tree>
                         </field>
                          <p style="padding-top:10px;color:#ff0000;">DANH SÁCH THỰC TẬP SINH HỦY SAU TRÚNG TUYỂN</p>
-                          <field name="interns_cancel_pass" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}">
-                            <tree create="false">
+                          <field name="interns_cancel_pass" class="o_list_view_scroll" widget="one2many_intern" context="{'page':'doingoai','form_view_ref': 'hh_intern.view_intern_form_clone'}" limit="5000">
+                            <tree create="false" limit="5000">
                                 <field name="name" readonly="1" sortable='0'/>
                                 <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                  <field name="date_of_birth_short" context="" sortable='0'/>
@@ -477,9 +481,9 @@
                                  <field name="reason_cancel_pass"  sortable='0'/>
                                  <field name="pass_exam" widget="bool_button" string=" "
                                         options='{"terminology":{"string_true": "", "action_true": "Trúng tuyển", "string_false": " ","action_false": "Trúng tuyển"},
-                                                    "invisible":{"status":[1,3,4,5,6]}}'  context="{'related':['preparatory_exam','cancel_pass']}" sortable='0'/>
+                                                    "invisible":{"status":[3,4,5,6,7]}}'  context="{'related':['preparatory_exam','cancel_pass']}" sortable='0'/>
                                  <field name="preparatory_exam" widget="bool_button" options='{ "terminology":{"string_true": "", "action_true": "Dự bị", "string_false": " ","action_false": "Dự bị"},
-                                                    "invisible":{"status":[1,3,4,5,6]}}' string=" " context="{'related':['pass_exam','cancel_pass']}" sortable='0'/>
+                                                    "invisible":{"status":[3,4,5,6,7]}}' string=" " context="{'related':['pass_exam','cancel_pass']}" sortable='0'/>
                             </tree>
                         </field>
                     </page>
@@ -491,322 +495,322 @@
     </record>
 
 
-    <record id="view_doc_generate" model="ir.ui.view">
-        <field name="name">Tạo đơn hàng</field>
-        <field name="model">intern.invoice</field>
-         <field name="arch" type="xml">
-             <form >
-                 <header>
-                    <button name="create_doc" string="Tạo Đơn hàng" type="object" class="oe_highlight"/>
-                     <field name="status" invisible="1"/>
-                    <button name="pass_exam" string="Đã trúng tuyển" type="object" style="margin-left:50px"  attrs="{'invisible':[('status','!=',False),('status','&gt;=',2)]}" class="oe_read_only"/>
-                </header>
+    <!--<record id="view_doc_generate" model="ir.ui.view">-->
+        <!--<field name="name">Tạo đơn hàng</field>-->
+        <!--<field name="model">intern.invoice</field>-->
+         <!--<field name="arch" type="xml">-->
+             <!--<form >-->
+                 <!--<header>-->
+                    <!--<button name="create_doc" string="Tạo Đơn hàng" type="object" class="oe_highlight"/>-->
+                     <!--<field name="status" invisible="1"/>-->
+                    <!--<button name="pass_exam" string="Đã trúng tuyển" type="object" style="margin-left:50px"  attrs="{'invisible':[('status','!=',False),('status','&gt;=',2)]}" class="oe_read_only"/>-->
+                <!--</header>-->
 
-                 <table class="o_group">
-                     <tbody>
-                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="name" />
-                            </td>
-                            <td colspan="1" width="250px">
-                                <div class="column">
-                                        <field name="name"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="200px" class="columnDivider">
-                                 <label for="room_pttt" />
-                            </td>
-                            <td colspan="1" width="100px">
-                                <div class="column">
-                                    <field name="order" invisible="1"/>
-                                    <field name="room_pttt" widget="selection" domain="[('room_type', '=', '1')]"/>
-                                </div>
-                            </td>
-                         </tr>
+                 <!--<table class="o_group">-->
+                     <!--<tbody>-->
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="name" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="name"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="room_pttt" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="100px">-->
+                                <!--<div class="column">-->
+                                    <!--<field name="order" invisible="1"/>-->
+                                    <!--<field name="room_pttt" widget="selection" domain="[('room_type', '=', '1')]"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="enterprise" required="True"/>
-                            </td>
-                            <td colspan="1" width="250px">
-                                <div class="column">
-                                        <field name="enterprise" required="True" style="background-color: #ffff96"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="200px" class="columnDivider">
-                                 <label for="place_to_work" />
-                            </td>
-                            <td colspan="1" width="250px">
-                                <div class="column">
-                                   <field name="place_to_work"/>
-                                </div>
-                            </td>
-                         </tr>
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="enterprise" required="True"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="enterprise" required="True" style="background-color: #ffff96"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="place_to_work" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                   <!--<field name="place_to_work"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="name_of_guild" />
-                            </td>
-                            <td colspan="1" width="250px">
-                                <div class="column">
-                                        <field name="name_of_guild" style="background-color: #ffff96" required="True"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="200px" class="columnDivider">
-                                 <label for="legal_name" />
-                            </td>
-                            <td colspan="1" width="100px">
-                                <div class="column">
-                                        <field name="legal_name"/>
-                                </div>
-                            </td>
-                         </tr>
-                     </tbody>
-                 </table>
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="name_of_guild" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="name_of_guild" style="background-color: #ffff96" required="True"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="legal_name" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="100px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="legal_name"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+                     <!--</tbody>-->
+                 <!--</table>-->
 
 
-                 <table class="o_group" invisible="1">
-                     <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin chi tiết:</caption>
-                     <tbody>
-                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="job" />
-                            </td>
-                            <td colspan="1" width="250px">
-                                <div class="column">
-                                        <field name="job"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="200px" class="columnDivider">
-                                 <label for="year_expire" />
-                            </td>
-                            <td colspan="1" width="100px">
-                                <div class="column">
-                                        <field name="year_expire"/>
-                                </div>
-                            </td>
-                         </tr>
-                     </tbody>
-                 </table>
+                 <!--<table class="o_group" invisible="1">-->
+                     <!--<caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin chi tiết:</caption>-->
+                     <!--<tbody>-->
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="job" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="250px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="job"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="200px" class="columnDivider">-->
+                                 <!--<label for="year_expire" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="100px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="year_expire"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+                     <!--</tbody>-->
+                 <!--</table>-->
 
-                  <table class="o_group" invisible="1">
-                     <tbody>
-                         <tr>
-                            <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="salary_base" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="salary_base" style="width:100px"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="salary_real" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="salary_real" style="width:100px"/>
-                                </div>
-                            </td>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="subsidize_start_month" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="subsidize_start_month" style="width:100px"/>
-                                </div>
-                            </td>
-                         </tr>
-                         <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="number_man" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="number_man" style="width:100px"/>
-                                </div>
-                            </td>
+                  <!--<table class="o_group" invisible="1">-->
+                     <!--<tbody>-->
+                         <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="salary_base" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="salary_base" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="salary_real" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="salary_real" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="subsidize_start_month" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="subsidize_start_month" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="number_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="number_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="number_women" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="number_women" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="number_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="number_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="age_from" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="age_from" style="width:100px"/>
-                                </div>
-                            </td>
-                         </tr>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="age_from" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="age_from" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                          <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="source_man" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="source_man" style="width:100px"/>
-                                </div>
-                            </td>
+                          <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="source_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="source_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="source_women" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="source_women" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="source_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="source_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="age_to" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="age_to" style="width:100px"/>
-                                </div>
-                            </td>
-                         </tr>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="age_to" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="age_to" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                     </tbody>
-                  </table>
-                  <table class="o_group" invisible="1">
-                     <tbody>
-                         <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="certificate" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="certificate" style="width:100px"/>
-                                </div>
-                            </td>
+                     <!--</tbody>-->
+                  <!--</table>-->
+                  <!--<table class="o_group" invisible="1">-->
+                     <!--<tbody>-->
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="certificate" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="certificate" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="marital" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="marital" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="marital" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="marital" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="preferred_hand" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="preferred_hand" style="width:100px"/>
-                                </div>
-                            </td>
-                         </tr>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="preferred_hand" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="preferred_hand" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                          <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="vision" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="vision" style="width:100px"/>
-                                </div>
-                            </td>
+                          <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="vision" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="vision" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="physical" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="physical" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="physical" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="physical" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="smoking" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="smoking" style="width:100px"/>
-                                </div>
-                            </td>
-                         </tr>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="smoking" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="smoking" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                         <!--</tr>-->
 
-                         <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="height_man" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="height_man" style="width:100px"/>
-                                </div>
-                            </td>
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="height_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="height_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="height_women" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="height_women" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="height_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="height_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                         </tr>
+                         <!--</tr>-->
 
-                         <tr>
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="weight_man" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="weight_man" style="width:100px"/>
-                                </div>
-                            </td>
+                         <!--<tr>-->
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="weight_man" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="weight_man" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                             <td colspan="1" width="150px" class="columnDivider">
-                                 <label for="weight_women" />
-                            </td>
-                            <td colspan="1" width="200px">
-                                <div class="column">
-                                        <field name="weight_women" style="width:100px"/>
-                                </div>
-                            </td>
+                             <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                 <!--<label for="weight_women" />-->
+                            <!--</td>-->
+                            <!--<td colspan="1" width="200px">-->
+                                <!--<div class="column">-->
+                                        <!--<field name="weight_women" style="width:100px"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
 
-                         </tr>
-                     </tbody>
-                 </table>
-                 <group invisible="1">
-                     <field name="job_description" style="width:300px"/>
-                     <field name="other_requirement" style="width:300px"/>
-                     <field name="note" style="width:300px"/>
-                 </group>
-                 <notebook>
-                    <page string="Danh sách thi tuyển" >
-                        <field name="interns" string="Danh sách thực tập sinh"  mode="tree" context="{'form_view_ref':'hh_intern.view_intern_form'}" >
+                         <!--</tr>-->
+                     <!--</tbody>-->
+                 <!--</table>-->
+                 <!--<group invisible="1">-->
+                     <!--<field name="job_description" style="width:300px"/>-->
+                     <!--<field name="other_requirement" style="width:300px"/>-->
+                     <!--<field name="note" style="width:300px"/>-->
+                 <!--</group>-->
+                 <!--<notebook>-->
+                    <!--<page string="Danh sách thi tuyển" >-->
+                        <!--<field name="interns" string="Danh sách thực tập sinh"  mode="tree" context="{'form_view_ref':'hh_intern.view_intern_form'}" >-->
 
-                             <tree string="Chi tiết thực tập sinh" default_order="sequence" >
-                                 <field name="name_without_signal"  />
-                                 <field name="identity"  />
-                                 <field name="identity_2"/>
-                                 <field name="date_of_birth" />
-                                 <field name="address" />
-                                 <field name="province" />
-                                 <field name="avatar" widget="image"/>
-                                 <field name="height"/>
-                                 <field name="sequence" widget="handle"/>
-                            </tree>
-                        </field>
-                    </page>
+                             <!--<tree string="Chi tiết thực tập sinh" default_order="sequence" >-->
+                                 <!--<field name="name_without_signal"  />-->
+                                 <!--<field name="identity"  />-->
+                                 <!--<field name="identity_2"/>-->
+                                 <!--<field name="date_of_birth" />-->
+                                 <!--<field name="address" />-->
+                                 <!--<field name="province" />-->
+                                 <!--<field name="avatar" widget="image"/>-->
+                                 <!--<field name="height"/>-->
+                                 <!--<field name="sequence" widget="handle"/>-->
+                            <!--</tree>-->
+                        <!--</field>-->
+                    <!--</page>-->
 
-                 </notebook>
-             </form>
-         </field>
-    </record>
+                 <!--</notebook>-->
+             <!--</form>-->
+         <!--</field>-->
+    <!--</record>-->
 
     <record id="view_doc_after_exam" model="ir.ui.view">
         <field name="name">Đơn hàng</field>
@@ -1266,22 +1270,22 @@
                 </table>
                 <notebook>
 
-                    <page string="Danh sách trúng tuyển" >
-                        <field name="interns" invisible="1"/>
-                        <!--domain="[('id', 'in', interns[0][2])]"-->
-                        <field name="interns_pass" string="Danh sách thực tập sinh"  mode="tree"
-                               context="{'form_view_ref':'hh_intern.view_internhs_form'}">
-                             <tree string="Chi tiết thực tập sinh" default_order="sequence">
-                                <field name="name_without_signal"  />
-                                <field name="identity"  />
-                                <field name="identity_2"/>
-                                <field name="date_of_birth" />
-                                <field name="province" />
-                                 <field name="height"/>
-                                 <field name="sequence" widget="handle"/>
-                            </tree>
-                        </field>
-                    </page>
+                    <!--<page string="Danh sách trúng tuyển" >-->
+                        <!--<field name="interns" invisible="1"/>-->
+                        <!--&lt;!&ndash;domain="[('id', 'in', interns[0][2])]"&ndash;&gt;-->
+                        <!--<field name="interns_pass" string="Danh sách thực tập sinh"  mode="tree"-->
+                               <!--context="{'form_view_ref':'hh_intern.view_internhs_form'}">-->
+                             <!--<tree string="Chi tiết thực tập sinh" default_order="sequence">-->
+                                <!--<field name="name_without_signal"  />-->
+                                <!--<field name="identity"  />-->
+                                <!--<field name="identity_2"/>-->
+                                <!--<field name="date_of_birth" />-->
+                                <!--<field name="province" />-->
+                                 <!--<field name="height"/>-->
+                                 <!--<field name="sequence" widget="handle"/>-->
+                            <!--</tree>-->
+                        <!--</field>-->
+                    <!--</page>-->
                  </notebook>
             </form>
         </field>
@@ -1292,12 +1296,12 @@
         <field name="name">History</field>
         <field name="model">intern.invoice</field>
          <field name="arch" type="xml">
-             <tree default_order="date_exam_short desc">
-                 <field name="custom_id" />
-                 <field name="name" />
-                 <field name="enterprise" />
-                 <field name="name_of_guild" />
-                 <field name="date_exam_short" string="Ngày thi"/>
+             <tree default_order="date_exam_short desc"  version="7.0" class="invoices">
+                 <field name="custom_id" style="60px"/>
+                 <field name="name" style="300px"/>
+                 <!--<field name="enterprise" />-->
+                 <!--<field name="name_of_guild" />-->
+                 <field name="date_exam_short" string="Ngày thi" style="70px"/>
                  <field name="room_pttt" />
                  <field name="interns_exam_doc" string="Thi tuyển" />
                  <field name="date_confirm_form"/>

@@ -382,86 +382,10 @@ var X2ManyListNew = ListView.List.extend({
                         return self.render_cell.apply(self, arguments); },
 
 
-
-//                    count_issues: function(record){
-//                        var parent = self.group.view.ViewManager.x2m.getParent().fields.issues;
-//                        var counter = 0;
-//                        var id = record.get('id');
-//                        var cachekey = Object.keys(parent.dataset.cache);
-//                        for(var tmp = 0; tmp<cachekey.length;tmp++){
-//                            if(parent.dataset.cache[cachekey[tmp]].values.intern_id == id){
-//                                if(!parent.dataset.cache[cachekey[tmp]].to_delete)
-//                                    counter++;
-//                            }
-//                        }
-//                        return counter;
-////                        var invoice_id = parent.datarecord.id;
-////                        var id = record.get('id');
-////                        var tmp = parent.dataset._model.call('get_issue_count',[id,invoice_id]).done(function(results){
-////                            var test = self.view.$('.tr[data-id='+id+"]");
-////                        });
-////                        return "0";
-//                    },
-//                    get_issues_after_exam:function(record){
-//                        var tmp = self.group.view.ViewManager.x2m.getParent().fields;
-//                        var parent = self.group.view.ViewManager.x2m.getParent().fields.issues_after_exam;
-//                        var id = record.get('id');
-//                        var cachekey = Object.keys(parent.dataset.cache);
-//                        for(var tmp = 0; tmp<cachekey.length;tmp++){
-//                            if(parent.dataset.cache[cachekey[tmp]].values.intern_id == id){
-//                                if(!parent.dataset.cache[cachekey[tmp]].to_delete)
-//                                    return parent.dataset.cache[cachekey[tmp]].values.name;
-//                                break;
-//                            }
-//                        }
-//                        return "";
-////                        var parent = self.group.view.ViewManager.x2m.getParent().fields.issues_after_exam;
-////                        var counter = 0;
-////                        var id = record.get('id');
-////                        var cachekey = Object.keys(parent.dataset.cache);
-////                        for(var tmp = 0; tmp<cachekey.length;tmp++){
-////                            if(parent.dataset.cache[cachekey[tmp]].values.intern_id == id){
-////                                if(!parent.dataset.cache[cachekey[tmp]].to_delete)
-////                                    counter++;
-////                            }
-////                        }
-////                        return counter;
-//                    },
-//                    get_late_day: function(record){
-//                        var parent = self.group.view.ViewManager.x2m.getParent().fields.late_doc;
-//                        var id = record.get('id');
-//                        var cachekey = Object.keys(parent.dataset.cache);
-//                        for(var tmp = 0; tmp<cachekey.length;tmp++){
-//                            if(parent.dataset.cache[cachekey[tmp]].values.intern_id == id){
-//                                if(!parent.dataset.cache[cachekey[tmp]].to_delete)
-//                                    return parent.dataset.cache[cachekey[tmp]].values.number_of_date;
-//                                break;
-//                            }
-//                        }
-//                        return "0";
-//                    }
-
                 },  )));
 
             this.pad_table_to(4);
     },
-
-//    render_received_doc:function(record){
-//        var id = record.get('id');
-//        var parent = this.group.view.ViewManager.x2m.getParent().fields.late_doc;
-//        var cachekey = Object.keys(parent.dataset.cache);
-//        var value = false;
-//        for(var tmp = 0; tmp<cachekey.length;tmp++){
-//            if(parent.dataset.cache[cachekey[tmp]].values.intern_id == id){
-//                if(!parent.dataset.cache[cachekey[tmp]].to_delete)
-//                    value =  parent.dataset.cache[cachekey[tmp]].values.received_doc;
-//                break;
-//            }
-//        }
-//
-//        return _.str.sprintf('<div class="o_checkbox"><input type="checkbox" %s disabled="disabled"/><span/></div>',
-//                 value ? 'checked="checked"' : '');
-//    },
 
 
 
@@ -504,35 +428,7 @@ var X2ManyListNew = ListView.List.extend({
         return false;
     },
 
-//    can_back_normal: function(record){
-//        if(this.dataset.child_name == 'interns_promotion'){
-//            var id = record.get('id');
-//            var parent = this.group.view.ViewManager.x2m.getParent().fields;
-//            if(parent.interns.dataset.ids.indexOf(id) ===-1){
-//                return true;
-//            }
-//            else{
-//                return false;
-//            }
-//        }
-//        else{
-//            return false;
-//        }
-//    },
-//
-//    is_ready_exam: function (record){
-//        if(this.dataset.child_name !== 'interns_promotion'){
-//            return true;
-//        }
-//        var id = record.get('id');
-//        var parent = this.group.view.ViewManager.x2m.getParent().fields.interns;
-//        if (parent.dataset.ids.indexOf(id) === -1) {
-//            return false;
-//        }
-//        else{
-//            return true;
-//        }
-//    },
+
 
     pad_table_to: function (count) {
         if (!this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
@@ -685,6 +581,256 @@ var X2ManyListViewNew = ListViewNew.extend({
     display_nocontent_helper: function () {
         return false;
     },
+});
+
+
+
+
+
+
+var FieldMany2ManyIntern = FieldMany2Many.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.x2many_views = {
+            list: Many2ManyListViewNew,
+            kanban: core.view_registry.get('many2many_kanban'),
+        };
+//        this.on("link_external", this, function(id){
+//            alert(id);
+//        });
+        if(this.name == 'interns_promoted'|| this.name=='interns_confirm_exam' || this.name=='interns_escape_exam'
+            || this.name=='interns_pass_new'  || this.name=='interns_preparatory'  || this.name=='interns_cancel_pass'
+            || this.name=='interns_departure'){
+            this.dataset = this.getParent().fields.interns_clone.dataset;
+        }
+    },
+    start: function() {
+        this.$el.addClass('o_form_field_many2many_intern');
+        return this._super.apply(this, arguments);
+    },
+
+
+    promote: function(id){
+        this.dataset.write(id,{promoted:true});
+        this.reload_current_view();
+    },
+
+    //KIDO toggle button bool
+    toggle_button_bool:function(id, field,options){
+        var values = {};
+        values[field] = !this.dataset.cache[id].values[field];
+        if(options){
+            var options_tmp = pyeval.py_eval(options);
+            for (var t in options_tmp.related)
+                values[options_tmp.related[t]] = false;
+        }
+        this.dataset.write(id,values,{});
+        if(this.getParent().fields.interns_clone)
+            this.getParent().fields.interns_clone.reload_current_view();
+        if(this.getParent().fields.interns_promoted)
+            this.getParent().fields.interns_promoted.reload_current_view();
+        if(this.getParent().fields.interns_confirm_exam)
+            this.getParent().fields.interns_confirm_exam.reload_current_view();
+        if(this.getParent().fields.interns_escape_exam)
+            this.getParent().fields.interns_escape_exam.reload_current_view();
+        if(this.getParent().fields.interns_pass_new)
+            this.getParent().fields.interns_pass_new.reload_current_view();
+        if(this.getParent().fields.interns_preparatory)
+            this.getParent().fields.interns_preparatory.reload_current_view();
+        if(this.getParent().fields.interns_cancel_pass)
+            this.getParent().fields.interns_cancel_pass.reload_current_view();
+        if(this.getParent().fields.interns_departure)
+            this.getParent().fields.interns_departure.reload_current_view();
+    },
+
+    toggle_delete_bool:function(id,field,options){
+
+        var values = {};
+        values[field] = false;
+        if(options){
+            var options_tmp = pyeval.py_eval(options);
+            for (var t in options_tmp.related)
+                values[options_tmp.related[t]] = false;
+        }
+        this.dataset.write(id,values,{});
+        if(this.getParent().fields.interns_clone)
+            this.getParent().fields.interns_clone.reload_current_view();
+        if(this.getParent().fields.interns_promoted)
+            this.getParent().fields.interns_promoted.reload_current_view();
+        if(this.getParent().fields.interns_confirm_exam)
+            this.getParent().fields.interns_confirm_exam.reload_current_view();
+        if(this.getParent().fields.interns_escape_exam)
+            this.getParent().fields.interns_escape_exam.reload_current_view();
+        if(this.getParent().fields.interns_pass_new)
+            this.getParent().fields.interns_pass_new.reload_current_view();
+        if(this.getParent().fields.interns_preparatory)
+            this.getParent().fields.interns_preparatory.reload_current_view();
+        if(this.getParent().fields.interns_cancel_pass)
+            this.getParent().fields.interns_cancel_pass.reload_current_view();
+        if(this.getParent().fields.interns_departure)
+            this.getParent().fields.interns_departure.reload_current_view();
+    },
+});
+
+var X2ManyDataSet = data.BufferedDataSet.extend({
+    get_context: function() {
+        this.context = this.x2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
+        return this.context;
+    },
+});
+
+
+
+var FormViewDialogSpecific = common.ViewDialog.extend({
+
+    init: function(parent, options) {
+        this.intern_id = options.intern_id;
+        this._super(parent, options);
+    },
+
+    open: function() {
+
+        var _super = this._super.bind(this);
+        var parent = this.getParent().ViewManager.x2m.getParent();
+        var tmpset;
+        if(this.options.res_model == 'intern.issueafter'){
+            tmpset = parent.fields.issues_after_exam.dataset;
+        }
+        else{
+            tmpset = parent.fields.issues.dataset;
+        }
+        this.dataset = new X2ManyDataSet(this, this.options.res_model, {});
+        var arrayIds = [];
+        for(var i = 0; i<tmpset.ids.length;i++){
+            var tmpCache = tmpset.cache[tmpset.ids[i]];
+            if(!tmpCache.to_delete){
+                if(tmpCache.values.intern_id == this.intern_id){
+                    arrayIds.push(tmpCache.id);
+                    this.dataset.cache[tmpCache.id] = tmpCache;
+                }
+            }
+        }
+        this.dataset.ids= arrayIds;
+        if(this.options.res_model == 'intern.issueafter'){
+            this.dataset.x2m =parent.fields.issues_after_exam.dataset.x2m;
+            this.dataset.parent_view = parent.fields.issues_after_exam.dataset.parent_view;
+            this.dataset.child_name = parent.fields.issues_after_exam.dataset.child_name;
+        }
+        else{
+            this.dataset.x2m =parent.fields.issues.dataset.x2m;
+            this.dataset.parent_view = parent.fields.issues.dataset.parent_view;
+            this.dataset.child_name = parent.fields.issues.dataset.child_name;
+        }
+
+        var context = pyeval.sync_eval_domains_and_contexts({
+            domains: [],
+            contexts: [this.context]
+        }).context;
+        var search_defaults = {};
+        _.each(context, function (value_, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value_;
+            }
+        });
+        data_manager
+            .load_views(this.dataset, [[false, 'list'], [false, 'search']], {})
+            .then(this.setup.bind(this, search_defaults))
+            .then(function (fragment) {
+                _super().$el.append(fragment);
+            });
+        return this;
+    },
+    setup: function(search_defaults, fields_views) {
+        var self = this;
+        var fragment = document.createDocumentFragment();
+        var $header = $('<div/>').addClass('o_modal_header').appendTo(fragment);
+        var $pager = $('<div/>').addClass('o_pager').appendTo($header);
+
+            self.view_list = new One2ManyListView(self,
+                self.dataset, fields_views.list,
+                _.extend({'deletable': this.options.deletable,
+                    'selectable': false,
+                    'import_enabled': false,
+                    '$buttons': self.$buttons,
+                    'disable_editable_mode': false,
+                    'pager': false,
+
+                }, self.options.list_view_options || {}));
+            if(this.options.res_model == 'intern.issueafter'){
+                self.view_list.x2m = self.getParent().ViewManager.x2m.getParent().fields.issues_after_exam.viewmanager.x2m;
+            }
+            else
+                self.view_list.x2m = self.getParent().ViewManager.x2m.getParent().fields.issues.viewmanager.x2m;
+            self.view_list.popup = self;
+            self.view_list.on('list_view_loaded', self, function() {
+                this.on_view_list_loaded();
+            });
+
+            var buttons = [
+                {text: _t("Close"), classes: "btn-default o_form_button_cancel", close: true}
+            ];
+
+            self.set_buttons(buttons);
+
+            return self.view_list.appendTo(fragment).then(function() {
+                self.view_list.do_show();
+                self.view_list.reload_content();
+                return fragment;
+            });
+    },
+
+    destroy: function(reason) {
+        var parent = this.getParent().ViewManager.x2m.getParent();
+        var tmpset;
+        if(this.options.res_model == 'intern.issueafter'){
+            tmpset = parent.fields.issues_after_exam.dataset;
+        }
+        else{
+            tmpset = parent.fields.issues.dataset;
+        }
+        var idscache = Object.keys(this.dataset.cache);
+        for(var i = 0; i<idscache.length;i++){
+
+            var id = idscache[i];
+            var tmpCache = this.dataset.cache[id];
+            if(tmpCache.to_delete){
+                var index = tmpset.ids.indexOf(tmpCache.id);
+                if(index>-1){
+                    tmpset.ids.splice(index, 1);
+                }
+            }
+            else{
+                tmpCache.values.intern_id = this.intern_id;
+                tmpCache.changes.intern_id= this.intern_id;
+                if(typeof id === 'string' && id.startsWith("one2many") && tmpset.cache[id]== undefined ){
+                    tmpset.ids.push(id);
+                }
+            }
+            tmpset.cache[id] = tmpCache;
+
+        }
+        this._super();
+    },
+
+    on_view_list_loaded: function() {},
+
+    create_edit_record: function() {
+        this.close();
+        return new common.FormViewDialog(this.__parentedParent, this.options).open();
+    },
+});
+
+var One2ManyGroups = ListView.Groups.extend({
+    setup_resequence_rows: function () {
+        if (!this.view.x2m.get('effective_readonly')) {
+            this._super.apply(this, arguments);
+        }
+    }
 });
 
 
@@ -918,193 +1064,6 @@ var Many2ManyListViewNew = X2ManyListViewNew.extend({
     },
 
 });
-
-
-
-var FieldMany2ManyIntern = FieldMany2Many.extend({
-    init: function() {
-        this._super.apply(this, arguments);
-        this.x2many_views = {
-            list: Many2ManyListViewNew,
-            kanban: core.view_registry.get('many2many_kanban'),
-        };
-//        this.on("link_external", this, function(id){
-//            alert(id);
-//        });
-    },
-    start: function() {
-        this.$el.addClass('o_form_field_many2many_intern');
-        return this._super.apply(this, arguments);
-    },
-
-
-    promote: function(id){
-        this.dataset.write(id,{promoted:true});
-        this.reload_current_view();
-    },
-});
-
-var X2ManyDataSet = data.BufferedDataSet.extend({
-    get_context: function() {
-        this.context = this.x2m.build_context();
-        var self = this;
-        _.each(arguments, function(context) {
-            self.context.add(context);
-        });
-        return this.context;
-    },
-});
-
-
-
-var FormViewDialogSpecific = common.ViewDialog.extend({
-
-    init: function(parent, options) {
-        this.intern_id = options.intern_id;
-        this._super(parent, options);
-    },
-
-    open: function() {
-
-        var _super = this._super.bind(this);
-        var parent = this.getParent().ViewManager.x2m.getParent();
-        var tmpset;
-        if(this.options.res_model == 'intern.issueafter'){
-            tmpset = parent.fields.issues_after_exam.dataset;
-        }
-        else{
-            tmpset = parent.fields.issues.dataset;
-        }
-        this.dataset = new X2ManyDataSet(this, this.options.res_model, {});
-        var arrayIds = [];
-        for(var i = 0; i<tmpset.ids.length;i++){
-            var tmpCache = tmpset.cache[tmpset.ids[i]];
-            if(!tmpCache.to_delete){
-                if(tmpCache.values.intern_id == this.intern_id){
-                    arrayIds.push(tmpCache.id);
-                    this.dataset.cache[tmpCache.id] = tmpCache;
-                }
-            }
-        }
-        this.dataset.ids= arrayIds;
-        if(this.options.res_model == 'intern.issueafter'){
-            this.dataset.x2m =parent.fields.issues_after_exam.dataset.x2m;
-            this.dataset.parent_view = parent.fields.issues_after_exam.dataset.parent_view;
-            this.dataset.child_name = parent.fields.issues_after_exam.dataset.child_name;
-        }
-        else{
-            this.dataset.x2m =parent.fields.issues.dataset.x2m;
-            this.dataset.parent_view = parent.fields.issues.dataset.parent_view;
-            this.dataset.child_name = parent.fields.issues.dataset.child_name;
-        }
-
-        var context = pyeval.sync_eval_domains_and_contexts({
-            domains: [],
-            contexts: [this.context]
-        }).context;
-        var search_defaults = {};
-        _.each(context, function (value_, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                search_defaults[match[1]] = value_;
-            }
-        });
-        data_manager
-            .load_views(this.dataset, [[false, 'list'], [false, 'search']], {})
-            .then(this.setup.bind(this, search_defaults))
-            .then(function (fragment) {
-                _super().$el.append(fragment);
-            });
-        return this;
-    },
-    setup: function(search_defaults, fields_views) {
-        var self = this;
-        var fragment = document.createDocumentFragment();
-        var $header = $('<div/>').addClass('o_modal_header').appendTo(fragment);
-        var $pager = $('<div/>').addClass('o_pager').appendTo($header);
-
-            self.view_list = new One2ManyListView(self,
-                self.dataset, fields_views.list,
-                _.extend({'deletable': this.options.deletable,
-                    'selectable': false,
-                    'import_enabled': false,
-                    '$buttons': self.$buttons,
-                    'disable_editable_mode': false,
-                    'pager': false,
-
-                }, self.options.list_view_options || {}));
-            if(this.options.res_model == 'intern.issueafter'){
-                self.view_list.x2m = self.getParent().ViewManager.x2m.getParent().fields.issues_after_exam.viewmanager.x2m;
-            }
-            else
-                self.view_list.x2m = self.getParent().ViewManager.x2m.getParent().fields.issues.viewmanager.x2m;
-            self.view_list.popup = self;
-            self.view_list.on('list_view_loaded', self, function() {
-                this.on_view_list_loaded();
-            });
-
-            var buttons = [
-                {text: _t("Close"), classes: "btn-default o_form_button_cancel", close: true}
-            ];
-
-            self.set_buttons(buttons);
-
-            return self.view_list.appendTo(fragment).then(function() {
-                self.view_list.do_show();
-                self.view_list.reload_content();
-                return fragment;
-            });
-    },
-
-    destroy: function(reason) {
-        var parent = this.getParent().ViewManager.x2m.getParent();
-        var tmpset;
-        if(this.options.res_model == 'intern.issueafter'){
-            tmpset = parent.fields.issues_after_exam.dataset;
-        }
-        else{
-            tmpset = parent.fields.issues.dataset;
-        }
-        var idscache = Object.keys(this.dataset.cache);
-        for(var i = 0; i<idscache.length;i++){
-
-            var id = idscache[i];
-            var tmpCache = this.dataset.cache[id];
-            if(tmpCache.to_delete){
-                var index = tmpset.ids.indexOf(tmpCache.id);
-                if(index>-1){
-                    tmpset.ids.splice(index, 1);
-                }
-            }
-            else{
-                tmpCache.values.intern_id = this.intern_id;
-                tmpCache.changes.intern_id= this.intern_id;
-                if(typeof id === 'string' && id.startsWith("one2many") && tmpset.cache[id]== undefined ){
-                    tmpset.ids.push(id);
-                }
-            }
-            tmpset.cache[id] = tmpCache;
-
-        }
-        this._super();
-    },
-
-    on_view_list_loaded: function() {},
-
-    create_edit_record: function() {
-        this.close();
-        return new common.FormViewDialog(this.__parentedParent, this.options).open();
-    },
-});
-
-var One2ManyGroups = ListView.Groups.extend({
-    setup_resequence_rows: function () {
-        if (!this.view.x2m.get('effective_readonly')) {
-            this._super.apply(this, arguments);
-        }
-    }
-});
-
 
 var One2ManyListViewNew = X2ManyListViewNew.extend({
     init: function () {
@@ -1542,8 +1501,187 @@ var FieldOne2ManyIntern = FieldOne2Many.extend({
 
 });
 
+One2ManyListView.include({
+    do_add_record: function () {
+//        if (this.editable()) {
+//            this._super.apply(this, arguments);
+//        }
+        if (!('showslection' in this.fields_view.arch.attrs)){
+            this._super.apply(this, arguments);
+        }else{
+            var self = this;
+            new common.SelectCreateDialog(this, {
+                res_model: this.model,
+                domain: new data.CompoundDomain(this.x2m.build_domain(), ["!", ["id", "in", this.x2m.dataset.ids]]),
+                context: this.x2m.build_context(),
+                title: _t("Add: ") + this.x2m.string,
+                alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
+                no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
+                on_selected: function(element_ids) {
+
+                    return self.x2m.data_link_multi(element_ids).then(function() {
+                        if ('sequence_pass' in self.fields_view.fields){
+                            var smallest = 1;
+                            _.each(self.x2m.dataset.ids, function(id){
+                                self.x2m.dataset.read_ids([id],['sequence_pass'],{}).then(function (records) {
+                                    if(records[0].sequence_pass>smallest){
+                                        smallest = records[0].sequence_pass;
+                                    }
+                                });
+                            });
+                            _.each(element_ids, function (id) {
+                                    smallest = smallest+1;
+                                    self.x2m.dataset._update_cache(id,{'changes':{'sequence_pass':smallest}});
+                                }
+                            );
+                        }
+                        else if ('sequence' in self.fields_view.fields){
+                            var smallest = 1;
+                            _.each(self.x2m.dataset.ids, function(id){
+                                self.x2m.dataset.read_ids([id],['sequence'],{}).then(function (records) {
+                                    if(records[0].sequence_pass>smallest){
+                                        smallest = records[0].sequence_pass;
+                                    }
+                                });
+                            });
+                            _.each(element_ids, function (id) {
+                                    smallest = smallest+1;
+                                    self.x2m.dataset._update_cache(id,{'changes':{'sequence':smallest}});
+                                }
+                            );
+                        }
+                        self.x2m.reload_current_view();
+                    });
+                }
+            }).open();
+        }
+    },
+    data_link_multi: function (ids, options) {
+        return this.send_commands(_.map(ids, function (id) { return COMMANDS.link_to(id); }), options);
+    },
+
+
+
+});
+
+FieldOne2Many.include({
+    get_value: function() {
+        var self = this,
+            is_one2many = this.field.type === "one2many",
+            not_delete = this.options.not_delete,
+            starting_ids = this.starting_ids.slice(),
+            replace_with_ids = [],
+            add_ids = [],
+            command_list = [],
+            id, index, record;
+
+        _.each(this.get('value'), function (id) {
+            index = starting_ids.indexOf(id);
+            if (index !== -1) {
+                starting_ids.splice(index, 1);
+            }
+            var record = self.dataset.get_cache(id);
+            if (!_.isEmpty(record.changes)) {
+                var values = _.clone(record.changes);
+                // format many2one values
+                for (var k in values) {
+                    if ((values[k] instanceof Array) && values[k].length === 2 && typeof values[k][0] === "number" && typeof values[k][1] === "string") {
+                        values[k] = values[k][0];
+                    }
+                }
+                if (record.to_create) {
+                    command_list.push(COMMANDS.create(values));
+                } else {
+                    command_list.push(COMMANDS.update(record.id, values));
+                }
+                return;
+            }
+            if (!is_one2many || not_delete || self.dataset.delete_all) {
+                replace_with_ids.push(id);
+            } else {
+                command_list.push(COMMANDS.link_to(id));
+            }
+        });
+        if ((!is_one2many || not_delete || self.dataset.delete_all) && (replace_with_ids.length || starting_ids.length)
+            || (is_one2many && 'views' in self && typeof self.views[0].fields_view != 'undefined' && 'showslection' in self.views[0].fields_view.arch.attrs)) {
+            _.each(command_list, function (command) {
+                if (command[0] === COMMANDS.UPDATE) {
+                    replace_with_ids.push(command[1]);
+                }
+            });
+            command_list.unshift(COMMANDS.replace_with(replace_with_ids));
+        }
+
+        _.each(starting_ids, function(id) {
+            if (is_one2many && !not_delete) {
+                command_list.push(COMMANDS.delete(id));
+            } else if (is_one2many && !self.dataset.delete_all) {
+                command_list.push(COMMANDS.forget(id));
+            }
+        });
+
+        return command_list;
+    },
+
+})
+
+
+//var One2ManyListViewAutoSave = One2ManyListView.extend({
+//    do_activate_record: function(index, id) {
+//        var self = this;
+//        var pop = new common.FormViewDialog(self, {
+//            res_model: self.x2m.field.relation,
+//            res_id: id,
+//            context: self.x2m.build_context(),
+//            title: _t("Open: ") + self.x2m.string,
+////            write_function: function(id, data, options) {
+////                return self.x2m.data_update(id, data, options).done(function() {
+////                    self.x2m.reload_current_view();
+////                });
+////            },
+//            write_function = function(id, data, options, sup) {
+//                var fct = self.options.write_function || sup;
+//                return fct.call(this, id, data, options).done(function(r) {
+////                    self.trigger('write_completed saved', r);
+////                    self.x2m.data_update(id, data, options)
+////                    self.x2m.reload_current_view();
+//                    return self.x2m.data_update(id, data, options).done(function() {
+//                        self.x2m.reload_current_view();
+//                    });
+//                });
+//            },
+//            alternative_form_view: self.x2m.field.views ? self.x2m.field.views.form : undefined,
+//            parent_view: self.x2m.view,
+//            child_name: self.x2m.name,
+//            read_function: function(ids, fields, options) {
+//                return self.x2m.data_read(ids, fields, options);
+//            },
+//            form_view_options: {'not_interactible_on_create':true},
+//            readonly: !this.is_action_enabled('edit') || self.x2m.get("effective_readonly")
+//        }).open();
+//
+////        pop.on('write_completed', self, function () {
+////            self.dataset.evict_record(id);
+////            self.reload_content();
+//////            self.x2m.reload_current_view();
+////        });
+//    },
+//
+//});
+//
+//var FieldOne2ManyAutoSaved = FieldOne2Many.extend({
+//    init: function() {
+//        this._super.apply(this, arguments);
+//        this.x2many_views = {
+//            kanban: core.view_registry.get('one2many_kanban'),
+//            list: One2ManyListViewAutoSave,
+//        };
+//    },
+//});
+
 core.form_widget_registry.add('many2many_intern', FieldMany2ManyIntern);
 core.form_widget_registry.add('one2many_intern', FieldOne2ManyIntern);
+//core.form_widget_registry.add('one2many_saved', FieldOne2ManyAutoSaved);
 
 
 });

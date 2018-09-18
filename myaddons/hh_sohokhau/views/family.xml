@@ -1,0 +1,506 @@
+<odoo>
+    <record id="view_form_family_member" model="ir.ui.view">
+        <field name="name">Thành viên gđ</field>
+        <field name="model">family.member</field>
+        <field name="arch" type="xml">
+            <form>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name_other" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name_other" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="name_other_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="name_other_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                  <label for="day" string="Ngày sinh"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99"  />
+                                    <field name="month" style="width: 70px; display: inline-block" placeholder="Tháng" />
+                                    <field name="year" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999" />
+                                    <!--<field name="date_of_birth" class="oe_read_only"/>-->
+                                </div>
+                            </td>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="gender"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="gender" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="relation"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="relation" />
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="folk"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="folk" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="nation"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="nation" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="identity"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="identity" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="passport_number"/>
+                            </td>
+                          <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="passport_number" />
+                                </div>
+                            </td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<td colspan="1" width="150px" class="columnDivider">-->
+                                  <!--<label for="day_identity" string="Ngày cấp"/>-->
+                            <!--</td>-->
+                            <!--<td colspan="1" >-->
+                                <!--<div>-->
+                                    <!--<field name="day_identity" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99" class="oe_edit_only"  />-->
+                                    <!--<field name="month_identity" style="width: 70px; display: inline-block" placeholder="Tháng" class="oe_edit_only" />-->
+                                    <!--<field name="year_identity" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999" />-->
+                                    <!--<field name="date_identity" class="oe_read_only"/>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="job_place"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="job_place" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="day_arrive"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_arrive" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99"  />
+                                    <field name="month_arrive" style="width: 70px; display: inline-block" placeholder="Tháng" />
+                                    <field name="year_arrive" style="width:50px" placeholder="Năm" widget="mask" data-inputmask-mask="9999" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_before_arrive"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_before_arrive" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td/>
+                            <td/>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_before_arrive_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_before_arrive_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="day_sign"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_sign" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99"  />
+                                    <field name="month_sign" style="width: 70px; display: inline-block" placeholder="Tháng" />
+                                    <field name="year_sign" style="width:50px" placeholder="Năm" widget="mask" data-inputmask-mask="9999" />
+                                </div>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="official"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="official" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="truong_ca"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="truong_ca" />
+                                </div>
+                            </td>
+                        </tr>
+
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="official_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="official_jp" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="truong_ca_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="truong_ca_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <caption style="font-weight: bold;border: 1px solid #fff; font-size:16px;color:black;">Thông tin xoá ĐK:</caption>
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="reason_remove_dktt"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="reason_remove_dktt" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="official_remove"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="official_remove" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="truong_ca_remove"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="truong_ca_remove" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="official_remove_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="official_remove_jp" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="truong_ca_remove_jp"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="truong_ca_remove_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="day_sign_remove"/>
+                            </td>
+                            <td colspan="1" >
+                                <div>
+                                    <field name="day_sign_remove" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99"  />
+                                    <field name="month_sign_remove" style="width: 70px; display: inline-block" placeholder="Tháng" />
+                                    <field name="year_sign_remove" style="width:50px" placeholder="Năm" widget="mask" data-inputmask-mask="9999" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_form_family" model="ir.ui.view">
+        <field name="name">Hộ khẩu</field>
+        <field name="model">intern.intern</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="download_shk" type="object" string="Tải SHK"/>
+                </header>
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="shk_no" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="shk_no" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_village" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_village" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_village_jp" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_village_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_district" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_district" />
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_district_jp" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_district_jp" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="address_province" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="address_province" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                      <label for="day_sign"/>
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div>
+                                    <field name="day_sign" style="width: 40px; display: inline-block" placeholder="Ngày" widget="mask" data-inputmask-mask="99"  />
+                                    <field name="month_sign" style="width: 70px; display: inline-block" placeholder="Tháng" />
+                                    <field name="year_sign" style="width:50px" placeholder="Năm" class="oe_edit_only" widget="mask" data-inputmask-mask="9999" />
+                                    <!--<field name="date_of_birth" class="oe_read_only"/>-->
+                                </div>
+                            </td>
+                            <td colspan="1" width="150px" ></td>
+                            <td colspan="1" width="200px" ></td>
+                        </tr>
+                        <tr>
+                             <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="truong_ca" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="truong_ca" />
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="document_no" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="document_no" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="book_dktt_no" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="book_dktt_no" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" width="150px" class="columnDivider">
+                                 <label for="page_no" />
+                            </td>
+                            <td colspan="1" width="200px">
+                                <div class="column">
+                                    <field name="page_no" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <notebook>
+                    <page string="Thành phần gia đình" >
+                        <field name="members" class="members">
+                            <tree>
+                                <field name="name"/>
+                                <field name="gender"/>
+                                <field name="relation"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_manage_invoice_sohokhau" model="ir.ui.view">
+         <field name="name">Đơn hàng</field>
+         <field name="model">intern.invoice</field>
+         <field name="arch" type="xml">
+             <form >
+                 <header>
+
+                 </header>
+
+                 <notebook>
+                    <page string="Danh sách trúng tuyển" >
+                        <field name="interns_pass_doc" string="Danh sách thực tập sinh"  mode="tree"
+                               context="{'form_view_ref':'hh_sohokhau.view_form_family'}" limit="5000" >
+
+                             <tree string="Chi tiết thực tập sinh"  create="false" default_order="sequence_exam" delete="false" limit="5000">
+                                 <field name="name_without_signal" />
+                                 <field name="identity" />
+                                 <field name="identity_2"/>
+                                 <field name="date_of_birth" />
+                                 <field name="address" />
+                                 <field name="province"/>
+                                 <field name="avatar" widget="image"/>
+                                 <field name="height"/>
+                                 <field name="sequence_exam" widget="handle"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                 </notebook>
+             </form>
+         </field>
+    </record>
+
+    <record id="invoice_form_hokhau" model="ir.ui.view">
+
+            <field name="name">Extends Form</field>
+
+            <field name="model">intern.invoice</field>
+
+            <field name="inherit_id" ref="hh_intern.view_manage_invoice_doingoai"/>
+
+            <field name="arch" type="xml">
+
+            	<button name="start_translate_form" position="after">
+
+            		<button name="translate_shk" string="Dịch Sổ HK" type="object"/>
+
+            	</button>
+
+            </field>
+
+    </record>
+</odoo>

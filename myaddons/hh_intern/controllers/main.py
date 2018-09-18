@@ -174,7 +174,11 @@ class CreateDocument(http.Controller):
         reponds = BytesIO()
         archive = zipfile.ZipFile(reponds, 'w', zipfile.ZIP_DEFLATED)
 
-        interns_pass = sorted(invoice.interns_pass_doc,key=lambda x: x.sequence_pass)
+        list_interns = invoice.interns_pass_doc
+        if invoice.hoso_created:
+            list_interns = invoice.interns_pass_doc_hs
+
+        interns_pass = sorted(list_interns,key=lambda x: x.sequence_pass)
         enterprise_id = int(enterprise)
 
         if document == 'Doc1-3':
@@ -279,10 +283,22 @@ class CreateDocument(http.Controller):
                                                            ('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')])
 
         elif document == 'CheckList':
-            reponds.close
+            reponds.close()
             return request.make_response(invoice.create_check_list(enterprise_id),headers=[('Content-Disposition',
                                                             content_disposition('Check_List.docx')),
                                                            ('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')])
+
+        elif document == 'Doc4-8':
+            reponds.close()
+            return request.make_response(invoice.create_48(enterprise_id), headers=[('Content-Disposition',
+                                                                                             content_disposition(
+                                                                                                 '4-8-入国前講習実施記録 (5-10).docx')),
+                                                                                            ('Content-Type',
+                                                                                             'application/vnd.openxmlformats-officedocument.wordprocessingml.document')])
+        elif document == 'Master':
+            master = invoice.create_master(enterprise_id)
+            archive.write(master.name, 'Master.docx')
+            os.unlink(master.name)
 
         archive.close()
         reponds.flush()
@@ -298,7 +314,12 @@ class CreateDocument(http.Controller):
         # invoice = request.env[model].search([('id', '=', id)])
         invoice = request.env[model].browse(int(id))
         enterprise_id = int(enterprise)
-        interns_pass = sorted(invoice.interns_pass_doc, key=lambda x: x.sequence_pass)
+
+        list_interns = invoice.interns_pass_doc
+        if invoice.hoso_created:
+            list_interns = invoice.interns_pass_doc_hs
+
+        interns_pass = sorted(list_interns, key=lambda x: x.sequence_pass)
         # request._cr.execute('SELECT intern_id FROM internpass_order WHERE internpass_order.invoice_id = %s' % id)
         # tmpresult = request._cr.dictfetchall()
         # if len(tmpresult) == 1:
@@ -332,38 +353,48 @@ class CreateDocument(http.Controller):
         #     archive.write(tempFile.name, 'Checklist.docx')
         #     os.unlink(tempFile.name)
 
+        file_maps = {}
+
         doc1_13_1 = invoice.create_1_13_1()
 
-        archive.write(doc1_13_1.name, u'1-13号 HOANG HUNG JAPAN 訓連センター.docx')
-        os.unlink(doc1_13_1.name)
+        file_maps.update({u'1-13号 HOANG HUNG JAPAN 訓連センター.docx':doc1_13_1.name})
+        # archive.write(doc1_13_1.name, u'1-13号 HOANG HUNG JAPAN 訓連センター.docx')
+        # os.unlink(doc1_13_1.name)
 
         doc1_13_2 = invoice.create_1_13_2()
-        archive.write(doc1_13_2.name, u'1-13号HOANG HUNG 会社.docx')
-        os.unlink(doc1_13_2.name)
+        file_maps.update({u'1-13号HOANG HUNG 会社.docx': doc1_13_2.name})
+        # archive.write(doc1_13_2.name, u'1-13号HOANG HUNG 会社.docx')
+        # os.unlink(doc1_13_2.name)
 
-        master = invoice.create_master(enterprise_id)
-        archive.write(master.name, 'Master.docx')
-        os.unlink(master.name)
+        # master = invoice.create_master(enterprise_id)
+        # file_maps.update({'Master.docx': master.name})
+        # archive.write(master.name, 'Master.docx')
+        # os.unlink(master.name)
 
         doc1_29 = invoice.create_doc_1_29(enterprise_id)
-        archive.write(doc1_29.name, '1_29.docx')
-        os.unlink(doc1_29.name)
+        file_maps.update({'1_29.docx': doc1_29.name})
+        # archive.write(doc1_29.name, '1_29.docx')
+        # os.unlink(doc1_29.name)
 
         doc_list_send = invoice.create_list_of_sent_en(enterprise_id)
-        archive.write(doc_list_send.name, u'推薦書 - ENG.docx')
-        os.unlink(doc_list_send.name)
+        file_maps.update({u'推薦書 - ENG.docx': doc_list_send.name})
+        # archive.write(doc_list_send.name, u'推薦書 - ENG.docx')
+        # os.unlink(doc_list_send.name)
 
         doc_list_send_jp = invoice.create_list_of_sent_jp(enterprise_id)
-        archive.write(doc_list_send_jp.name, u'推薦書.docx')
-        os.unlink(doc_list_send_jp.name)
+        file_maps.update({u'推薦書.docx': doc_list_send_jp.name})
+        # archive.write(doc_list_send_jp.name, u'推薦書.docx')
+        # os.unlink(doc_list_send_jp.name)
 
         doc1_20 = invoice.create_doc_1_20()
-        archive.write(doc1_20.name, '1_20.docx')
-        os.unlink(doc1_20.name)
+        file_maps.update({'1_20.docx': doc1_20.name})
+        # archive.write(doc1_20.name, '1_20.docx')
+        # os.unlink(doc1_20.name)
 
         docCCDT = invoice.create_certification_end_train(enterprise_id)
-        archive.write(docCCDT.name, u'事前講習実施報告書.docx')
-        os.unlink(docCCDT.name)
+        file_maps.update({u'事前講習実施報告書.docx': docCCDT.name})
+        # archive.write(docCCDT.name, u'事前講習実施報告書.docx')
+        # os.unlink(docCCDT.name)
 
         iterate_intern = 0
         for i, intern in enumerate(interns_pass):
@@ -371,32 +402,47 @@ class CreateDocument(http.Controller):
                 continue
 
             doc1_3 = invoice.create_doc_1_3(intern, iterate_intern)
-            archive.write(doc1_3.name, '1_3_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(doc1_3.name)
+            file_maps.update({'1_3_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): doc1_3.name})
+            # archive.write(doc1_3.name, '1_3_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(doc1_3.name)
 
             doc1_10 = invoice.create_doc_1_10(intern)
-            archive.write(doc1_10.name, '1_10_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(doc1_10.name)
+            file_maps.update(
+                {'1_10_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): doc1_10.name})
+            # archive.write(doc1_10.name, '1_10_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(doc1_10.name)
 
 
 
             doc1_21 = invoice.create_doc_1_21(intern)
-            archive.write(doc1_21.name, '1_21_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(doc1_21.name)
+            file_maps.update(
+                {'1_21_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): doc1_21.name})
+            # archive.write(doc1_21.name, '1_21_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(doc1_21.name)
 
             doc1_28 = invoice.create_doc_1_28(intern,i)
-            archive.write(doc1_28.name, '1_28_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(doc1_28.name)
+            file_maps.update(
+                {'1_28_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): doc1_28.name})
+            # archive.write(doc1_28.name, '1_28_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(doc1_28.name)
 
             hdtn = invoice.create_hdtn(intern)
-            archive.write(hdtn.name, 'hdtn_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(hdtn.name)
+            file_maps.update(
+                {'hdtn_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): hdtn.name})
+            # archive.write(hdtn.name, 'hdtn_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(hdtn.name)
 
             hdtv = invoice.create_hdtv(intern)
-            archive.write(hdtv.name, 'hdtv_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
-            os.unlink(hdtv.name)
+            file_maps.update(
+                {'hdtv_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)): hdtv.name})
+            # archive.write(hdtv.name, 'hdtv_%d_%s.docx' % ((iterate_intern+1),intern_utils.name_with_underscore(intern.name)))
+            # os.unlink(hdtv.name)
 
             iterate_intern+=1
+
+        for key in file_maps:
+            archive.write(file_maps[key],key)
+            os.unlink(file_maps[key])
 
         archive.close()
         reponds.flush()

@@ -1,0 +1,98 @@
+<odoo>
+
+    <report
+        id="intern_issue_xlsx"
+        model="hoanghung.report"
+        string="Danh sách phát sinh"
+        report_type="xlsx"
+        name="intern.issue.xlsx"
+        file="intern.issue.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+    <report
+        id="intern_departure_xlsx"
+        model="hoanghung.report"
+        string="Báo cáo số lượng xuất cảnh"
+        report_type="xlsx"
+        name="intern.departure.xlsx"
+        file="intern.departure.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+    <report
+        id="interns_pass_xlsx"
+        model="hoanghung.report"
+        string="Danh sách trúng tuyển tháng"
+        report_type="xlsx"
+        name="interns.pass.xlsx"
+        file="interns.pass.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+    <report
+        id="interns_numberpass_xlsx"
+        model="hoanghung.report"
+        string="Số lượng trúng tuyển đơn hàng"
+        report_type="xlsx"
+        name="interns.numberpass.xlsx"
+        file="interns.numberpass.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+    <report
+        id="interns_resources_xlsx"
+        model="hoanghung.report"
+        string="Thống kê số liệu nguồn"
+        report_type="xlsx"
+        name="intern.resources.xlsx"
+        file="intern.resources.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+    <report
+        id="hunt_target_xlsx"
+        model="hoanghung.report"
+        string="Chỉ tiêu theo phòng TD"
+        report_type="xlsx"
+        name="hunt.target.xlsx"
+        file="hunt.target.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+    <report
+        id="invoice_pausestop_xlsx"
+        model="hoanghung.report"
+        string="Đơn hàng Hoãn - Huỷ"
+        report_type="xlsx"
+        name="invoice.pausestop.xlsx"
+        file="invoice.pausestop.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+    <report
+        id="intern_deposit_xlsx"
+        model="hoanghung.report"
+        string="Danh sách nộp cọc"
+        report_type="xlsx"
+        name="intern.deposit.xlsx"
+        file="intern.deposit.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+    <report
+        id="invoice_coche_xlsx"
+        model="hoanghung.report"
+        string="Bảng cơ chế đơn hàng"
+        report_type="xlsx"
+        name="invoice.coche.xlsx"
+        file="invoice.coche.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+</odoo>

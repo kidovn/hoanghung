@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template id="template" xml:space="preserve">
+    <t t-extend="ExportDialog">
+        <t t-jquery="input:first" t-operation="replace">
+            <span></span>
+        </t>
+        <t t-jquery=".o_import_compat label:first" t-operation="replace">
+            <span></span>
+        </t>
+        <t t-jquery=".o_import_compat div:eq(1)" t-operation="replace">
+            <div><input type="radio" name="o_import_compat_name" value="" checked="checked"/><label>Export all Data</label></div>
+        </t>
+    </t>
+</template>

@@ -141,13 +141,17 @@ var ListViewNew = ListView.extend({
 //        var self = this;
 //
         this.header_count_form = 0;
+        this.header_count_iq = 0;
         this.header_count_avatar = 0;
         this.header_count_health = 0;
         this.header_count_deposit = 0;
 
         for(var i in this.dataset.cache){
-            if(this.dataset.cache[i].values['have_form']){
-                this.header_count_form+=1;
+//            if(this.dataset.cache[i].values['have_form']){
+//                this.header_count_form+=1;
+//            }
+            if(this.dataset.cache[i].values['have_iq']){
+                this.header_count_iq+=1;
             }
             if(this.dataset.cache[i].values['have_health']){
                 this.header_count_health+=1;
@@ -195,6 +199,9 @@ var ListViewNew = ListView.extend({
                 if(column.id == 'have_form'){
                     return '<span style="color:red">('+this.header_count_form+')</span>';
                 }
+                else if (column.id == 'have_iq'){
+                    return '<span style="color:red">('+this.header_count_iq+')</span>';
+                }
                 else if(column.id == 'have_health'){
                     return '<span style="color:red">('+this.header_count_health+')</span>';
                 }else if(column.id == 'have_deposit'){
@@ -232,6 +239,11 @@ var ListViewNew = ListView.extend({
         }
 
         this.trigger('list_view_loaded', data, this.grouped);
+
+//        this.$('tfoot .o_list_download_excel').click(function() {
+//            /
+//        });
+
         return $.when();
     },
 });

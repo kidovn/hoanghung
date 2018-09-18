@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="res.groups" id="group_tk_accounting_manager">
+            <field name="name">Accounting Manager</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_view">
+            <field name="name">Accounting View</field>
+            <field name="comment">Teko Accounting View Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_change_debt_view">
+            <field name="name">Change Receivable View</field>
+            <field name="comment">Teko Accounting View Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_change_debt_manager">
+            <field name="name">Change Receivable Manager</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_delete_debt_manager">
+            <field name="name">Delete Receivable Manager</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_reduce_receivable_manager">
+            <field name="name">Reduce Receivable Manager</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_transfer_money_manager">
+            <field name="name">Transfer Money Manager</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_transfer_money_approvement">
+            <field name="name">Transfer Money Approvement</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+        <record model="res.groups" id="group_tk_accounting_3pl_map_money_manager">
+            <field name="name">3PL Map Money</field>
+            <field name="comment">Teko Accounting Manager Permission Group.</field>
+            <field name="category_id" ref="tk_legacy.module_category_tk_finance"/>
+        </record>
+    </data>
+</odoo>

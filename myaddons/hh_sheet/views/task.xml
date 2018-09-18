@@ -1,0 +1,21 @@
+<odoo>
+    <record id="task_view_manager" model="ir.ui.view">
+        <field name="name">Nhiệm vụ</field>
+        <field name="model">employee.sheet.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="send_data" string="Đẩy dữ liệu"/>
+                </header>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_employee_sheet">
+        <field name="name">Nhân viên</field>
+        <field name="res_model">employee.sheet.wizard</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem id="menu_employee_sheet" name="Test" action="action_employee_sheet"/>
+</odoo>

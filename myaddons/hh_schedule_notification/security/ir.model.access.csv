@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hh_event,hh_event manager,model_hh_event,,1,1,1,1
+access_hh_alarm,hh_alarm manager,model_hh_alarm,,1,1,1,1

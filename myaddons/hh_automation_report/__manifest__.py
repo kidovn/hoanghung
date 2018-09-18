@@ -19,13 +19,17 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base',
+    'depends': ['base','hh_intern','report_xlsx','hh_intern_pass_report','hh_report'
+                # 'hh_report'
                 ],
 
 
     # always loaded
     'data': [
         'views/cron_view.xml',
+        'views/report_view.xml',
+        'views/report_menu.xml',
+        'views/template.xml',
         'security/ir.model.access.csv',
     ],
     # only loaded in demonstration mode

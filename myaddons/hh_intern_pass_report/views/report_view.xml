@@ -10,8 +10,29 @@
             <field name="arch" type="xml">
 
             	<button name="start_translate_form" position="after">
-
+                    <button string="Gửi lại TB trúng tuyển" type="object" name="send_pass_report_again" attrs="{'invisible': [('status', '!=', 2)]}"/>
             		<button string="Tải TB trúng tuyển" type="object" name="download_pass_report" attrs="{'invisible': [('status', '!=', 2)]}"/>
+                    <button string="Tải DS TTS thi tuyển" type="object" name="download_exam_report" attrs="{'invisible': [('status', '!=', 1)]}"/>
+
+            	</button>
+
+            </field>
+
+    </record>
+
+    <record id="invoice_form_download_promoted_report" model="ir.ui.view">
+
+            <field name="name">Extends Form</field>
+
+            <field name="model">intern.invoice</field>
+
+            <field name="inherit_id" ref="hh_intern.view_promotion_invoice_form"/>
+
+            <field name="arch" type="xml">
+
+            	<button name="start_promotion" position="after">
+
+            		<button string="Tải DS tiến cử trúng tuyển" type="object" name="download_promoted_report" />
 
             	</button>
 
@@ -35,6 +56,7 @@
         <field name="header_spacing">0</field>
         <field name="dpi">300</field>
     </record>
+
 
 
 </odoo>

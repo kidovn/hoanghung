@@ -1,0 +1,238 @@
+<odoo>
+    <template id="invoices_page" >
+      <!--<t t-call="website.layout">-->
+        <![CDATA[<!DOCTYPE html>]]>
+
+        <html lang="en">
+        <head>
+            <link rel="stylesheet" href="/hh_website/static/css/style.css"/>
+        </head>
+        <body>
+          <div class="oe_structure">
+            <div class="container">
+              <center><h3>Danh sách đơn hàng</h3></center>
+              <br/>
+              <div class="table-responsive">
+                  <table class="o_list_view table table-condensed table-striped">
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Mã đơn hàng</th>
+                        <th>Tên đơn hàng</th>
+                        <th>Phòng PTTT</th>
+                        <!--<th>Cán bộ PTTT</th>-->
+                        <th>Phòng TD care</th>
+                        <th>Ngày chốt form</th>
+                        <th>Ngày thi tuyển</th>
+                        <th>Số lượng nam</th>
+                        <th>Số lượng nữ</th>
+                        <th>Số lượng thi tuyển</th>
+                        <th>Form TC</th>
+                        <th>Chốt thi</th>
+                        <th>Ghi chú</th>
+                        <!--<th>Tình trạng</th>-->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <t t-foreach="invoices" t-as="invoice">
+                          <tr t-attf-data-href="/invoice/{{invoice.id}}" class='clickable-row' t-attf-bgcolor="{{invoice.color_notice}}">
+                            <td><t t-esc="invoice_index+1"/></td>
+                            <td><t t-esc="invoice.custom_id_2"/></td>
+                            <td><t t-esc="invoice.name"/></td>
+                            <td><t t-if="invoice.room_pttt" t-esc="invoice.room_pttt.name"/></td>
+                            <!--<td><t t-esc="invoice.employee_pttt.name"/></td>-->
+                            <td><t t-if="invoice.room_td_care" t-esc="invoice.room_td_care.name"/></td>
+                            <td><t t-if="invoice.date_confirm_form" t-esc="time.strftime('%d-%m-%Y',time.strptime(invoice.date_confirm_form,'%Y-%m-%d'))"/></td>
+                            <td><t t-if="invoice.date_exam_short" t-esc="time.strftime('%d-%m-%Y',time.strptime(invoice.date_exam_short,'%Y-%m-%d'))"/></td>
+                            <td><t t-esc="invoice.number_man" /></td>
+                            <td><t t-esc="invoice.number_women" /></td>
+                            <td><t t-esc="invoice.source_total" /></td>
+                            <td><t t-esc="form_tc[invoice_index]" /></td>
+                            <td><t t-esc="form_ct[invoice_index]" /></td>
+                            <td><t t-esc="invoice.note_report" /></td>
+                          </tr>
+                      </t>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </body>
+        <script src="/hh_website/static/src/js/jquery.min.js"/>
+        <script src="/hh_website/static/src/js/actions.js"/>
+        <!--<script src="/hh_website/static/src/js/bootstrap.min.js"/>-->
+      </html>
+      <!--</t>-->
+    </template>
+
+    <template id="invoices_detail" name="Đơn hàng">
+        <![CDATA[<!DOCTYPE html>]]>
+
+        <html lang="en">
+        <head>
+            <link rel="stylesheet" href="/hh_website/static/css/style.css"/>
+        </head>
+        <body>
+            <div class="oe_structure">
+                <center><h3>Đơn hàng <t t-esc="invoice.name"/></h3></center>
+                <table >
+                  <tbody>
+                    <tr>
+                      <td>Mã đơn hàng:</td>
+                      <td><t t-esc="invoice.custom_id_2" /></td>
+                        <td style="padding-left: 30px;">Địa điểm làm việc:</td>
+                         <td><t t-esc="invoice.place_to_work" /></td>
+                    </tr>
+                    <tr>
+                      <td>Phòng PTTT:</td>
+                      <td><t t-if="invoice.room_pttt" t-esc="invoice.room_pttt.name"/></td>
+                        <td style="padding-left: 30px;">Lương cơ bản:</td>
+                         <td><t t-esc="invoice.salary_base" /></td>
+                    </tr>
+                     <tr>
+                         <td>Phòng TD hỗ trợ:</td>
+                         <td><t t-if="invoice.room_td_care" t-esc="invoice.room_td_care.name" /></td>
+                         <td style="padding-left: 30px;">Lương thực lĩnh:</td>
+                         <td><t t-esc="invoice.salary_real" /></td>
+                     </tr>
+
+                      <!--<tr>-->
+                         <!---->
+                     <!--</tr>-->
+
+                      <!--<tr>-->
+                         <!---->
+                     <!--</tr>-->
+                      <!--<tr>-->
+
+                     <!--</tr>-->
+                       <tr>
+                         <td>Ngày chốt form:</td>
+                         <td><t t-if="invoice.date_confirm_form" t-esc="time.strftime('%d-%m-%Y',time.strptime(invoice.date_confirm_form,'%Y-%m-%d'))"/></td>
+                     </tr>
+
+                       <tr>
+                         <td>Ngày thi tuyển:</td>
+                         <td><t t-if="invoice.date_exam_short" t-esc="time.strftime('%d-%m-%Y',time.strptime(invoice.date_exam_short,'%Y-%m-%d'))"/></td>
+                     </tr>
+                      <tr>
+                         <td>Ngày dự kiến XC:</td>
+                         <td><t t-if="invoice.date_departure" t-esc="time.strftime('%d-%m-%Y',time.strptime(invoice.date_departure,'%Y-%m-%d'))"/></td>
+                     </tr>
+                  </tbody>
+                </table>
+
+                <p>Danh sách tiến cử</p>
+                <div class="table-responsive">
+                    <table class="o_list_view table">
+                      <thead>
+                        <th>STT</th>
+                        <th>Họ tên</th>
+                        <th>Ngày TC</th>
+                        <th>Ngày sinh</th>
+                        <th>Quê quán</th>
+                        <th>Cán bộ tuyển dụng</th>
+                        <th>Phòng tuyển dụng</th>
+                        <th>Chiều cao</th>
+                        <th>Cân nặng</th>
+                        <th>Thị lực</th>
+                        <th>Trình độ VH</th>
+                        <th>Hôn nhân</th>
+                        <th>Ảnh</th>
+                        <th>Cọc</th>
+                        <th>Sức khoẻ</th>
+                        <th>IQ</th>
+                        <th>Chốt thi</th>
+                      </thead>
+                      <tbody>
+                          <t t-set="counter" t-value="0"/>
+                        <t t-foreach="interns" t-as="intern">
+                            <t t-if="intern.promoted">
+                                <t t-set="counter" t-value="counter+1"/>
+
+                              <t t-set="backcolor" t-value="'#FFFFFF'"/>
+
+                              <t t-if="intern.condition_count2 == 10">
+                                  <t t-set="backcolor" t-value="'#91c468'"/>
+                              </t>
+                              <t t-elif="intern.condition_count2 == 0">
+                                  <t t-set="backcolor" t-value="'#e0596d'"/>
+                              </t>
+                              <t t-else="">
+                                    <t t-set="backcolor" t-value="'#FFFFFF'"/>
+                              </t>
+                              <tr t-attf-bgcolor="{{backcolor}}">
+                                <td><t t-esc="counter"/></td>
+                                <td><t t-esc="intern.name"/></td>
+                                <td><t t-if="intern.datetime_promoted" t-esc="datetime.datetime.strptime(intern.datetime_promoted, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M')"/></td>
+                                <td><t t-esc="time.strftime('%d/%m/%Y',time.strptime(intern.date_of_birth_short,'%Y-%m-%d'))"/></td>
+                                <td><t t-esc="intern.province.name"/></td>
+                                  <td><t t-esc="intern.recruitment_employee.name"/></td>
+                                  <td><t t-esc="intern.room_recruitment.name"/></td>
+                                  <td><t t-esc="intern.height"/></td>
+                                  <td><t t-esc="intern.weight"/></td>
+                                  <td><t t-esc="intern.vision_left"/>/<t t-esc="intern.vision_right"/></td>
+                                  <td>
+                                    <t t-if="intern.certification">
+                                        <t t-esc="intern.certification.name_in_vn[16:]"/>
+                                    </t>
+                                  </td>
+                                  <td>
+                                    <t t-if="intern.marital_status">
+                                        <t t-esc="intern.marital_status.name_in_vn"/>
+                                    </t>
+                                  </td>
+                                  <td>
+                                    <t t-if="intern.avatar">
+                                        <input type="checkbox" onclick="return false;" checked="True"/>
+                                    </t>
+                                      <t t-else="">
+                                          <input type="checkbox" onclick="return false;"  />
+                                      </t>
+                                  </td>
+                                  <td>
+                                    <t t-if="intern.have_deposit">
+                                        <input type="checkbox" onclick="return false;"  checked="True"/>
+                                    </t>
+                                      <t t-else="">
+                                          <input type="checkbox"  onclick="return false;" />
+                                      </t>
+                                  </td>
+
+                                  <td>
+                                    <t t-if="intern.have_health">
+                                        <input type="checkbox"  onclick="return false;" checked="True"/>
+                                    </t>
+                                      <t t-else="">
+                                          <input type="checkbox"  onclick="return false;" />
+                                      </t>
+                                  </td>
+
+                                  <td>
+                                    <t t-if="intern.iq_percentage>0">
+                                        <input type="checkbox"  onclick="return false;" checked="True"/>
+                                    </t>
+                                      <t t-else="">
+                                          <input type="checkbox"  onclick="return false;" />
+                                      </t>
+                                  </td>
+
+                                  <td>
+                                    <t t-if="intern.confirm_exam">
+                                        <input type="checkbox"  onclick="return false;" checked="True"/>
+                                    </t>
+                                      <t t-else="">
+                                          <input type="checkbox"  onclick="return false;" />
+                                      </t>
+                                  </td>
+                              </tr>
+                            </t>
+                        </t>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </body>
+        </html>
+    </template>
+</odoo>

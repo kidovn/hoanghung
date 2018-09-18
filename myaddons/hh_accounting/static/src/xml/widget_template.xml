@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="templatenew" xml:space="preserve">
+    <t t-name="MyAccountingButton">
+        <t t-if="widget.get_value()">
+            <div class="o_bool_button" style="padding-left: 10px;display: flex;align-items: center;padding-top: 5px"><button style="font-size:8px;" class="btn btn_toggle btn-sm"><t t-esc="widget.action_true"/></button></div>
+        </t>
+        <t t-if="!widget.get_value()">
+            <div class="o_bool_button" style="padding-left: 10px;display: flex;align-items: center;padding-top: 5px"><button style="font-size:8px;" class="btn btn-primary btn-sm"><t t-esc="widget.action_false"/></button></div>
+        </t>
+    </t>
+
+    <button t-name="ListView.row.text_button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : widget.class"
+        ><t t-esc="widget.string"/></button>
+</templates>

@@ -1,0 +1,41 @@
+<odoo>
+     <record id="view_form_test" model="ir.ui.view">
+        <field name="name">TEST OBJ</field>
+        <field name="model">hhtest.modela</field>
+        <field name="arch" type="xml">
+            <form >
+                <field name="name"/>
+                <field name="model_b" mode="tree">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_test" model="ir.ui.view">
+        <field name="name">TEST OBJ</field>
+        <field name="model">hhtest.modela</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_test_tree_form">
+        <field name="name">Đơn hàng</field>
+        <field name="res_model">hhtest.modela</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="menu_hh_test" name="TEST" groups="base.group_user"/>
+
+    <menuitem id="menu_hh_test_tree" parent="menu_hh_test"
+        name="Danh sách TEST" action="action_test_tree_form" groups="base.group_user"/>
+
+
+</odoo>

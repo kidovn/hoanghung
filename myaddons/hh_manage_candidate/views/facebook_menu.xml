@@ -1,0 +1,9 @@
+<odoo>
+    <record model="ir.actions.act_window" id="action_facebook_page_menu">
+        <field name="name">Trang facebook</field>
+        <field name="res_model">candidate.facebook</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="list_facebook_page" parent="menu_employee_hunt" action="action_facebook_page_menu" name="Facebook"/>
+</odoo>

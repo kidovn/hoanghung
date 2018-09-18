@@ -34,7 +34,7 @@
     </record>
 
 
-    <record id="dialog_cancel_invoice" model="ir.ui.view">
+    <record id="dialog_printdoc_invoice" model="ir.ui.view">
         <field name="name">invoice.printdoc.wizard</field>
         <field name="model">invoice.printdoc.wizard</field>
         <field name="arch" type="xml">
@@ -62,7 +62,7 @@
         <field name="res_model">invoice.printdoc.wizard</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="dialog_cancel_invoice"/>
+        <field name="view_id" ref="dialog_printdoc_invoice"/>
         <field name="target">new</field>
     </record>
 

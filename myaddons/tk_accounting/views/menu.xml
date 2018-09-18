@@ -1,0 +1,18 @@
+<openerp>
+    <data noupdate="0">
+        <record id="tk_kien_demo_tree_window_action" model="ir.actions.act_window">
+            <field name="name">Kien Demo</field>
+            <field name="res_model">kien.demo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="tk_kien_demo_tree_view"/>
+        </record>
+
+
+        <menuitem name="Demo" sequence="4"
+                  id="menuitem_tk_kien_demo"
+                  action="tk_kien_demo_tree_window_action"/>
+
+    </data>
+</openerp>

@@ -54,7 +54,7 @@ class Employee(models.Model):
 
     room_type = fields.Selection(
         [('0', 'Tuyển dụng'), ('1', 'Phát triển thị trường'), ('2', 'Kiểm soát'), ('3', 'Đối ngoại'),
-         ('4', 'Hồ sơ'), ('5', 'Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')], string="Phòng ban")
+         ('4', 'Hồ sơ'), ('5', 'Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')], string="Kiểu Phòng ban")
 
     # department_hs = fields.Many2many('department',string='Phụ trách hồ sơ của các phòng')
     department_id = fields.Many2one('department', string="Phòng")
@@ -64,14 +64,15 @@ class Employee(models.Model):
     @api.onchange('department_id')
     def onchage_department_id(self):
         for rec in self:
-            rec.room_type = rec.department_id.room_type
+            if rec.department_id:
+                rec.room_type = rec.department_id.room_type
 
 
 class Department(models.Model):
     _name = 'department'
     _description = u'Phòng ban'
     room_type = fields.Selection([('0','Tuyển dụng'),('1','Phát triển thị trường'),('2','Kiểm soát'),('3','Đối ngoại'),
-                                  ('4','Hồ sơ'),('5','Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')],string="Phòng", required=True)
+                                  ('4','Hồ sơ'),('5','Kế toán'),('6','Hành chính NS'),('7','Đào tạo'),('8','Tuyển dụng NS')],string="Kiểu Phòng ban", required=True)
     name = fields.Char("Tên phòng")
     manager = fields.Many2one('hh.employee',string="Trưởng phòng")
     members = fields.One2many('hh.employee','department_id', string='Members', readonly=True)

@@ -132,6 +132,54 @@ var PivotViewExtend = PivotView.extend({
         }
     },
 
+    download_table: function () {
+        framework.blockUI();
+        var nbr_measures = this.active_measures.length,
+            headers = this.compute_headers(),
+            measure_row = nbr_measures > 1 ? _.last(headers) : [],
+            rows = this.compute_rows(),
+            i, j, value;
+        headers[0].splice(0,1);
+        // process measure_row
+        for (i = 0; i < measure_row.length; i++) {
+            measure_row[i].measure = this.measures[measure_row[i].measure].string;
+        }
+        // process all rows
+        var self = this;
+        var measure_types = this.active_measures.map(function (name) {
+            return self.measures[name].type;
+        });
+        var widgets = this.widgets;
+
+        for (i =0, j, value; i < rows.length; i++) {
+            for (j = 0; j < rows[i].values.length; j++) {
+//                value = rows[i].values[j];
+                value = this.custom_format(rows[i].expanded,i,rows[i].values[j], {type: measure_types[j % nbr_measures], widget: widgets[j % nbr_measures]});
+                rows[i].values[j] = {
+                    is_bold: (i === 0) || ((this.main_col.width > 1) && (j >= rows[i].values.length - nbr_measures)),
+                    value:  (value === undefined) ? "" : value,
+                };
+            }
+        }
+        var table = {
+            headers: _.initial(headers),
+            measure_row: measure_row,
+            rows: rows,
+            nbr_measures: nbr_measures,
+            title: this.title,
+        };
+        if(table.measure_row.length + 1 > 256) {
+            c.show_message(_t("For Excel compatibility, data cannot be exported if there are more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+            return;
+        }
+        session.get_file({
+            url: '/web/pivot/export_xls',
+            data: {data: JSON.stringify(table)},
+            complete: framework.unblockUI,
+            error: crash_manager.rpc_error.bind(crash_manager)
+        });
+    },
+
     custom_format: function (expanded,row_index,value, descriptor, value_if_empty) {
         if ((descriptor.type == 'datetime'|| descriptor.type == 'date') && value instanceof Array){
             if(expanded || row_index == 0){

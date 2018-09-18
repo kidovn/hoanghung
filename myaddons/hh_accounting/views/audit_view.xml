@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_audit_log_accounting_tree" model="ir.ui.view">
+        <field name="name">Thực tập sinh</field>
+        <field name="model">auditlog.log.line</field>
+        <field name="arch" type="xml">
+            <tree default_order="create_date desc">
+                <!--<field name="field_id" readonly="1"/>-->
+                <field name="log_id" readonly="1"/>
+                <field name="field_description" readonly="1"/>
+                <field name="old_value" readonly="1"/>
+                <field name="new_value" readonly="1"/>
+                <field name="user_id" readonly="1"/>
+                <field name="create_date" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

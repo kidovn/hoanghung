@@ -13,13 +13,13 @@ class CancelInvoiceWizard(models.TransientModel):
     @api.multi
     def confirm_request(self):
         if 'action' in self._context and 'active_ids' in self._context:
-            recs = self.env['active_model'].browse(self._context['active_ids'])
+            recs = self.env['intern.invoice'].browse(self._context['active_ids'])
             if self._context['action'] == 'pause':
                 for rec in recs:
                     rec.pause_invoice(self.reason)
             elif self._context['action'] == 'cancel':
                 for rec in recs:
-                    rec.cancel_invoice()
+                    rec.cancel_invoice(self.reason)
         return True
 
 class PrintDocWizard(models.TransientModel):
@@ -28,7 +28,7 @@ class PrintDocWizard(models.TransientModel):
                                  ('Doc1-21', '1-21'), ('Doc1-28', '1-28'), ('Doc1-29', '1-29'),
                                  ('DocCCDT', 'Chứng chỉ kết thúc Đào tạo'),
                                  ('HDPC', 'Hợp đồng PC'), ('PROLETTER', 'Thư tiến cử'),('DSLD','Danh sách lao động')
-                                    ,('CheckList','Check List')], string='Hồ sơ in')
+                                    ,('CheckList','Check List'),('Doc4-8','4-8'),('Master','Master')], string='Hồ sơ in')
 
     enterprise = fields.Many2one('intern.enterprise',string='Xí nghiệp',required=True)
 
@@ -37,10 +37,16 @@ class PrintDocWizard(models.TransientModel):
         education_list = []
         invoice_id = self._context['active_id']
         invoice = self.env['intern.invoice'].browse(invoice_id)
-        for x in invoice.interns_pass_doc:
-            if x.enterprise:
-                education_list.append(x.enterprise.id)
-        return [(6, 0, education_list)]
+        if invoice.interns_pass_doc:
+            for x in invoice.interns_pass_doc:
+                if x.enterprise:
+                    education_list.append(x.enterprise.id)
+            return [(6, 0, education_list)]
+        elif invoice.interns_pass_doc_hs:
+            for x in invoice.interns_pass_doc_hs:
+                if x.enterprise:
+                    education_list.append(x.enterprise.id)
+            return [(6, 0, education_list)]
 
     enterprise_ids = fields.Many2many('intern.enterprise',default=_get_enterprise_domain)
 
@@ -67,4 +73,14 @@ class PrintFormCustomWizard(models.TransientModel):
     interns_list = fields.Many2many('intern.internclone', default=_get_interns_domain)
     interns = fields.Many2many('intern.internclone')
 
+# class MergeInvoice(models.TransientModel):
+#     _name = 'invoice.merge.wizard'
+#
+#     invoices = fields.Many2many('intern.invoice',string='Chọn ĐH')
+#
+#     def confirm_request(self):
+#         _logger.info("confirm")
+#         invoice_id = self._context['active_id']
+#         invoice = self.env['intern.invoice'].browse(invoice_id)
+#         return invoice.create_extern_doc(self.enterprise.id,self.document)
 

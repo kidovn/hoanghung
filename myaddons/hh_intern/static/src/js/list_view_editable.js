@@ -953,7 +953,7 @@ ListViewNew.include(/** @lends instance.web.ListView# */{
 
 ListView.List.include({
     row_clicked: function (event) {
-        if(this.view.editable() && this.view.is_action_enabled('edit') && "editable" in this.view.x2m.options && this.view.x2m.options['editable'] ==0){
+        if(this.view.editable() && this.view.x2m && this.view.is_action_enabled('edit') && "editable" in this.view.x2m.options && this.view.x2m.options['editable'] ==0){
             var focus_field = $(event.target).not(".o_readonly").data('field');
             if(focus_field!=undefined && this.view.fields_view.fields[focus_field].__attrs['ct_editable'] == "1"){
                 if (this.__is_starting_edition) {

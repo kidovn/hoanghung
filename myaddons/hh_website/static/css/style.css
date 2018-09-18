@@ -1,0 +1,14 @@
+.table-responsive table {
+    border-collapse: collapse;
+}
+
+.table-responsive > th{
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.o_list_view.table td, .o_list_view.table th
+{
+    border: 1px solid black;
+    padding: 5px;
+}

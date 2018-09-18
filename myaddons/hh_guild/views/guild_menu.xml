@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+     <record model="ir.actions.act_window" id="action_guild">
+        <field name="name">Danh sách Nghiệp đoàn</field>
+        <field name="res_model">intern.guild</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_list_dispatch_2"
+        name="Danh sách Nghiệp đoàn"
+        action="action_guild" parent="hh_intern.menu_hoso_main"/>
+
+
+
+    <record model="ir.actions.act_window" id="action_enterprise_list">
+        <field name="name">Danh sách Xí nghiệp</field>
+        <field name="res_model">intern.enterprise</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem
+        id="menu_list_enterprise"
+        name="Danh sách Xí nghiệp"
+        action="action_enterprise_list" parent="hh_intern.menu_hoso_main"/>
+</odoo>

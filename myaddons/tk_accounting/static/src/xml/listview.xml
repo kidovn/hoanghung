@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates  id="template" xml:space="preserve">
+    <t t-extend="ListView.buttons">
+         <t t-jquery="button.o_list_button_add" t-operation="after">
+              <t t-if="widget.model =='tk.accounting.three.pl.paid.detail' ">
+                <button id="tk.accounting.three.pl.paid.detail"
+                        class="oe_validate_three_pl_paid_button btn btn-primary btn-sm "
+                        type="button"> Validate </button>
+                <button id="tk.accounting.three.pl.paid.detail.confirm" data-model="tk.accounting.three.pl.paid.detail"
+                        class="oe_validate_three_pl_confirm_paid_button btn btn-primary btn-sm "
+                        type="button"> Xác nhận thanh toán </button>
+                <button id="tk.accounting.three.pl.paid.detail.revalidate" data-model="tk.accounting.three.pl.paid.detail"
+                        class="oe_validate_three_pl_revalidate_paid_button btn btn-primary btn-sm "
+                        type="button"> Revalidate </button>
+              </t>
+         </t>
+    </t>
+</templates>

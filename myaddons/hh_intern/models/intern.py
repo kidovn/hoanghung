@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, date
 from odoo.exceptions import ValidationError
 import intern_utils
 import province
+import re
 _logger = logging.getLogger(__name__)
 
 
@@ -74,6 +75,13 @@ class InternFamilyVi(models.Model):
 def percentage(part, whole):
     return round(100.0 * float(part)/float(whole),0)
 
+class SourceHistory(models.Model):
+    _name = 'intern.source.history'
+    enter_source = fields.Selection([('1', 'Ngắn hạn'), ('2', 'Dài hạn'), ('3', 'Ban chỉ đạo'), ('4', 'Rút bỏ nguồn')],
+                                    'Đăng ký nguồn')
+    intern_id = fields.Many2one('intern.intern')
+    date_enter_source = fields.Date('Ngày vào nguồn')
+
 class InternKS(models.Model):
     _name = 'intern.internks'
     _description = 'Thực tập sinh'
@@ -87,6 +95,8 @@ class InternKS(models.Model):
     date_enter_source = fields.Date('Ngày vào nguồn')
 
     date_escape_source = fields.Date('Ngày rời nguồn')
+
+
 
     identity = fields.Char("CMND")
     identity_2 = fields.Char("Thẻ căn cước")
@@ -257,7 +267,7 @@ class InternKS(models.Model):
             self.notice_percentage ="%d"%(percentage(self.notice_correct,self.notice_done))
 
     total_correct = fields.Integer(store=False,compute='_cal_total_corect')
-    total_question = fields.Integer("Tổng số câu", default=133)
+    total_question = fields.Integer("Tổng số câu", default=48)
     iq_percentage = fields.Char("Trung bình cộng"
                                 # ,compute='_cal_total_percentage'
                                 )
@@ -377,35 +387,6 @@ class InternDN(models.Model):
 
 
 
-
-    # info = fields.Many2one('intern.info',"Sơ yếu lý lịch")
-
-
-
-    # @api.model
-    # def get_creator(self):
-    #     return self.env['res.par'].search([('type', 'in', ['income', 'value', 'excise'])]).ids
-
-
-    #
-    # @api.multi
-    # def write(self, vals):
-    #     record = super(Intern, self).create(vals)
-    #     record['name_without_signal'] = no_accent_vietnamese(record['name'])
-    #     return record
-
-    # @api.model
-    # def load_views(self, views, options=None):
-    #     _logger.info("AAAAAAAAAAAAA")
-    #     for member in self.family_members:
-    #         try:
-    #             member.ages = (datetime.now().year) + 1 - member.birth_year
-    #             _logger.info("AGE %d" % member.ages)
-    #         except Exception ,e:
-    #             _logger.info(e)
-    #             member.ages = 0
-    #     return super(Intern, self).load_views(views, options)
-
 class InvoiceStt(models.Model):
     _name = 'intern.invoicestt'
     invoiceid = fields.Integer('Invoice_id')
@@ -466,6 +447,7 @@ class Intern(models.Model):
     @api.onchange('name')  # if these fields are changed, call method
     def name_change(self):
         if self.name:
+            self.name = re.sub(' +',' ',self.name)
             self.name_without_signal = intern_utils.no_accent_vietnamese(self.name)
             tmp = self.convertToJP(intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(self.name)))
             if tmp is not None:
@@ -561,7 +543,7 @@ class Intern(models.Model):
             else:
                 rec.show_specialized = False
 
-
+    entersource_history = fields.One2many('intern.source.history','intern_id',string=u'Lịch sử vào nguồn')
 
     @api.model
     def create(self, vals):
@@ -640,13 +622,38 @@ class Intern(models.Model):
 
         # vals['company_id'] = self.env.user.company_id.id
 
+        # if 'date_enter_source' in vals:
+        #     if vals['date_enter_source']!= False and ('enter_source' not in vals or not vals['enter_source']):
+        #         raise ValidationError('Bạn đã thay đổi ngày vào nguồn nhưng chưa chọn nguồn')
+        # if 'date_escape_source' in vals:
+        #     if vals['date_escape_source'] != False and ('enter_source' not in vals or not vals['enter_source']):
+        #         raise ValidationError('Bạn đã thay đổi ngày rút bỏ nguồn nhưng chưa chọn nguồn')
+
         if 'enter_source' in vals:
+            if vals['enter_source'] is not False:
+                if vals['enter_source'] != '4' and ('date_enter_source' not in vals or not vals['date_enter_source']):
+                    raise ValidationError('TTS đã nhập nguồn nhưng chưa có ngày vào nguồn')
+                elif vals['enter_source'] == '4' and ('date_escape_source' not in vals or not vals['date_escape_source']):
+                    raise ValidationError('TTS đã rút nguồn nhưng chưa có ngày rút nguồn')
             if vals['enter_source']!= False and vals['enter_source']!='4':
                 # vals['date_enter_source'] = fields.date.today()
                 vals['enter_source_tmp'] = vals['enter_source']
 
+        if 'enter_source' in vals:
+            history = {}
+            history['enter_source'] = vals['enter_source']
+            if vals['enter_source']:
+                if vals['enter_source'] == '4':
+                    history['date_enter_source'] = vals['date_escape_source']
+                else:
+                    history['date_enter_source'] = vals['date_enter_source']
+            # record.entersource_history = (0, 0, history)
+            vals['entersource_history'] = [(0, 0, history)]
 
         record = super(Intern, self).create(vals)
+
+
+
         try:
             splitName = vals['name'].split()
             tempSplitName = intern_utils.fix_accent_2(intern_utils.no_accent_vietnamese2(vals['name'])).split()
@@ -805,17 +812,21 @@ class Intern(models.Model):
             elif not specilization_check:
                 raise ValidationError('Lý lịch học tập chưa tương ứng với chuyên ngành')
 
+        # if 'date_enter_source' in vals:
+        #     if vals['date_enter_source']!= False and ('enter_source' not in vals or not vals['enter_source']):
+        #         raise ValidationError('Bạn đã nhập ngày vào nguồn nhưng chưa chọn nguồn')
+
         if 'enter_source' in vals:
+            if vals['enter_source'] is not False:
+                if vals['enter_source'] != '4' and ('date_enter_source' not in vals or not vals['date_enter_source']):
+                    raise ValidationError('TTS đã nhập nguồn nhưng chưa có ngày vào nguồn')
+                elif vals['enter_source'] == '4' and ('date_escape_source' not in vals or not vals['date_escape_source']):
+                    raise ValidationError('TTS đã rút nguồn nhưng chưa có ngày rút nguồn')
             if vals['enter_source']!= False and vals['enter_source'] != '4':
                 # vals['date_enter_source'] = fields.date.today()
                 vals['enter_source_tmp'] = vals['enter_source']
-            # else:
-                # intern = self.env['intern.intern'].browse(self.id)
-                # if self.date_enter_source!= None and fields.date.today() - timedelta(days=7) < datetime.strptime(self.date_enter_source,'%Y-%m-%d').date():
-                    # vals['date_enter_source'] = False
-                    # vals['enter_source_tmp'] = False
-                # else:
-                #     vals['date_escape_source'] = fields.date.today()
+
+
 
 
         if vals.get('name_in_japan'):
@@ -837,7 +848,23 @@ class Intern(models.Model):
                         })
 
         # self.send_to_channel("TAO TEST TY","Log")
-        super(Intern, self).write(vals)
+
+        if 'enter_source' in vals:
+            history = {}
+            history['enter_source'] = vals['enter_source']
+
+            if vals['enter_source']:
+                if vals['enter_source'] == '4':
+                    history['date_enter_source'] = vals['date_escape_source']
+                else:
+                    history['date_enter_source'] = vals['date_enter_source']
+            # self.entersource_history = (0, 0, history)
+            vals['entersource_history'] = [(0, 0, history)]
+
+        record = super(Intern, self).write(vals)
+
+
+
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -879,6 +906,19 @@ class Intern(models.Model):
 
     #Tien cu
     cmnd_or_tcc = fields.Char("CMND/Thẻ CC",store=False,compute=_compute_identity)
+    have_iq = fields.Boolean(string='IQ',compute='compute_have_iq')
+
+    @api.multi
+    def compute_have_iq(self):
+        for rec in self:
+            try:
+                if rec.iq_percentage and int(rec.iq_percentage) > 0:
+                    rec.have_iq = True
+                else:
+                    rec.have_iq = False
+            except:
+                rec.have_iq = False
+
     have_form = fields.Boolean(string="Có Form")
     have_health = fields.Boolean(string="Có giấy khám SK")
     have_deposit = fields.Boolean(string="Đặt cọc")
@@ -889,16 +929,25 @@ class Intern(models.Model):
     def _count_condition(self):
         for rec in self:
             rec.condition_count = 0
-            if rec.have_form:
-                rec.condition_count = rec.condition_count+5
+            # if rec.have_form:
+            #     rec.condition_count = rec.condition_count+5
+            if rec.have_iq:
+                rec.condition_count = rec.condition_count + 5
             if rec.have_health:
                 rec.condition_count = rec.condition_count + 5
             if rec.have_deposit:
                 rec.condition_count = rec.condition_count + 5
             if rec.avatar:
                 rec.condition_count = rec.condition_count + 5
+            rec.condition_count2 = 5
+            if rec.have_health and rec.have_deposit and rec.avatar:
+                rec.condition_count2 = 10
+            elif not rec.have_health or not rec.have_deposit:
+                rec.condition_count2 = 0
+
 
     condition_count = fields.Integer("",store=False,compute=_count_condition)
+    condition_count2 = fields.Integer("",store=False,compute=_count_condition)
 
 
     # def send_to_channel(self, body, ch_name):
@@ -913,10 +962,10 @@ class Intern(models.Model):
     #
     #     return True
 
-    @api.multi
-    def read(self, fields=None, load='_classic_read'):
-        result = super(Intern, self).read(fields, load)
-        return result
+    # @api.multi
+    # def read(self, fields=None, load='_classic_read'):
+    #     result = super(Intern, self).read(fields, load)
+    #     return result
 
     recruitment_r_employee = fields.Many2one('hh.employee', string=u"Cán bộ phụ trách thực tế")
 
@@ -950,12 +999,22 @@ class Intern(models.Model):
             tmpresult = self._cr.dictfetchall()
             promoteds = []
             exams = []
+            obj.pass_issued_accounting = ''
             for record in tmpresult:
+                if record['issues_raise']:
+                    obj.current_status = 'Phát sinh rút bỏ thi'
+                    obj.pass_issued_accounting = 'Đã bỏ thi'
+                    break
+                if record['cancel_pass'] and record['reason_cancel_bool'] == '1':
+                    obj.current_status = 'Phát sinh huỷ TT'
+                    obj.pass_issued_accounting = 'Đã trúng tuyển'
+                    break
                 if record['departure'] and not record['comeback']:
                     obj.current_status = 'Đã xuất cảnh'
                     break
                 if record['pass_exam'] and record['done_exam']:
                     obj.current_status = 'Đã trúng tuyển'
+                    obj.pass_issued_accounting = 'Đã trúng tuyển'
                     break
                 if record['confirm_exam'] and not record['done_exam']:
                     # obj.current_status = 'Đã chốt thi'
@@ -974,6 +1033,10 @@ class Intern(models.Model):
             elif len(promoteds) >0:
                 obj.current_status = u'Đang tiến cử đơn %s' % (', '.join(promoteds))
 
+
+    pass_issued_accounting = fields.Char('Trúng tuyển/Phát sinh',compute='_compute_status')
+
+
     passport_no = fields.Char('Passport No.')
     passport_type = fields.Selection([('0','Ngoại giao'),('1','Công vụ'),('2','Phổ thông'),('3','Khác')],string='Loại passport')
     passport_place = fields.Many2one('province',string="Nơi cấp")
@@ -988,3 +1051,18 @@ class Intern(models.Model):
     year_go_abroad = fields.Char('Năm nào')
 
     had_visa_jp = fields.Boolean('Đã từng xin VISA đi Nhật')
+
+
+    invoices_promoted = fields.Many2many('intern.invoice', compute='_compute_invoice_promoted',string='Đơn hàng tiến cử')
+
+    @api.one
+    def _compute_invoice_promoted(self):
+        # for rec in self:
+        related_ids = []
+        internsclone = self.env['intern.internclone'].search([('intern_id','=',self.id),('promoted','=',True)])
+        for intern in internsclone:
+            related_ids.append(intern.invoice_id.id)
+        # here compute & fill related_ids with ids of related object
+        self.invoices_promoted = self.env['intern.invoice'].search([('id','in',related_ids)])
+
+

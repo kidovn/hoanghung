@@ -64,19 +64,25 @@ class InternReport(models.Model):
     def _date_of_identity_short(self):
         for rec in self:
             if rec.day_identity and rec.month_identity and rec.year_identity:
-                rec.date_identity_short = datetime.strptime('%s-%s-%s' % (rec.year_identity, rec.month_identity, rec.day_identity), '%Y-%m-%d')
+                try:
+                    rec.date_identity_short = datetime.strptime('%s-%s-%s' % (rec.year_identity, rec.month_identity, rec.day_identity), '%Y-%m-%d')
+                except:
+                    return None
             else:
                 rec.date_identity_short = None
 
-    date_sent_doc_short = fields.Date("Ngày gửi hồ sơ", store=False, compute='_date_send_doc_short')
+    date_sent_doc_short = fields.Date("Ngày gửi hồ sơ", store=True, compute='_date_send_doc_short')
 
     @api.multi
     @api.depends('day_sent_doc', 'month_sent_doc', 'year_sent_doc')
     def _date_send_doc_short(self):
         for rec in self:
-            if rec.day_sent_doc and rec.month_sent_doc and rec.year_sent_doc:
-                rec.date_sent_doc_short = datetime.strptime('%s-%s-%s' % (rec.year_sent_doc, rec.month_sent_doc, rec.day_sent_doc), '%Y-%m-%d')
-            else:
+            try:
+                if rec.day_sent_doc and rec.month_sent_doc and rec.year_sent_doc:
+                    rec.date_sent_doc_short = datetime.strptime('%s-%s-%s' % (rec.year_sent_doc, rec.month_sent_doc, rec.day_sent_doc), '%Y-%m-%d')
+                else:
+                    rec.date_sent_doc_short = None
+            except:
                 rec.date_sent_doc_short = None
 
 

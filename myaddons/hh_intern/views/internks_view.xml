@@ -374,7 +374,7 @@
                             <td colspan="1" width="100px" class="columnDivider">Phần trăm</td>
                             <td colspan="1" class="noDivider"/>
                         </tr>
-                        <tr>
+                        <tr  attrs="{'invisible':[('logic_correct','=',0)]}">
                             <td colspan="1"  class="columnDivider">
                                   <label for="logic_correct" string="Logic"/>
                             </td>
@@ -395,7 +395,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr attrs="{'invisible':[('add_correct','=',0)]}">
                             <td colspan="1"  class="columnDivider">
                                   <label for="add_correct" string="Cộng"/>
                             </td>
@@ -824,7 +824,7 @@
                 </table>
 
 
-                <group invisible="1">
+                <group >
                     <field name="user_access" groups="hh_intern.group_manager"  mode="tree" >
                         <tree>
                             <field name="name" string="Tên"/>
@@ -832,6 +832,21 @@
                         </tree>
                     </field>
                 </group>
+
+                 <notebook>
+                     <page string="Đơn hàng đc tiến cử">
+                         <field name="invoices_promoted">
+                             <tree>
+                                <field name="custom_id_2"/>
+                                <field name="name"/>
+                                <field name="room_pttt"/>
+                                <field name="date_confirm_form"/>
+                                <field name="date_exam"/>
+                                <field name="status"/>
+                             </tree>
+                         </field>
+                     </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -841,13 +856,14 @@
         <field name="model">intern.intern</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="custom_id"/>
-                <field name="enter_source"/>
-                <field name="name"/>
-                <field name="province"/>
-                <field name="date_of_birth_short"/>
-                <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar"/>
-                <field name="current_status"/>
+                <field name="custom_id" style="80px"/>
+                <field name="enter_source"  style="100px"/>
+                <field name="name"  style="180px"/>
+                <field name="province" style="100px"/>
+                <field name="date_of_birth_short" style="100px"/>
+                <field name="avatar" nolabel="1" widget="image" class="oe_right oe_avatar" style="50px"/>
+                <field name="recruitment_employee" style="180px"/>
+                <field name="current_status" style="250px"/>
             </tree>
         </field>
     </record>
@@ -1105,21 +1121,22 @@
                                  <field name="room_recruitment" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
                                  <field name="recruitment_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
                                  <field name="recruitment_r_employee" readonly="1" widget="selection" domain="[('room_type', '=', '0')]" sortable='0'/>
-                                 <field name="have_form" sortable='0'/>
+                                 <field name="have_form" sortable='0' invisible="1"/>
+                                 <field name="have_iq" sortable='0'/>
                                  <field name="avatar" widget="image" sortable='0'/>
                                  <field name="have_health" sortable='0'/>
-                                 <field name="have_deposit" sortable='0'/>
+                                 <field name="have_deposit" sortable='0' readonly="1"/>
                                  <field name="condition_count" invisible="1"/>
                                  <field name="promoted" invisible="1"/>
                                  <field name="confirm_exam" invisible="1"/>
                                  <field name="issues_raise" invisible="1"/>
                                  <field name="pass_exam" invisible="1"/>
                                  <field name="preparatory_exam" invisible="1"/>
-                                 <field name="preparatory_exam" invisible="1"/>
+                                 <!--<field name="preparatory_exam" invisible="1"/>-->
                                  <field name="cancel_pass" invisible="1"/>
                                  <!--<field name="issues_before" invisible="1"/>-->
                                  <!--<field name="issues_after" invisible="1"/>-->
-                                 <field name="issues_raise" invisible="1"/>
+                                 <!--<field name="issues_raise" invisible="1"/>-->
                                  <field name="issues_resolve" invisible="1"/>
                                  <field name="fine_employee" invisible="1"/>
                                  <field name="fine_intern" invisible="1"/>
@@ -1148,7 +1165,7 @@
                                  <field name="have_form" sortable='0'/>
                                  <field name="avatar" widget="image" sortable='0'/>
                                  <field name="have_health" sortable='0'/>
-                                 <field name="have_deposit" sortable='0'/>
+                                 <field name="have_deposit" sortable='0' readonly="1"/>
 
                             </tree>
                         </field>
@@ -1268,7 +1285,7 @@
                                   <field name="custom_id" readonly="1" sortable='0'/>
                                   <field name="cmnd_or_tcc" readonly="1" sortable='0'/>
                                   <field name="date_of_birth" context="" sortable='0'/>
-                                  <field name="province" readonly="1" sortable='0'/>
+                                  <field name="province" readonly="1" sortable='0' options="{'no_open':True,'no_create':1,'no_create_edit':1}"/>
                                   <field name="comeback" />
                                   <field name="reason_comeback" />
                                   <field name="liquidated"/>
@@ -1288,6 +1305,8 @@
                         </field>
                      </page>
                 </notebook>
+
+
              </form>
         </field>
     </record>

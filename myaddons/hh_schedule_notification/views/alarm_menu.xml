@@ -1,0 +1,34 @@
+<odoo>
+    <record id="action_hh_event" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">hh.event</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_id" ref="view_hh_event_calendar"/>
+        <!--<field name="search_view_id" ref="view_calendar_event_search"/>-->
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to schedule a new meeting.
+          </p><p>
+            The calendar is shared between employees and fully integrated with
+            other applications such as the employee holidays or the business
+            opportunities.
+          </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hh_event"
+        name="HH EVENT"
+        sequence="2"
+        action="action_hh_event"
+        web_icon="calendar,static/description/icon.png" groups="base.group_erp_manager"
+    />
+
+    <!-- called in js from '/js/base_calendar.js' -->
+    <record id="action_hh_event_notify" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">hh.event</field>
+        <field name="view_mode">form,calendar,tree</field>
+        <field name="view_id" ref="view_hh_event_form"/>
+    </record>
+</odoo>

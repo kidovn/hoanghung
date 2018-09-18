@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import cron
+from . import cron, report, invoice
 
 

@@ -1,15 +1,15 @@
 <odoo>
 
-    <report
-        id="interns_pass_report"
-        model="intern.invoice"
-        string="Thông báo Trúng tuyển"
-        report_type="qweb-html"
-        attachment_use="False"
-        name="hh_intern_pass_report.report_intern_pass_view"
-        paperformat="hh_intern_pass_report.paperformat_euro_landscape"
-        menu="False"
-    />
+    <!--<report-->
+        <!--id="interns_pass_report"-->
+        <!--model="intern.invoice"-->
+        <!--string="Thông báo Trúng tuyển"-->
+        <!--report_type="qweb-html"-->
+        <!--attachment_use="False"-->
+        <!--name="hh_intern_pass_report.report_intern_pass_view"-->
+        <!--paperformat="hh_intern_pass_report.paperformat_euro_landscape"-->
+        <!--menu="False"-->
+    <!--/>-->
 
     <template id="pass_report_style">
         .pass_content thead > tr > th{
@@ -72,37 +72,40 @@
                              <th style="width: 180px;">Ngày nhập học trúng tuyển</th>
                              <th style="width: 180px;">Ngày dự kiến xuất cảnh</th>
                              <th style="width: 180px;">Pháp nhân</th>
-                             <th style="width: 350px;">Ghi chú</th>
+                             <!--<th style="width: 350px;">Ghi chú</th>-->
                          </tr>
                      </thead>
                      <tbody>
-                         <t t-foreach="record.interns_clone" t-as="intern" >
+                         <t t-foreach="interns" t-as="intern" >
                              <tr t-if="intern.pass_exam">
                                  <td data-field="stt"><t t-esc="intern_index+1"/></td>
-                                 <td data-field="xi_nghiep" ><t t-esc="record.enterprise_doc.name_jp"/></td>
+                                 <td data-field="xi_nghiep" >
+                                     <p><t t-esc="intern.enterprise.name_jp"/></p>
+                                     <p><t t-esc="intern.enterprise.name_romaji"/></p>
+                                 </td>
                                  <td data-field="nghiep_doan" ><t t-esc="record.guild.name_acronym"/></td>
                                  <td data-field="ma_so">
-                                     <!--<t t-esc="codes[intern_index]"/> -->
+                                     <t t-esc="intern.custom_id"/>
                                  </td>
                                  <td data-field="name"><t t-esc="intern.name"/></td>
-                                 <td data-field="birthday"><t t-esc="intern.date_of_birth_short"/></td>
+                                 <td data-field="birthday"><t t-if="intern.date_of_birth_short"><t t-esc="time.strftime('%d/%m/%Y',time.strptime(intern.date_of_birth_short,'%Y-%m-%d'))"/></t></td>
                                  <td data-field="province"><t t-esc="intern.province.name"/></td>
-                                 <td data-field="place_to_work"><t t-esc="record.place_to_work"/></td>
+                                 <td data-field="place_to_work"><t t-esc="intern.place_to_work.name"/></td>
                                  <td data-field="job">
                                      <p><t t-esc="record.job_vi"/></p>
                                      <p><t t-esc="record.job_jp"/></p>
                                  </td>
                                  <td data-field="expire"><t t-esc="record.year_expire"/></td>
-                                 <td data-field="date_pass"><t t-esc="record.date_exam"/></td>
-                                 <td data-field="date_training"><t t-esc="record.date_start_training"/></td>
-                                 <td data-field="date_departure"><t t-esc="record.date_departure"/></td>
+                                 <td data-field="date_pass"><t t-if="record.date_pass"><t t-esc="time.strftime('%d/%m/%Y',time.strptime(record.date_pass,'%Y-%m-%d'))"/></t></td>
+                                 <td data-field="date_join_school"><t t-if="record.date_join_school"><t t-esc="time.strftime('%d/%m/%Y',time.strptime(record.date_join_school,'%Y-%m-%d'))"/></t></td>
+                                 <td data-field="date_departure"><t t-if="record.date_departure"><t t-esc="time.strftime('%d/%m/%Y',time.strptime(record.date_departure,'%Y-%m-%d'))"/></t></td>
                                  <td data-field="dispatchcom"><t t-esc="record.dispatchcom1.name_short"/></td>
-                                 <td>Trúng tuyển chính thức</td>
+                                 <!--<td>Trúng tuyển chính thức</td>-->
                              </tr>
                          </t>
                      </tbody>
                  </table>
-                 <t t-if="record.interns_preparatory">
+                 <t t-if="record.interns_preparatory and has_prepare >0 ">
                      <br/>
                      <div>DANH SÁCH DỰ BỊ</div>
                      <table class="pass_content" style="font-size: 10px;">
@@ -122,11 +125,11 @@
                                  <th style="width: 180px;">Ngày nhập học trúng tuyển</th>
                                  <th style="width: 180px;">Ngày dự kiến xuất cảnh</th>
                                  <th style="width: 180px;">Pháp nhân</th>
-                                 <th style="width: 350px;">Ghi chú</th>
+                                 <!--<th style="width: 350px;">Ghi chú</th>-->
                              </tr>
                          </thead>
                          <tbody>
-                             <t t-foreach="record.interns_preparatory" t-as="intern" >
+                             <t t-foreach="interns" t-as="intern" >
                                  <tr t-if="intern.preparatory_exam">
                                      <td data-field="stt"><t t-esc="intern_index+1"/></td>
                                      <td data-field="xi_nghiep" ><t t-esc="record.enterprise_doc.name_jp"/></td>
@@ -135,7 +138,7 @@
                                          <!--<t t-esc="codes_pre[intern_index]"/> -->
                                      </td>
                                      <td data-field="name"><t t-esc="intern.name"/></td>
-                                     <td data-field="birthday"><t t-esc="intern.date_of_birth_short"/></td>
+                                     <td data-field="birthday"><t t-if="intern.date_of_birth_short"><t t-esc="time.strftime('%d/%m/%Y',time.strptime(intern.date_of_birth_short,'%Y-%m-%d'))"/></t></td>
                                      <td data-field="province"><t t-esc="intern.province.name"/></td>
                                  </tr>
                              </t>
@@ -171,4 +174,37 @@
             </t>
         </t>
     </template>
+
+    <report
+        id="invoice_intern_pass_xlsx"
+        model="intern.invoice"
+        string="Thông báo trúng tuyển"
+        report_type="xlsx"
+        name="intern.invoice.pass.xlsx"
+        file="intern.invoice.pass.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+     <report
+        id="invoice_intern_exam_xlsx"
+        model="intern.invoice"
+        string="DS TTS chốt thi tuyển"
+        report_type="xlsx"
+        name="intern.invoice.exam.xlsx"
+        file="intern.invoice.exam.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+
+    <report
+        id="invoice_intern_promoted_xlsx"
+        model="intern.invoice"
+        string="DS tiến cử"
+        report_type="xlsx"
+        name="intern.invoice.promoted.xlsx"
+        file="intern.invoice.promoted.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
 </odoo>

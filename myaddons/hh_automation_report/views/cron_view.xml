@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <form string="Scheduled Actions">
                 <header>
-                    <button name="method_direct_trigger" type="object" string="Gửi ngay bây giờ" class="oe_highlight"/>
+                    <button name="method_direct_trigger_demo" type="object" string="Gửi ngay bây giờ" class="oe_highlight"/>
                 </header>
                <sheet>
                 <group col="2">
@@ -13,8 +13,8 @@
                     <field name="nextcall"/>
                 </group>
                 <notebook>
-                    <page string="Information">
-                        <group string="Action to Trigger">
+                    <page string="Thiết lập">
+                        <group>
                             <field name="emails"/>
                             <field name="report" context="{'tree_view_ref':'hh_automation_report.hh_filter_tree'}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
                         </group>
@@ -22,7 +22,7 @@
                             <tbody>
                                 <tr>
                                     <td colspan="1" width="150px" style="border-right: 1px solid #DEDEDE;padding-left: 0px">
-                                         <label for="interval_number" style="font-weight: bold;margin-right: 0px;"/>
+                                         <label for="interval_number" style="font-weight: bold;margin-right: 0px;" string="Lặp lại mỗi"/>
                                     </td>
                                     <td colspan="1" width="200px">
                                         <div class="column">
@@ -36,7 +36,7 @@
                         </table>
                     </page>
                     <page string="Nội dung">
-                        <field name="body_content" widget="html"/>
+                        <field name="body_content" widget="html" options="{'style-inline': true}"/>
                     </page>
                 </notebook>
                </sheet>

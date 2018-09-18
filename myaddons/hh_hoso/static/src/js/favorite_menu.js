@@ -63,6 +63,7 @@ FavoriteMenu.include({
         while(domain.indexOf('"time.')>-1){
             domain = domain.replace('"time.','time.').replace('(\\"','("').replace('\\")"','")');
         }
+        domain = domain.replace(',true',',True').replace(',false',',False')
         var filter = {
             name: filter_name,
             user_id: shared_filter ? false : session.uid,

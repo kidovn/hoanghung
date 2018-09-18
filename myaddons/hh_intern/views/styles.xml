@@ -9,11 +9,11 @@
                 <script type="text/javascript" src="/hh_intern/static/src/js/widget_tree_intern.js"></script>
                 <script type="text/javascript" src="/hh_intern/static/src/js/widget_custom.js"></script>
                 <script type="text/javascript" src="/hh_intern/static/src/js/grouped_list_view.js"></script>
+                <script type="text/javascript" src="/hh_intern/static/src/js/core.js"></script>
 
                 <!--<script type="text/javascript" src="/hh_intern/static/src/js/jquery.ba-floatingscrollbar.js"></script>-->
 
                 <link rel="stylesheet" href="/hh_intern/static/src/css/intern.css"/>
-                <!--<link rel="text/javascript" href="/hh_intern/static/src/js/core.js"/>-->
                 <link rel="stylesheet" href="/hh_intern/static/src/css/scroll-fix.css"/>
             </xpath>
         </template>

@@ -1,0 +1,13 @@
+<odoo>
+
+    <report
+        id="employee_birthday_xlsx"
+        model="hoanghung.report"
+        string="DS nhân viên sinh nhật trong tháng"
+        report_type="xlsx"
+        name="employee.birthday.xlsx"
+        file="employee.birthday.xlsx"
+        attachment_use="False"
+        menu="False"
+    />
+</odoo>
